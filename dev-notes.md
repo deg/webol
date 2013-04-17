@@ -11,5 +11,5 @@ Options for project.clj are in https://github.com/emezeske/lein-cljsbuild/blob/0
 Launch
 ------
 
-lein ring server
+lein ring server-headless
 lein cljsbuild auto
