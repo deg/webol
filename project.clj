@@ -1,7 +1,7 @@
 (defproject receipts "0.1.0-SNAPSHOT"
-  :description "FIXME: write this!"
+  :description "HTML5 web-app to manage our receipts."
   :url "http://example.com/FIXME"
-  :dependencies [[org.clojure/clojure "1.4.0"]
+  :dependencies [[org.clojure/clojure "1.5.1"]
                  [ring "1.1.8"]]
   :plugins [[lein-cljsbuild "0.3.0"]]
   :hooks [leiningen.cljsbuild]
