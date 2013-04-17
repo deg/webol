@@ -1,35 +1,17 @@
 (ns receipts.server
-  (:require [ring.adapter.jetty :as jetty]
-            [ring.middleware.resource :as resources]
-            [ring.util.response :as response])
-  (:gen-class))
+  (:use compojure.core)
+  (:require [compojure.handler :as handler]
+            [compojure.route :as route]))
 
-(defn render-app []
-  {:status 200
-   :headers {"Content-Type" "text/html"}
-   :body
-   (str "<!DOCTYPE html>"
-        "<html>"
-        "<head>"
-        "<link rel=\"stylesheet\" href=\"css/page.css\" />"
-        "</head>"
-        "<body>"
-        "<div>"
-        "<p id=\"clickable\">Click me!</p>"
-        "</div>"
-        "<script src=\"js/cljs.js\"></script>"
-        "</body>"
-        "</html>")})
+(defroutes app-routes
+  ; to serve document root address
+  (GET "/" [] "<p>Hello from compojure</p>")
+  ; to serve static pages saved in resources/public directory
+  (route/resources "/")
+  ; if page is not found
+  #_(route/not-found "<h1>Page not found.</h1>"))
 
-(defn handler [request]
-  (if (= "/" (:uri request))
-      (response/redirect "/help.html")
-      (render-app)))
+(def handler
+  (handler/site app-routes))
 
-(def app 
-  (-> handler
-    (resources/wrap-resource "public")))
-
-(defn -main [& args]
-  (jetty/run-jetty app {:port 3000}))
 
