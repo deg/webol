@@ -1,11 +1,12 @@
 (ns receipts.server
   (:use compojure.core)
-  (:require [compojure.handler :as handler]
+  (:require [ring.util.response :as resp]
+            [compojure.handler :as handler]
             [compojure.route :as route]))
 
 (defroutes app-routes
   ; to serve document root address
-  (GET "/" [] "<p>Hello from compojure</p>")
+  (GET "/" [] (resp/redirect "/help.html"))
   ; to serve static pages saved in resources/public directory
   (route/resources "/")
   ; if page is not found
