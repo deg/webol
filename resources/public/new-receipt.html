@@ -8,24 +8,30 @@
     <meta name="viewport" content="width=320 maximum-scale=2.0" />
   </head>
   <body>
-    <form action="nonesuch" method="post" id="newReceipt" novalidate>
+    <form action="" method="post" id="newReceipt" novalidate>
       <div>
-	<label for="PaidBy">Paid by:</label><input name="PaidBy" id="PaidBy" MaxLength="15"/>
+	<label for="PaidBy">Paid by:</label>
+	<input name="PaidBy" id="PaidBy" autocomplete="on" MaxLength="15"/>
       </div>
       <div>
-	<label for="Date">Date:</label><input name="Date" id="Date" MaxLength="15"/>
+	<label for="Date">Date:</label>
+	<input name="Date" id="Date" type="Date" value="2013-04-18" MaxLength="15"/>
       </div>
       <div>
-	<label for="Amount">Amount:</label><input name="Amount" id="Amount" MaxLength="15"/>
+	<label for="Amount">Amount:</label>
+	<input name="Amount" id="Amount" MaxLength="15"/>
       </div>
       <div>
-	<label for="Vendor">Vendor:</label><input name="Vendor" id="Vendor" MaxLength="15"/>
+	<label for="Vendor">Vendor:</label>
+	<input name="Vendor" id="Vendor" autocomplete="on" MaxLength="15"/>
       </div>
       <div>
-	<label for="Comments">Comments:</label><input name="Comments" id="Comments" MaxLength="15"/>
+	<label for="Comments">Comments:</label>
+	<input name="Comments" id="Comments" MaxLength="15"/>
       </div>
       <div>
-	<label for="ForWhom">For Whom:</label><input name="ForWhom" id="ForWhom" MaxLength="15"/>
+	<label for="ForWhom">For Whom:</label>
+	<input name="ForWhom" id="ForWhom" MaxLength="15"/>
       </div>
       <p><a href="help.html">Help</a> about this application.</p>
       <div>

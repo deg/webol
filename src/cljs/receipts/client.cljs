@@ -1,4 +1,5 @@
-(ns hello-clojurescript)
+(ns hello-clojurescript
+  (:use [domina :only [by-id value set-value!]]))
 
 (defn handle-click []
   (js/alert "Hello!"))
@@ -9,12 +10,13 @@
 
 ;; define the function to be attached to form submission event
 (defn validate-form []
-  (let [paid-by (.getElementById js/document "PaidBy")
-        amount (.getElementById js/document "Amount")]
-    (if (and (> (count (.-value paid-by)) 0)
-             (> (count (.-value amount)) 0))
+  (let [paid-by (by-id "PaidBy")
+        amount (by-id "Amount")]
+    (set-value! (by-id "ForWhom") "DASH")
+    (if (and (> (count (value paid-by)) 0)
+             (> (count (value amount)) 0))
       true
-      (do (js/alert "Please, complete the form!")
+      (do (js/alert "Please complete the form!")
           false))))
 
 ;; define the function to attach validate-form to onsubmit event of
