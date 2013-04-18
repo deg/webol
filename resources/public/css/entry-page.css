@@ -1,0 +1,32 @@
+p
+{
+ margin:1em 0;
+}
+label
+{
+ float:left;
+ width:5em;
+ text-align:right;
+ margin-right:0.5em;
+}
+input[type="text"]
+{
+ width: 10em;
+}
+.left-column, right-column
+{
+ float:left;
+}
+.left-column
+{
+ margin-right:1em;
+}​
+.textarea-label
+{
+ float:none;
+}
+textarea
+{
+ height:5em;
+ width:35em;
+}​

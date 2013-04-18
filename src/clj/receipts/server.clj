@@ -6,7 +6,7 @@
 
 (defroutes app-routes
   ; to serve document root address
-  (GET "/" [] (resp/redirect "/help.html"))
+  (GET "/" [] (resp/redirect "/new-receipt.html"))
   ; to serve static pages saved in resources/public directory
   (route/resources "/")
   ; if page is not found
