@@ -2,7 +2,9 @@
   (:require-macros [hiccups.core :as h])
   (:require [domina :as dom]
             [hiccups.runtime :as hiccupsrt]
-            [domina.events :as ev]))
+            [domina.events :as ev]
+            [shoreleave.remotes.http-rpc :refer [remote-callback]]
+            [cljs.reader :refer [read-string]]))
 
 (defn handle-click []
   (js/alert "Hello!"))
@@ -18,7 +20,8 @@
     (dom/set-value! (dom/by-id "ForWhom") "DASH")
     (if (and (> (count paid-by) 0)
              (> (count amount) 0))
-      true
+      (remote-callback :save-receipt [paid-by paid-by amount paid-by paid-by paid-by]
+                       #(js/alert %))
       (do (js/alert "Please complete the form!")
           false))))
 
