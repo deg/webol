@@ -1,4 +1,4 @@
-(ns hello-clojurescript
+(ns degel.receipts.cljs.client
   (:use [domina :only [by-id value set-value!]]))
 
 (defn handle-click []

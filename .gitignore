@@ -1,5 +1,5 @@
 *~
 out/
 repl/
-resources/public/js/cljs.js
+resources/public/js/receipts*.js
 target/

@@ -11,11 +11,17 @@
   :ring {:handler receipts.server/handler}
   :cljsbuild { 
     :builds {
-      :main {
-        :source-paths ["src/cljs"]
-        :compiler {:output-to "resources/public/js/cljs.js"
-                   :optimizations :simple
-                   :pretty-print true}
-        :jar true}}}
+      :dev {
+            :source-paths ["src/cljs" "src/brepl"]
+            :compiler {:output-to "resources/public/js/receipts-dev.js"
+                       :optimizations :simple
+                       :pretty-print true}
+            :jar true}
+      :prod {
+            :source-paths ["src/cljs" "src/brepl"] ; TODO brepl not safe here
+            :compiler {:output-to "resources/public/js/receipts.js"
+                       :optimizations :advanced
+                       :pretty-print true}
+            :jar true}}}
   :main receipts.server)
 
