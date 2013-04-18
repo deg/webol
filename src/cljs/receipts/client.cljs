@@ -1,5 +1,7 @@
 (ns degel.receipts.cljs.client
+  (:require-macros [hiccups.core :as h])
   (:require [domina :as dom]
+            [hiccups.runtime :as hiccupsrt]
             [domina.events :as ev]))
 
 (defn handle-click []
@@ -22,7 +24,7 @@
 
 (defn add-help []
   (dom/append! (dom/by-id "newReceipt")
-               "<div class='help'>Help me please</div>"))
+               (h/html [:div.help "Help me please"])))
 
 (defn remove-help []
   (dom/destroy! (dom/by-class "help")))
@@ -33,7 +35,7 @@
   ;; verify that js/document exists and that it has a getElementById
   ;; property
   (when (and js/document
-           (.-getElementById js/document))
+             (aget js/document "getElementById"))
     (ev/listen! (dom/by-id "submit") :click validate-form)
     (ev/listen! (dom/by-id "submit") :mouseover add-help)
     (ev/listen! (dom/by-id "submit") :mouseout remove-help)
