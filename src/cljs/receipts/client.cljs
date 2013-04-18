@@ -1,5 +1,6 @@
 (ns degel.receipts.cljs.client
-  (:use [domina :only [by-id value set-value!]]))
+  (:require [domina :as dom]
+            [domina.events :as ev]))
 
 (defn handle-click []
   (js/alert "Hello!"))
@@ -10,11 +11,11 @@
 
 ;; define the function to be attached to form submission event
 (defn validate-form []
-  (let [paid-by (by-id "PaidBy")
-        amount (by-id "Amount")]
-    (set-value! (by-id "ForWhom") "DASH")
-    (if (and (> (count (value paid-by)) 0)
-             (> (count (value amount)) 0))
+  (let [paid-by (dom/value (dom/by-id "PaidBy"))
+        amount (dom/value (dom/by-id "Amount"))]
+    (dom/set-value! (dom/by-id "ForWhom") "DASH")
+    (if (and (> (count paid-by) 0)
+             (> (count amount) 0))
       true
       (do (js/alert "Please complete the form!")
           false))))
@@ -26,7 +27,4 @@
   ;; property
   (if (and js/document
            (.-getElementById js/document))
-    ;; get loginForm by element id and set its onsubmit property to
-    ;; our validate-form function
-    (let [login-form (.getElementById js/document "newReceipt")]
-      (set! (.-onsubmit login-form) validate-form))))
+    (ev/listen! (dom/by-id "submit") :click validate-form)))
