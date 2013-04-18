@@ -16,3 +16,4 @@ Launch
 
 lein ring server-headless
 lein cljsbuild auto
+(doesn't work for me -- need to compare to tutorial project) 
