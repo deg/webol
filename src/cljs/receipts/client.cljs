@@ -20,11 +20,22 @@
       (do (js/alert "Please complete the form!")
           false))))
 
+(defn add-help []
+  (dom/append! (dom/by-id "newReceipt")
+               "<div class='help'>Help me please</div>"))
+
+(defn remove-help []
+  (dom/destroy! (dom/by-class "help")))
+
 ;; define the function to attach validate-form to onsubmit event of
 ;; the form
 (defn ^:export init []
   ;; verify that js/document exists and that it has a getElementById
   ;; property
-  (if (and js/document
+  (when (and js/document
            (.-getElementById js/document))
-    (ev/listen! (dom/by-id "submit") :click validate-form)))
+    (ev/listen! (dom/by-id "submit") :click validate-form)
+    (ev/listen! (dom/by-id "submit") :mouseover add-help)
+    (ev/listen! (dom/by-id "submit") :mouseout remove-help)
+    (ev/listen! (dom/by-id "Date") :mouseover add-help)
+    (ev/listen! (dom/by-id "Date") :mouseout remove-help)))
