@@ -2,7 +2,7 @@
   (:require-macros [hiccups.core :refer [html]])
   (:require [domina :refer [append! by-class by-id destroy! set-value! value]]
             [hiccups.runtime] ;; Needed by hiccups.core macros
-            [domina.events :refer [listen! prevent-default]]
+            [domina.events :refer [listen! prevent-default target]]
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [cljs.reader :refer [read-string]]))
 
@@ -21,8 +21,12 @@
           (js/alert "Missing field"))
       (remote-callback :save-receipt [paid-by date amount category vendor comments for-whom]
                        #(append! (by-id "newReceipt")
-                                 (html [:div.result %])))))
-)
+                                 (html [:div.result %]))))))
+
+(defn verify-not-empty [e]
+  (let [target (target e)]
+    (when (empty? (value e))
+      (append! (by-id "newReceipt") (html [:div.help "Empty, tsk tsk!"])))))
 
 
 (defn add-help []
@@ -37,8 +41,13 @@
 (defn ^:export init []
   (when (and js/document
              (aget js/document "getElementById"))
-    (listen! (by-id "submit") :click submit-form)
-    (listen! (by-id "submit") :mouseover add-help)
-    (listen! (by-id "submit") :mouseout remove-help)
-    (listen! (by-id "Date") :mouseover add-help)
-    (listen! (by-id "Date") :mouseout remove-help)))
+    (let [form (by-id "submit")
+          paid-by (by-id "PaidBy")
+          date (by-id "Date")]
+      (listen! form :click submit-form)
+      (listen! form :mouseover add-help)
+      (listen! form :mouseout remove-help)
+      (listen! paid-by :blur verify-not-empty)
+      (listen! date :blur verify-not-empty)
+      (listen! date :mouseover add-help)
+      (listen! date :mouseout remove-help))))
