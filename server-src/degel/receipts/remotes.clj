@@ -1,9 +1,9 @@
-(ns degel.receipts.server.remotes
+(ns degel.receipts.remotes
   (:require [clojure.string :as str]
             [clojure.pprint :refer [cl-format]]
             [compojure.handler :refer [site]]
             [shoreleave.middleware.rpc :refer [defremote wrap-rpc]]
-            [receipts.server :refer [handler]]))
+            [degel.receipts.server :refer [handler]]))
 
 (defn month-string [month]
   (let [month-val (Integer/parseInt month)]

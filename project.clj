@@ -10,18 +10,18 @@
   :plugins [[lein-cljsbuild "0.3.0"]
             [lein-ring "0.8.3"]]
   :hooks [leiningen.cljsbuild]
-  :source-paths ["src/clj"]
-  :ring {:handler degel.receipts.server.remotes/app}
+  :source-paths ["server-src"]
+  :ring {:handler degel.receipts.remotes/app}
   :cljsbuild { 
     :builds {
       :dev {
-            :source-paths ["src/cljs" "src/brepl"]
+            :source-paths ["client-src" "client-src-dev"]
             :compiler {:output-to "resources/public/js/receipts-dev.js"
                        :optimizations :simple
                        :pretty-print true}
             :jar true}
       :prod {
-            :source-paths ["src/cljs" "src/brepl"] ; TODO brepl not safe here
+            :source-paths ["client-src" "client-src-dev"] ; TODO brepl not safe here
             :compiler {:output-to "resources/public/js/receipts.js"
                        :optimizations :advanced
                        :pretty-print true}

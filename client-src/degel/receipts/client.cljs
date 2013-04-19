@@ -1,4 +1,4 @@
-(ns degel.receipts.cljs.client
+(ns degel.receipts.client
   (:require-macros [hiccups.core :refer [html]])
   (:require [domina :refer [append! by-class by-id destroy! set-value! value]]
             [hiccups.runtime] ;; Needed by hiccups.core macros

@@ -1,4 +1,4 @@
-(ns receipts.server
+(ns degel.receipts.server
   (:require [compojure.core :refer [defroutes GET]]
             [compojure.route :refer [resources not-found]]
             [ring.util.response :refer [redirect]]
