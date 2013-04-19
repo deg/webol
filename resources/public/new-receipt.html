@@ -8,10 +8,15 @@
     <meta name="viewport" content="width=320 maximum-scale=2.0" />
   </head>
   <body>
-    <form action="" method="post" id="newReceipt" novalidate>
+    <form action="" method="post" id="newReceipt">
       <div>
 	<label for="PaidBy">Paid by:</label>
-	<input name="PaidBy" id="PaidBy" autocomplete="on" MaxLength="15"/>
+	<input name="PaidBy"
+	       id="PaidBy"
+	       title="Enter 'cash', 'ck N' or 'vDDDD'"
+	       placeholder="cc #, ck #, or cash"
+	       autocomplete="on"
+	       MaxLength="8"/>
       </div>
       <div>
 	<label for="Date">Date:</label>
@@ -19,7 +24,13 @@
       </div>
       <div>
 	<label for="Amount">Amount:</label>
-	<input name="Amount" id="Amount" MaxLength="15"/>
+	<input name="Amount"
+	       id="Amount"
+	       type="Number"
+	       title="Enter price in shekels"
+	       pattern="^\d*(\.\d{2}$)?"
+	       placeholder="price"
+	       MaxLength="10"/>
       </div>
       <div>
 	<label for="Category">Category:</label>
