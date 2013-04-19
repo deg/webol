@@ -6,24 +6,19 @@
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [cljs.reader :refer [read-string]]))
 
-(defn handle-click []
-  (js/alert "Hello!"))
-
-(def clickable (.getElementById js/document "clickable"))
-(.addEventListener clickable "click" handle-click)
-
-
 ;; define the function to be attached to form submission event
 (defn validate-form []
   (let [paid-by (dom/value (dom/by-id "PaidBy"))
-        amount (dom/value (dom/by-id "Amount"))]
+        date (dom/value (dom/by-id "Date"))
+        amount (dom/value (dom/by-id "Amount"))
+        category (dom/value (dom/by-id "Category"))
+        vendor (dom/value (dom/by-id "Vendor"))
+        comments (dom/value (dom/by-id "Comments"))
+        for-whom (dom/value (dom/by-id "ForWhom"))]
     (dom/set-value! (dom/by-id "ForWhom") "DASH")
-    (if (and (> (count paid-by) 0)
-             (> (count amount) 0))
-      (remote-callback :save-receipt [paid-by paid-by amount paid-by paid-by paid-by]
-                       #(js/alert %))
-      (do (js/alert "Please complete the form!")
-          false))))
+    (remote-callback :save-receipt [paid-by date amount category vendor comments for-whom]
+                     #(dom/append! (dom/by-id "newReceipt")
+                                   (h/html [:div.result %])))))
 
 (defn add-help []
   (dom/append! (dom/by-id "newReceipt")

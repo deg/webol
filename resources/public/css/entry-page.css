@@ -112,6 +112,11 @@ fieldset {
        color: red;
 }
 
+.result {
+       color: blue;
+       background: yellow;
+}
+
 input.default {
 	color:#bbb;
 }
