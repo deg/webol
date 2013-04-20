@@ -46,7 +46,7 @@
           paid-by (by-id "PaidBy")
           amount (by-id "Amount")
           date (by-id "Date")]
-      (listen! form :click submit-form)
+;      (listen! form :click submit-form)
       (listen! form :mouseover add-help)
       (listen! form :mouseout remove-help)
       (listen! paid-by :blur verify-not-empty)

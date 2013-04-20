@@ -1,12 +1,14 @@
 (ns degel.receipts.server
-  (:require [compojure.core :refer [defroutes GET]]
+  (:require [compojure.core :refer [defroutes GET POST]]
             [compojure.route :refer [resources not-found]]
             [ring.util.response :refer [redirect]]
-            [compojure.handler :refer [site]]))
+            [compojure.handler :refer [site]]
+            [degel.receipts.receipts :refer [enter-receipt]]))
 
 (defroutes app-routes
-  ; to serve document root address
   (GET "/" [] (redirect "/new-receipt.html"))
+  (POST "/enterReceipt" [PaidBy Date Amount Category Vendor Comments ForWhom]
+        (enter-receipt PaidBy Date Amount Category Vendor Comments ForWhom))
   ; to serve static pages saved in resources/public directory
   (resources "/")
   ; if page is not found
