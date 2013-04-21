@@ -1,27 +1,26 @@
 (ns degel.receipts.client
   (:require-macros [hiccups.core :refer [html]])
   (:require [domina :refer [append! attr by-class by-id destroy! set-value! value]]
-            [hiccups.runtime] ;; Needed by hiccups.core macros
             [domina.events :refer [listen! prevent-default target]]
-            [shoreleave.remotes.http-rpc :refer [remote-callback]]
-            [cljs.reader :refer [read-string]]))
+            [hiccups.runtime] ;; Needed by hiccups.core macros
+            ;[shoreleave.remotes.http-rpc :refer [remote-callback]]
 
 
-;; define the function to be attached to form submission event
-(defn submit-form [event]
-  (let [paid-by (value (by-id "PaidBy"))
-        date (value (by-id "Date"))
-        amount (value (by-id "Amount"))
-        category (value (by-id "Category"))
-        vendor (value (by-id "Vendor"))
-        comments (value (by-id "Comments"))
-        for-whom (value (by-id "ForWhom"))]
-    (if (or (empty? paid-by) (empty? date) (empty? category) (empty? vendor))
-      (do (prevent-default event)
-          (js/alert "Missing field"))
-      (remote-callback :save-receipt [paid-by date amount category vendor comments for-whom]
-                       #(append! (by-id "newReceipt")
-                                 (html [:div.result %]))))))
+;;; ;; define the function to be attached to form submission event
+;;; (defn submit-form [event]
+;;;   (let [paid-by (value (by-id "PaidBy"))
+;;;         date (value (by-id "Date"))
+;;;         amount (value (by-id "Amount"))
+;;;         category (value (by-id "Category"))
+;;;         vendor (value (by-id "Vendor"))
+;;;         comments (value (by-id "Comments"))
+;;;         for-whom (value (by-id "ForWhom"))]
+;;;     (if (or (empty? paid-by) (empty? date) (empty? category) (empty? vendor))
+;;;       (do (prevent-default event)
+;;;           (js/alert "Missing field"))
+;;;       (remote-callback :save-receipt [paid-by date amount category vendor comments for-whom]
+;;;                        #(append! (by-id "newReceipt")
+;;;                                  (html [:div.result %]))))))
 
 (defn verify-not-empty [e]
   (let [target (target e)
