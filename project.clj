@@ -19,7 +19,7 @@
       :dev {
             :source-paths ["client-src" "client-src-dev"]
             :compiler {:output-to "resources/public/js/receipts-dev.js"
-                       :optimizations :simple
+                       :optimizations :whitespace
                        :pretty-print true}
             :jar true}
       :prod {
