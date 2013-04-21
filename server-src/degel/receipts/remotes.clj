@@ -4,6 +4,9 @@
             [degel.receipts.server :refer [handler]]
             [degel.receipts.receipts :refer [format-receipt]]))
 
+(defremote fill-paid-by [country]
+  "v9949")
+
 (defremote save-receipt [paid-by date amount category vendor comments for-whom]
   (str "REMOTE: " (format-receipt paid-by date amount category vendor comments for-whom)))
 
