@@ -4,6 +4,7 @@
             [domina.events :refer [listen! prevent-default target]]
             [hiccups.runtime] ;; Needed by hiccups.core macros
             ;[shoreleave.remotes.http-rpc :refer [remote-callback]]
+            [degel.receipts.validators :refer [validate-receipt-fields]]))
 
 
 ;;; ;; define the function to be attached to form submission event
@@ -30,8 +31,16 @@
 
 
 (defn add-help []
-  (append! (by-id "newReceipt")
-           (html [:div.help "Click here to submit receipt"])))
+  (let [errors (validate-receipt-fields
+                (value (by-id "PaidBy"))
+                (value (by-id "Date"))
+                (value (by-id "Amount"))
+                (value (by-id "Category"))
+                (value (by-id "Vendor"))
+                (value (by-id "Comments"))
+                (value (by-id "ForWhom")))]
+    (append! (by-id "newReceipt")
+             (html [:div.help (str errors "Click here to submit receipt")]))))
 
 
 (defn remove-help []

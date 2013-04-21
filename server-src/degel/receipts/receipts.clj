@@ -1,6 +1,7 @@
 (ns degel.receipts.receipts
   (:require [clojure.string :refer [split]]
-            [clojure.pprint :refer [cl-format]]))
+            [clojure.pprint :refer [cl-format]]
+            [degel.receipts.validators :refer [validate-receipt-fields]]))
 
 (defn month-string [month]
   (let [month-val (Integer/parseInt month)]
@@ -16,6 +17,13 @@
                day (month-string month) year
                amount category vendor comments for-whom)))
 
+
+(defn validate-receipt [paid-by date amount category vendor comments for-whom]
+  (if (boolean (validate-receipt-fields paid-by date amount category vendor comments for-whom))
+    (str "Something didn't validate!")
+    (format-receipt paid-by date amount category vendor comments for-whom)))
+
+
 (defn enter-receipt [paid-by date amount category vendor comments for-whom]
-  (str "GOT: " (format-receipt paid-by date amount category vendor comments for-whom)))
+  (str "GOT: " (validate-receipt paid-by date amount category vendor comments for-whom)))
 

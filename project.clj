@@ -6,13 +6,15 @@
                  [domina "1.0.2-SNAPSHOT"]
                  [hiccups "0.2.0"]
                  [shoreleave/shoreleave-remote-ring "0.3.0"]
-                 [shoreleave/shoreleave-remote "0.3.0"]]
+                 [shoreleave/shoreleave-remote "0.3.0"]
+                 [com.cemerick/valip "0.3.2"]]
   :plugins [[lein-cljsbuild "0.3.0"]
             [lein-ring "0.8.3"]]
   :hooks [leiningen.cljsbuild]
   :source-paths ["server-src"]
   :ring {:handler degel.receipts.remotes/app}
-  :cljsbuild { 
+  :cljsbuild {
+    :crossovers [valip.core valip.predicates degel.receipts.validators]
     :builds {
       :dev {
             :source-paths ["client-src" "client-src-dev"]
