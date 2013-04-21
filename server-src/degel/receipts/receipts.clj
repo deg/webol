@@ -1,7 +1,7 @@
 (ns degel.receipts.receipts
   (:require [clojure.string :refer [split]]
             [clojure.pprint :refer [cl-format]]
-            [degel.receipts.validators :refer [validate-receipt-fields]]))
+            [degel.receipts.static-validators :refer [validate-receipt-fields]]))
 
 (defn month-string [month]
   (let [month-val (Integer/parseInt month)]

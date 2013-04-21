@@ -1,4 +1,4 @@
-(ns degel.receipts.validators
+(ns degel.receipts.static-validators
   (:require [valip.core :refer [validate]]
             [valip.predicates :refer [present? matches email-address?]]))
 

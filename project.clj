@@ -14,7 +14,7 @@
   :source-paths ["server-src"]
   :ring {:handler degel.receipts.remotes/app}
   :cljsbuild {
-    :crossovers [valip.core valip.predicates degel.receipts.validators]
+    :crossovers [valip.core valip.predicates degel.receipts.static-validators]
     :builds {
       :dev {
             :source-paths ["client-src" "client-src-dev"]

@@ -4,7 +4,7 @@
             [domina.events :refer [listen! prevent-default target]]
             [hiccups.runtime] ;; Needed by hiccups.core macros
             ;[shoreleave.remotes.http-rpc :refer [remote-callback]]
-            [degel.receipts.validators :refer [validate-receipt-fields]]))
+            [degel.receipts.static-validators :refer [validate-receipt-fields]]))
 
 
 ;;; ;; define the function to be attached to form submission event
