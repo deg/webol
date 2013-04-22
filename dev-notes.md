@@ -19,6 +19,12 @@ Launch
 - (doesn't work for me -- need to compare to tutorial project) lein trampoline cljsbuild repl-listen
 
 
+Tools
+-----
+SdbNavigator in the Chrome web store. Simple, but effective and
+working, interface to AWS SimpleDB.
+https://chrome.google.com/webstore/detail/sdbnavigator/ddhigekdfabonefhiildaiccafacphgg?hl=en 
+
 To-do (dev)
 -----------
 - Learn and use firebug, or find chrome equivalent
