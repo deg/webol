@@ -6,8 +6,18 @@
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]))
 
-(defn fill-paid-by []
-  (remote-callback :fill-paid-by [:israel] #(set-value! (by-id "PaidBy") %)))
+(defn fill-defaults []
+  (remote-callback :fill-paid-by [:israel]
+                   #(set-value! (by-id "PaidBy") %))
+  (let [date (js/Date.)
+        day (.getDate date)
+        month (inc (.getMonth date))]
+    (set-value! (by-id "Date")
+                (str (.getFullYear date)
+                     "-"
+                     (if (< month 10) "0" "") month
+                     "-"
+                     (if (< day 10) "0" "") day))))
 
 
 (defn verify-not-empty [e]
@@ -41,7 +51,7 @@
           paid-by (by-id "PaidBy")
           amount (by-id "Amount")
           date (by-id "Date")]
-      (fill-paid-by)
+      (fill-defaults)
       ;(listen! paid-by :focus fill-paid-by)
       (listen! form :mouseover add-help)
       (listen! form :mouseout remove-help)
