@@ -7,9 +7,6 @@
 (defremote fill-paid-by [country]
   "v9949")
 
-(defremote save-receipt [paid-by date amount category vendor comments for-whom]
-  (str "REMOTE: " (format-receipt paid-by date amount category vendor comments for-whom)))
-
 (def app (-> (var handler)
              (wrap-rpc)
              (site)))

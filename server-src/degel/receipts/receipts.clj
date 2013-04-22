@@ -9,7 +9,7 @@
       (["Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"] (dec month-val))
       "???")))
 
-(defn format-receipt [paid-by date amount category vendor comments for-whom]
+(defn format-receipt [{:keys [paid-by date amount category vendor comments for-whom]}]
   (println paid-by date amount vendor comments for-whom)
   (let [[year month day] (split date #"-")]
     (cl-format false "~A;~D~A~D;~A;~A;~A;~A;~A"
@@ -18,12 +18,12 @@
                amount category vendor comments for-whom)))
 
 
-(defn validate-receipt [paid-by date amount category vendor comments for-whom]
+(defn validate-receipt [{:keys [paid-by date amount category vendor comments for-whom] :as fields}]
   (if (boolean (validate-receipt-fields paid-by date amount category vendor comments for-whom))
     (str "Something didn't validate!")
-    (format-receipt paid-by date amount category vendor comments for-whom)))
+    (format-receipt fields)))
 
 
-(defn enter-receipt [paid-by date amount category vendor comments for-whom]
-  (str "GOT: " (validate-receipt paid-by date amount category vendor comments for-whom)))
+(defn enter-receipt [{:keys [paid-by date amount category vendor comments for-whom] :as fields}]
+  (str "GOT: " (validate-receipt fields)))
 

@@ -8,7 +8,13 @@
 (defroutes app-routes
   (GET "/" [] (redirect "/new-receipt.html"))
   (POST "/enterReceipt" [PaidBy Date Amount Category Vendor Comments ForWhom]
-        (enter-receipt PaidBy Date Amount Category Vendor Comments ForWhom))
+        (enter-receipt {:paid-by PaidBy
+                        :date Date
+                        :amount Amount
+                        :category Category
+                        :vendor Vendor
+                        :comments Comments
+                        :for-whom ForWhom}))
   ; to serve static pages saved in resources/public directory
   (resources "/")
   ; if page is not found
