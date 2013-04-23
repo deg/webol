@@ -18,9 +18,12 @@
   (reset! the-config (assoc enc/all-strings :client @the-client)))
 
 
-(defn put-record [& {:keys [paid-by date currency amount category vendor comments for-whom] :as columns}]
+(defn put-record [columns]
+  (when (nil? @the-config)
+    (create-client (:password columns)))
   (let [guid (str (java.util.UUID/randomUUID))]
-    (sdb/put-attrs @the-config "Receipts" (assoc columns ::sdb/id guid))
+    (sdb/put-attrs @the-config "Receipts"
+                   (assoc (dissoc columns :password) ::sdb/id guid))
     guid))
 
 

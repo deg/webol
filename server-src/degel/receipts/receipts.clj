@@ -1,6 +1,7 @@
 (ns degel.receipts.receipts
   (:require [clojure.string :refer [split]]
             [clojure.pprint :refer [cl-format]]
+            [degel.receipts.db :refer [put-record]]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]))
 
 (defn month-string [month]
@@ -18,12 +19,13 @@
                amount category vendor comments for-whom)))
 
 
-(defn validate-receipt [{:keys [paid-by date amount category vendor comments for-whom] :as fields}]
-  (if (boolean (validate-receipt-fields paid-by date amount category vendor comments for-whom))
-    (str "Something didn't validate!")
-    (format-receipt fields)))
-
-
-(defn enter-receipt [{:keys [paid-by date amount category vendor comments for-whom] :as fields}]
-  (str "GOT: " (validate-receipt fields)))
+(defn enter-receipt [{:keys [paid-by date amount category vendor comments for-whom password]
+                      :as columns}]
+  (let [errors (validate-receipt-fields paid-by date amount category vendor comments for-whom)]
+    (if (empty? errors)
+      (let [formatted (format-receipt columns)]
+        (println "COLUMNS 2: " columns)
+        (put-record (assoc columns :formatted formatted))
+        formatted)
+      (cl-format false "Something didn't validate: ~{~A ~}" (mapcat second errors)))))
 
