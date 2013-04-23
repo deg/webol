@@ -2,19 +2,19 @@
   (:require [cemerick.rummage :as sdb]
             [cemerick.rummage.encoding :as enc]))
 (def aws-key "AKIAI2SJMRRD53FHKY3Q")
-(defn assemble-aws-secret [secret]
+(defn assemble-aws-secret [pwd]
   ;; Reminder: (MAYNARD (ROOT 1654)) or https://portal.aws.amazon.com/gp/aws/securityCredentials
-  (str "PqoUYiVHA" (get secret 0)
-       "pRhV00HZ7YZ" (get secret 1)
-       "Zc7ZF" (get secret 2)
-       "3JCt" (get secret 3)
+  (str "PqoUYiVHA" (get pwd 0)
+       "pRhV00HZ7YZ" (get pwd 1)
+       "Zc7ZF" (get pwd 2)
+       "3JCt" (get pwd 3)
        "ECEnPdc"))
 
 
 (def the-client (atom nil))
 (def the-config (atom nil))
-(defn create-client [secret]
-  (reset! the-client (sdb/create-client aws-key (assemble-aws-secret secret)))
+(defn create-client [pwd]
+  (reset! the-client (sdb/create-client aws-key (assemble-aws-secret pwd)))
   (reset! the-config (assoc enc/all-strings :client @the-client)))
 
 
@@ -24,13 +24,13 @@
     guid))
 
 
-(defn nuke-db [secret]
-  (create-client secret)
+(defn nuke-db [pwd]
+  (create-client pwd)
   (sdb/delete-domain @the-client "Receipts")
   (sdb/create-domain @the-client "Receipts"))
 
-(defn test-db [secret]
-  (nuke-db secret)
+(defn test-db [pwd]
+  (nuke-db pwd)
   (put-record :paid-by "Visa" :date "2013-04-13"
               :currency "NIS" :amount "5.46"
               :category "Food" :Vendor "Shufersal" :comments "Shufersal online"
