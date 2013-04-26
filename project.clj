@@ -16,6 +16,7 @@
   :plugins [[lein-cljsbuild "0.3.0" :exclusions [org.clojure/clojure]]
             [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
             [lein-pedantic "0.0.5"]]
+  :min-lein-version "2.0.0"
   :hooks [leiningen.cljsbuild]
   :source-paths ["server-src"]
   :ring {:handler degel.receipts.remotes/app}
