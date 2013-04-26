@@ -15,7 +15,7 @@
                         :vendor Vendor
                         :comments Comments
                         :for-whom ForWhom
-                        :password Password})))
+                        :password Password}))
   ; to serve static pages saved in resources/public directory
   (resources "/")
   ; if page is not found
