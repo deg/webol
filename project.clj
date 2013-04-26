@@ -15,6 +15,8 @@
                  [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]]
   :plugins [[lein-cljsbuild "0.3.0" :exclusions [org.clojure/clojure]]
             [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
+            ;; [TODO] Fix. For now, no pedantic, because of conflicts in compojure dependency
+            ;; on ring/ring.core in local vs. Heroku deployment.
             #_[lein-pedantic "0.0.5"]]
   :min-lein-version "2.0.0"
   :hooks [leiningen.cljsbuild]
