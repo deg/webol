@@ -6,7 +6,7 @@
                  ;; Degel's Clojure utility library
                  [degel-clojure-utils "0.1.2"  :exclusions [org.clojure/tools.macro]]
 
-                 [compojure "1.1.5" :exclusions [ring/ring-core]]
+                 [compojure "1.1.5" #_:exclusions #_[ring/ring-core]]
                  [domina "1.0.2-SNAPSHOT"]
                  [hiccups "0.2.0"]
                  [shoreleave/shoreleave-remote-ring "0.3.0"]
@@ -15,7 +15,7 @@
                  [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]]
   :plugins [[lein-cljsbuild "0.3.0" :exclusions [org.clojure/clojure]]
             [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
-            [lein-pedantic "0.0.5"]]
+            #_[lein-pedantic "0.0.5"]]
   :min-lein-version "2.0.0"
   :hooks [leiningen.cljsbuild]
   :source-paths ["server-src"]
