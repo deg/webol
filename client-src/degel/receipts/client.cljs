@@ -57,6 +57,4 @@
       (listen! form :mouseout remove-help)
       (listen! paid-by :blur verify-not-empty)
       (listen! date :blur verify-not-empty)
-      (listen! amount :blur verify-not-empty)
-      (listen! date :mouseover add-help)
-      (listen! date :mouseout remove-help))))
+      (listen! amount :blur verify-not-empty))))
