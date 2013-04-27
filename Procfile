@@ -1,1 +1,2 @@
-web: lein trampoline ring server-headless
+web: lein ring server-ringless
+
