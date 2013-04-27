@@ -23,7 +23,7 @@
 (defn verify-not-empty [e]
   (let [target (target e)
         message (attr target :title)]
-    (when (empty? (value e))
+    (when (empty? (value target))
       (append! (by-id "newReceipt") (html [:div.help message])))))
 
 
