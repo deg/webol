@@ -28,6 +28,7 @@
 
 
 (defn add-help []
+  #_
   (let [errors (validate-receipt-fields
                 (value (by-id "PaidBy"))
                 (value (by-id "Date"))
@@ -53,8 +54,6 @@
           date (by-id "Date")]
       (fill-defaults)
       ;(listen! paid-by :focus fill-paid-by)
+      ;(listen! amount :blur verify-not-empty)
       (listen! form :mouseover add-help)
-      (listen! form :mouseout remove-help)
-      (listen! paid-by :blur verify-not-empty)
-      (listen! date :blur verify-not-empty)
-      (listen! amount :blur verify-not-empty))))
+      (listen! form :mouseout remove-help))))
