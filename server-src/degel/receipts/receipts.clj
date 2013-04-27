@@ -24,7 +24,6 @@
   (let [errors (validate-receipt-fields paid-by date amount category vendor comments for-whom)]
     (if (empty? errors)
       (let [formatted (format-receipt columns)]
-        (println "COLUMNS 2: " columns)
         (put-record (assoc columns :formatted formatted))
         formatted)
       (cl-format false "Something didn't validate: ~{~A ~}" (mapcat second errors)))))
