@@ -18,10 +18,8 @@
                         :password Password}))
   ; to serve static pages saved in resources/public directory
   (resources "/")
-  ; if page is not found
-  #_(not-found "<h1>Page not found.</h1>"))
+  (not-found "<h1>David moans: 'page not found'.</h1>"))
 
 (def handler
-  (site app-routes))
-
+  (-> app-routes site))
 
