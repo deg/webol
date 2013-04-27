@@ -1,2 +1,1 @@
-web: lein ring server-ringless
-
+web: lein ring server-headless
