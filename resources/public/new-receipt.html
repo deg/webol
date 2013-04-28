@@ -12,13 +12,21 @@
       <fieldset>
         <legend>Enter Receipt</legend>
         <div>
+	  <datalist id="PaymentDevices">
+	    <option value="Cash">
+	    <option value="Ck #">
+	    <option value="other">
+	    <option value="v0223">
+	    <option value="v5760">
+	    <option value="v9949">
+	  </datalist>
           <label for="PaidBy">Paid by:</label>
           <input name="PaidBy"
                  id="PaidBy"
+		 list="PaymentDevices"
                  title="Enter 'cash', 'ck N' or 'vDDDD'"
                  placeholder="cc #, ck #, or cash"
                  required
-                 autocomplete="on"
                  MaxLength="8"/>
         </div>
         <div>
