@@ -36,6 +36,5 @@
             :compiler {:output-to "resources/public/js/receipts.js"
                        :optimizations :advanced
                        :pretty-print true}
-            :jar true}}}
-  :main receipts.server)
+            :jar true}}})
 
