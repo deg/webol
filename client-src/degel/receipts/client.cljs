@@ -12,6 +12,7 @@
   (let [date (js/Date.)
         day (.getDate date)
         month (inc (.getMonth date))]
+    (set-value! (by-id "Comments") (str "Kilroy: " date))
     (set-value! (by-id "Date")
                 (str (.getFullYear date)
                      "-"
