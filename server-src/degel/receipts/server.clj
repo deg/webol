@@ -20,6 +20,4 @@
   (resources "/")
   (not-found "<h1>David moans: 'page not found'.</h1>"))
 
-(def handler
-  (-> app-routes site))
 
