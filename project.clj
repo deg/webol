@@ -19,7 +19,8 @@
             ;; on ring/ring.core in local vs. Heroku deployment.
             #_[lein-pedantic "0.0.5"]]
   :min-lein-version "2.0.0"
-  :hooks [leiningen.cljsbuild]
+  ;; [TODO] Figure out what this line did, and why it breaks 'lein trampoline ring server'
+  ;;:hooks [leiningen.cljsbuild]
   :source-paths ["server-src"]
   :ring {:handler degel.receipts.remotes/app}
   :cljsbuild {
