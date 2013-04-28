@@ -1,6 +1,8 @@
 (defproject receipts "0.1.0-SNAPSHOT"
   :description "HTML5 web-app to manage our receipts."
   :url "http://example.com/FIXME"
+  :license {:name "Proprietary software - this is not open-source"
+            :url "http://nonesuch/com/no-license.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
 
                  ;; Degel's Clojure utility library
@@ -19,7 +21,7 @@
             ;; on ring/ring.core in local vs. Heroku deployment.
             #_[lein-pedantic "0.0.5"]]
   :min-lein-version "2.0.0"
-  ;; [TODO] Figure out what this line did, and why it breaks 'lein trampoline ring server'
+  ;; [TODO] Figure out what this breaks 'lein trampoline ring server'
   ;;:hooks [leiningen.cljsbuild]
   :source-paths ["server-src"]
   :ring {:handler degel.receipts.remotes/app}
