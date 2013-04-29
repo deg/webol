@@ -8,7 +8,9 @@
 
 (defn fill-defaults []
   (remote-callback :fill-paid-by [:israel]
-                   #(set-value! (by-id "PaidBy") %))
+                   #(append! (by-id "PaidBy")
+                             (html [:datalist {:id "PaymentDevices"}
+                                    (for [x %] [:option {:value x}])])))
   (let [date (js/Date.)
         day (.getDate date)
         month (inc (.getMonth date))]
