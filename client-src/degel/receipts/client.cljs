@@ -9,6 +9,8 @@
 (defn log [s]
   (.log js/console s))
 
+(def storage (.-localStorage js/window))
+
 (defn fill-defaults []
   (remote-callback :fill-paid-by [:israel]
                    #(append! (by-id "PaidBy")
@@ -22,7 +24,9 @@
                      "-"
                      (if (< month 10) "0" "") month
                      "-"
-                     (if (< day 10) "0" "") day))))
+                     (if (< day 10) "0" "") day)))
+
+  (set-value! (by-id "Password") (.getItem storage :password)))
 
 
 (defn verify-not-empty [e]
@@ -49,16 +53,22 @@
 (defn remove-help []
   (destroy! (by-class "help")))
 
+(defn cache-password []
+  (let [password (-> "Password" by-id value)]
+    (.setItem storage :password password)))
+
 
 (defn ^:export init []
   (when (and js/document
              (aget js/document "getElementById"))
     (let [form (by-id "submit")
+          password (by-id "submit-pwd")
           paid-by (by-id "PaidBy")
           amount (by-id "Amount")
           date (by-id "Date")]
       (fill-defaults)
       ;(listen! paid-by :focus fill-paid-by)
       ;(listen! amount :blur verify-not-empty)
+      (listen! password :click cache-password)
       (listen! form :mouseover add-help)
       (listen! form :mouseout remove-help))))
