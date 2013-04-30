@@ -6,6 +6,9 @@
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]))
 
+(defn log [s]
+  (.log js/console s))
+
 (defn fill-defaults []
   (remote-callback :fill-paid-by [:israel]
                    #(append! (by-id "PaidBy")
