@@ -18,6 +18,16 @@ Launch
 - lein cljsbuild auto
 - (doesn't work for me -- need to compare to tutorial project) lein trampoline cljsbuild repl-listen
 
+Heroku notes
+------------
+- First server is free. Limited to 500MB. Suspended when idle for 60 minutes
+- Keeping alive via cron job (crontab -e):
+    15 * * * * curl http://receipts.goldfarb-family.com
+    37 * * * * curl http://receipts.goldfarb-family.com
+- Memory monitoring currently off, because too verbose in the logs. Enable with
+  heroku labs:enable log-runtime-metrics
+  See https://devcenter.heroku.com/articles/log-runtime-metrics
+
 
 Tools
 -----
