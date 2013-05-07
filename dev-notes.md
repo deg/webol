@@ -48,14 +48,10 @@ To-do (dev)
 
 To-do (features)
 ----------------
-- Current date in date field
-- Store receipts in a file
 - Email receipts
 - Record currency; default to NIS; also USD, Euro, etc.
 - Have list of valid credit cards, etc.
 - Mode switch, based on country (use location data to set default?)
   - Change credit cards
   - Change currency
-- Deploy to AWS
-- Basic security: Client must have a token in order to enter (or view) data
 
