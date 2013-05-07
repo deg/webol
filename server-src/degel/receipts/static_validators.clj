@@ -16,5 +16,6 @@
    [:amount present? "amount can't be empty."]
    [:category present? "category can't be empty."]
    [:vendor present? "vendor can't be empty."]
-   [:comments present? "comments can't be empty."]
-   [:for-whom present? "for-whom can't be empty."]))
+   #_[:comments present? "comments can't be empty."]
+   #_[:for-whom present? "for-whom can't be empty."]
+   ))
