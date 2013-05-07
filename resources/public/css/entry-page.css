@@ -108,6 +108,10 @@ fieldset {
 	width:14em;
 }
 
+.history {
+    font-size:0.7em;
+    }
+
 .help {
        color: red;
 }
