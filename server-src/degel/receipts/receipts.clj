@@ -1,7 +1,7 @@
 (ns degel.receipts.receipts
   (:require [clojure.string :refer [split]]
             [clojure.pprint :refer [cl-format]]
-            [degel.receipts.db :refer [put-record]]
+            [degel.receipts.db :refer [put-record get-all-records]]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]))
 
 (defn month-string [month]
@@ -28,3 +28,6 @@
         formatted)
       (cl-format false "Something didn't validate: ~{~A ~}" (mapcat second errors)))))
 
+(defn collect-receipt-history [password]
+  (let [records (get-all-records password [:formatted])]
+    (remove nil? (map :formatted records))))

@@ -29,6 +29,16 @@
   (set-value! (by-id "Password") (.getItem storage :password)))
 
 
+(defn refresh-history []
+  (let [password (value (by-id "Password"))]
+    (remote-callback :fill-receipt-history [password]
+                     (fn [records]
+                       (destroy! (by-class "history"))
+                       (let [h (html [:div.history
+                                      (map (fn [r] [:p r]) records)])]
+                         (append! (by-id "ForHistory") h))))))
+
+
 (defn verify-not-empty [e]
   (let [target (target e)
         message (attr target :title)]
@@ -62,13 +72,15 @@
   (when (and js/document
              (aget js/document "getElementById"))
     (let [form (by-id "submit")
-          password (by-id "submit-pwd")
+          password-btn (by-id "submit-pwd")
+          history-btn (by-id "refresh-history")
           paid-by (by-id "PaidBy")
           amount (by-id "Amount")
           date (by-id "Date")]
       (fill-defaults)
       ;(listen! paid-by :focus fill-paid-by)
       ;(listen! amount :blur verify-not-empty)
-      (listen! password :click cache-password)
+      (listen! password-btn :click cache-password)
+      (listen! history-btn :click refresh-history)
       (listen! form :mouseover add-help)
       (listen! form :mouseout remove-help))))
