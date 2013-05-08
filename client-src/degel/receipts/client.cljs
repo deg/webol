@@ -20,10 +20,8 @@
         day (.getDate date)
         month (inc (.getMonth date))]
     (set-value! (by-id "Date")
-                (str (.getFullYear date)
-                     "-"
-                     (if (< month 10) "0" "") month
-                     "-"
+                (str (.getFullYear date) "-"
+                     (if (< month 10) "0" "") month "-"
                      (if (< day 10) "0" "") day)))
 
   (set-value! (by-id "Password") (.getItem storage :password)))
