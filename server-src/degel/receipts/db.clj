@@ -33,12 +33,12 @@
 
 (defn put-record [columns]
   (let [[success errmsg] (create-client (:password columns))]
-    (if (false? success)
-      errmsg
-      (let [guid (str (java.util.UUID/randomUUID))]
-        (sdb/put-attrs @the-config "Receipts"
-                       (assoc (dissoc columns :password) ::sdb/id guid))
-        guid))))
+    [success (if (false? success)
+               errmsg
+               (let [guid (str (java.util.UUID/randomUUID))]
+                 (sdb/put-attrs @the-config "Receipts"
+                                (assoc (dissoc columns :password) ::sdb/id guid))
+                 guid))]))
 
 (defn get-all-records [password columns]
   (let [[success errmsg] (create-client password)]

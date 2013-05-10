@@ -32,12 +32,12 @@
   (set-value! (by-id "Password") (.getItem storage :password)))
 
 
-(defn confirmation-html [confirmation]
+(defn confirmation-html [success confirmation]
   (html
    [:div {:id "receipt-body"}
-    [:p.confirmation [:div:label "Ok: "] confirmation]
+    [:p.confirmation [:div:label (if success "Ok: " "Error: ")] confirmation]
     [:input {:type "button"
-             :value "Next receipt &rarr;"
+             :value (if success "Next receipt" "Try again")
              :id "next-receipt"}]]))
 
 
@@ -102,9 +102,23 @@
               :id "submit-receipt"}]]]))
 
 
-(defn show-new-receipt []
+(defn show-new-receipt [prefill-with]
   (set-html! (by-id "receipt-body") (entry-html))
   (fill-defaults)
+  (when-let [paid-by (:paid-by prefill-with)]
+    (set-value! (by-id "PaidBy") paid-by))
+  (when-let [date (:date prefill-with)]
+    (set-value! (by-id "Date") date))
+  (when-let [amount (:amount prefill-with)]
+    (set-value! (by-id "Amount") amount))
+  (when-let [category (:category prefill-with)]
+    (set-value! (by-id "Category") category))
+  (when-let [vendor (:vendor prefill-with)]
+    (set-value! (by-id "Vendor") vendor))
+  (when-let [comments (:comments prefill-with)]
+    (set-value! (by-id "Comments") comments))
+  (when-let [for-whom (:for-whom prefill-with)]
+    (set-value! (by-id "ForWhom") for-whom))
   (let [submit-btn (by-id "submit-receipt")]
     (listen! submit-btn :click submit-receipt)
     (listen! submit-btn :mouseover add-help)
@@ -121,9 +135,11 @@
                     :for-whom (-> "ForWhom" by-id value)
                     :password (-> "Password" by-id value)}]
     (remote-callback :enter-receipt [params-map]
-                     (fn [confirmation]
-                       (set-html! (by-id "receipt-body") (confirmation-html confirmation))
-                       (listen! (by-id "next-receipt") :click show-new-receipt)))))
+                     (fn [[success confirmation]]
+                       (set-html! (by-id "receipt-body")
+                                  (confirmation-html success confirmation))
+                       (listen! (by-id "next-receipt") :click
+                                #(show-new-receipt (if success {} params-map)))))))
 
 
 (defn refresh-history []
@@ -170,7 +186,7 @@
              (aget js/document "getElementById"))
     (let [password-btn (by-id "submit-pwd")
           history-btn (by-id "refresh-history")]
-      (show-new-receipt)
+      (show-new-receipt {})
       (fill-defaults)
       (listen! password-btn :click cache-password)
       (listen! history-btn :click refresh-history))))

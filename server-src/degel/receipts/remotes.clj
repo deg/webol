@@ -14,5 +14,3 @@
   (enter-receipt-internal columns))
 
 (def app (-> app-routes wrap-rpc site))
-
-

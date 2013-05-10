@@ -11,7 +11,6 @@
       "???")))
 
 (defn format-receipt [{:keys [paid-by date amount category vendor comments for-whom]}]
-  (println paid-by date amount vendor comments for-whom)
   (let [[year month day] (split date #"-")]
     (cl-format false "~A;~D~A~D;~A;~A;~A;~A;~A"
                paid-by
@@ -23,10 +22,12 @@
                       :as columns}]
   (let [errors (validate-receipt-fields paid-by date amount category vendor comments for-whom)]
     (if (empty? errors)
-      (let [formatted (format-receipt columns)]
-        (put-record (assoc columns :formatted formatted))
-        formatted)
-      (cl-format false "Something didn't validate: ~{~A ~}" (mapcat second errors)))))
+      (let [formatted (format-receipt columns)
+            [success guid-or-errmsg] (put-record (assoc columns :formatted formatted))]
+        [success (if (true? success)
+                   formatted
+                   guid-or-errmsg)])
+      [false (cl-format false "Something didn't validate: ~{~A ~}" (mapcat second errors))])))
 
 (defn collect-receipt-history [password]
   (let [records (get-all-records password [:formatted])]
