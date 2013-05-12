@@ -9,7 +9,7 @@
             [degel.receipts.html :refer [entry-html confirmation-html setup-html history-html]]))
 
 
-(declare submit-receipt add-help remove-help)
+(declare submit-receipt add-help remove-help cache-password refresh-history)
 
 
 (defn log [s]
@@ -30,7 +30,9 @@
                 (str (.getFullYear date) "-"
                      (if (< month 10) "0" "") month "-"
                      (if (< day 10) "0" "") day)))
-  (set-value! (by-id "Password") (.getItem storage :password)))
+  (set-value! (by-id "Password") (.getItem storage :password))
+  (listen! (by-id "submit-pwd") :click cache-password)
+  (listen! (by-id "refresh-history") :click refresh-history))
 
 
 (defn show-new-receipt [prefill-with]
@@ -110,17 +112,8 @@
 
 
 (defn add-help []
-  #_
-  (let [errors (validate-receipt-fields
-                (value (by-id "PaidBy"))
-                (value (by-id "Date"))
-                (value (by-id "Amount"))
-                (value (by-id "Category"))
-                (value (by-id "Vendor"))
-                (value (by-id "Comments"))
-                (value (by-id "ForWhom")))]
-    (append! (by-id "newReceipt")
-             (html [:div.help (str errors "Click here to submit receipt")]))))
+  (append! (by-id "receipt-body")
+             (html [:div.help "Click here to submit receipt"])))
 
 
 (defn remove-help []
@@ -134,11 +127,7 @@
 (defn ^:export init []
   (when (and js/document
              (aget js/document "getElementById"))
-    (let [navbar (by-class "navbar")
-          password-btn (by-id "submit-pwd")
-          history-btn (by-id "refresh-history")]
+    (let [navbar (by-class "navbar") ]
       (show-new-receipt {})
       (fill-defaults)
-      (listen! navbar :click set-tab)
-      (listen! password-btn :click cache-password)
-      (listen! history-btn :click refresh-history))))
+      (listen! navbar :click set-tab))))
