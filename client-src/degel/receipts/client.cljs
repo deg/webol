@@ -95,7 +95,7 @@
 
 
 (defn refresh-history []
-  (let [password (value (by-id "Password"))]
+  (let [password (.getItem storage :password)]
     (remote-callback :fill-receipt-history [password]
                      (fn [records]
                        (destroy! (by-class "history"))
