@@ -43,7 +43,7 @@
 
 (defn entry-html []
   (html
-   [:div {:id "receipt-body"}
+   [:form {:id "receipt-body"}
     [:div
      [:label {:for "PaidBy"} "Paid By:"]
      [:input {:name "PaidBy"
@@ -95,11 +95,36 @@
      [:input {:name "ForWhom"
               :id "ForWhom"
               :autocomplete "on"
-              :MaxLength "15"}]]
+              :MaxLength "15"}]]]
+   [:div
+    [:input {:type "button"
+             :value "Submit Receipt"
+             :id "submit-receipt"}]]))
+
+
+(defn setup-html []
+  (html
+   [:form {:id "setup-account"}
+    [:div [:label {:for "Password"} "Password"]
+     [:input {:name "Password"
+              :id "Password"
+              :type "password"
+              :required true
+              :MaxLength "10"}]]
     [:div
      [:input {:type "button"
-              :value "Submit Receipt"
-              :id "submit-receipt"}]]]))
+              :value "Setup Account"
+              :id "submit-pwd"}]]]
+   [:p [:a {:href "help.html"} "Help"] "about this application."]))
+
+
+(defn history-html []
+  (html
+   [:div {:id "ForHistory"}]
+   [:div
+    [:input {:type "button"
+             :value "Refresh"
+             :id "refresh-history"}]]))
 
 
 (defn show-new-receipt [prefill-with]
@@ -124,6 +149,14 @@
     (listen! submit-btn :mouseover add-help)
     (listen! submit-btn :mouseout remove-help)))
 
+(defn show-setup-tab []
+  (set-html! (by-id "receipt-body") (setup-html))
+  (fill-defaults))
+
+(defn show-history-tab []
+  (set-html! (by-id "receipt-body") (history-html))
+  (fill-defaults))
+
 
 (defn submit-receipt []
   (let [params-map {:paid-by  (-> "PaidBy" by-id value)
@@ -133,7 +166,7 @@
                     :vendor   (-> "Vendor" by-id value)
                     :comments (-> "Comments" by-id value)
                     :for-whom (-> "ForWhom" by-id value)
-                    :password (-> "Password" by-id value)}]
+                    :password (.getItem storage :password)}]
     (remote-callback :enter-receipt [params-map]
                      (fn [[success confirmation]]
                        (set-html! (by-id "receipt-body")
@@ -184,9 +217,15 @@
 (defn ^:export init []
   (when (and js/document
              (aget js/document "getElementById"))
-    (let [password-btn (by-id "submit-pwd")
+    (let [receipt-tab (by-id "receipt-tab")
+          submit-tab (by-id "setup-tab")
+          history-tab (by-id "history-tab")
+          password-btn (by-id "submit-pwd")
           history-btn (by-id "refresh-history")]
       (show-new-receipt {})
       (fill-defaults)
+      (listen! receipt-tab :click show-new-receipt)
+      (listen! submit-tab :click show-setup-tab)
+      (listen! history-tab :click show-history-tab)
       (listen! password-btn :click cache-password)
       (listen! history-btn :click refresh-history))))

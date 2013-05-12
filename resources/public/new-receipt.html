@@ -10,31 +10,15 @@
   </head>
   <body>
     <article class="tabs">
-      <section id="receipt-tab">
-	<h2><a href="#receipt-tab">Receipt</a></h2>
-	<div id="receipt-body">
-	</div>
+      <section>
+	<h2><input type="button" value="Receipt" id="receipt-tab"/></h2>
+	<div id="receipt-body"/>
       </section>
-      <section id="setup-tab">
-	<h2><a href="#setup-tab">Setup</a></h2>
-	<form action="setup-account" method="post" id="setup-account">
-          <div>
-            <label for="Password">Password:</label>
-            <input name="Password" id="Password" type="password" required MaxLength="10"/>
-          </div>
-	  <div>
-            <input type="button" value="Setup Account &rarr;" id="submit-pwd">
-	  </div>
-	</form>
-	<p><a href="help.html">Help</a> about this application.</p>
+      <section>
+	<h2><input type="button" value="Setup" id="setup-tab"/></h2>
       </section>
       <section id="history-tab">
-	<h2><a href="#history-tab">Old</a></h2>
-	<div id="ForHistory">
-	</div>
-	<div>
-          <input type="button" value="Refresh &rarr;" id="refresh-history">
-	</div>
+	<h2><input type="button" value="History" id="history-tab"/></h2>
       </section>
     </article>
     <script src="js/receipts-dev.js"></script>
