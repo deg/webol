@@ -2,25 +2,16 @@
 <html>
   <head>
     <link rel="stylesheet" href="css/entry-page.css" />
-    <link rel="stylesheet" href="css/tabs.css" />
     <!--[if lt IE 9]>
         <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.0" />
   </head>
   <body>
-    <article class="tabs">
-      <section>
-	<h2><input type="button" value="Receipt" id="receipt-tab"/></h2>
-	<div id="receipt-body"/>
-      </section>
-      <section>
-	<h2><input type="button" value="Setup" id="setup-tab"/></h2>
-      </section>
-      <section id="history-tab">
-	<h2><input type="button" value="History" id="history-tab"/></h2>
-      </section>
-    </article>
+    <input type="button" value="Receipt" id="receipt-tab"/>
+    <input type="button" value="Setup" id="setup-tab"/>
+    <input type="button" value="History" id="history-tab"/>
+    <div id="receipt-body"/>
     <script src="js/receipts-dev.js"></script>
     <script>degel.receipts.client.init()</script>
   </body>
