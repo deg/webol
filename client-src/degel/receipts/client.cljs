@@ -1,7 +1,7 @@
 (ns degel.receipts.client
   (:require-macros [hiccups.core :refer [html]])
-  (:require [domina :refer [append! attr by-class by-id destroy!
-                            set-html! set-inner-html! set-value! value]]
+  (:require [domina :refer [add-class! append! attr by-class by-id destroy!
+                            remove-class! set-html! set-inner-html! set-value! value]]
             [domina.events :refer [listen! prevent-default target]]
             [hiccups.runtime] ;; Needed by hiccups.core macros
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
@@ -149,13 +149,24 @@
     (listen! submit-btn :mouseover add-help)
     (listen! submit-btn :mouseout remove-help)))
 
-(defn show-setup-tab []
-  (set-html! (by-id "receipt-body") (setup-html))
-  (fill-defaults))
 
-(defn show-history-tab []
-  (set-html! (by-id "receipt-body") (history-html))
-  (fill-defaults))
+(defn set-tab [e]
+  ;; [TODO] This would be a lot cleaner if (1) I knew how to extract the id of a node and
+  ;; (2) how to iterate over the children of a node.
+  (let [tab (.-parentNode (target e))
+        navbar (by-class "navbar")
+        receipt-tab (by-id "receipt-tab")
+        setup-tab (by-id "setup-tab")
+        history-tab (by-id "history-tab")]
+    (remove-class! receipt-tab "active")
+    (remove-class! setup-tab "active")
+    (remove-class! history-tab "active")
+    (add-class! tab "active")
+    (condp = tab
+      receipt-tab (show-new-receipt {})
+      setup-tab (set-html! (by-id "receipt-body") (setup-html))
+      history-tab (set-html! (by-id "receipt-body") (history-html)))
+    (fill-defaults)))
 
 
 (defn submit-receipt []
@@ -217,15 +228,11 @@
 (defn ^:export init []
   (when (and js/document
              (aget js/document "getElementById"))
-    (let [receipt-tab (by-id "receipt-tab")
-          submit-tab (by-id "setup-tab")
-          history-tab (by-id "history-tab")
+    (let [navbar (by-class "navbar")
           password-btn (by-id "submit-pwd")
           history-btn (by-id "refresh-history")]
       (show-new-receipt {})
       (fill-defaults)
-      (listen! receipt-tab :click show-new-receipt)
-      (listen! submit-tab :click show-setup-tab)
-      (listen! history-tab :click show-history-tab)
+      (listen! navbar :click set-tab)
       (listen! password-btn :click cache-password)
       (listen! history-btn :click refresh-history))))

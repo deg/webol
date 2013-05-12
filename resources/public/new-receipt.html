@@ -9,10 +9,14 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
   </head>
   <body>
-    <div class="btn-group">
-      <button class="btn" id="receipt-tab">Receipt</button>
-      <button class="btn" id="setup-tab">Setup</button>
-      <button class="btn" id="history-tab">History</button>
+    <div class="navbar">
+      <div class="navbar-inner">
+	<ul class="nav">
+	  <li id="receipt-tab" class="active"><a href="#">Receipt</a></li>
+	  <li id="setup-tab"><a href="#">Setup</a></li>
+	  <li id="history-tab"><a href="#">History</a></li>
+	</ul>
+      </div>
     </div>
     <div id="receipt-body"/>
     <script src="http://code.jquery.com/jquery.js"></script>
