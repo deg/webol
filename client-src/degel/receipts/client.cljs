@@ -58,11 +58,10 @@
     (listen! submit-btn :mouseout remove-help)))
 
 
-(defn set-tab [e]
+(defn set-tab [tab]
   ;; [TODO] This would be a lot cleaner if (1) I knew how to extract the id of a node and
   ;; (2) how to iterate over the children of a node.
-  (let [tab (.-parentNode (target e))
-        navbar (by-class "navbar")
+  (let [navbar (by-class "navbar")
         receipt-tab (by-id "receipt-tab")
         setup-tab (by-id "setup-tab")
         history-tab (by-id "history-tab")]
@@ -125,9 +124,5 @@
 
 
 (defn ^:export init []
-  (when (and js/document
-             (aget js/document "getElementById"))
-    (let [navbar (by-class "navbar") ]
-      (show-new-receipt {})
-      (fill-defaults)
-      (listen! navbar :click set-tab))))
+  (listen! (by-class "navbar") :click #(set-tab (-> % target .-parentNode)))
+  (set-tab (by-id "receipt-tab")))
