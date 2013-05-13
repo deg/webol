@@ -76,7 +76,14 @@
 (defn setup-html []
   (html
    [:form {:id "setup-account"}
-    [:div [:label {:for "Password"} "Password"]
+    [:div
+     [:label {:for "user-id"} "User ID"]
+     [:input {:name "UserId"
+              :id "user-id"
+              :required true
+              :MaxLength "10"}]]
+    [:div
+     [:label {:for "Password"} "Password"]
      [:input {:name "Password"
               :id "Password"
               :type "password"

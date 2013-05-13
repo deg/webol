@@ -18,7 +18,8 @@
                amount category vendor comment for-whom)))
 
 
-(defn enter-receipt-internal [{:keys [paid-by date amount category vendor comment for-whom password]
+(defn enter-receipt-internal [{:keys [paid-by date amount category vendor comment for-whom
+                                      user-id password]
                       :as columns}]
   (let [errors (validate-receipt-fields paid-by date amount category vendor comment for-whom)]
     (if (empty? errors)

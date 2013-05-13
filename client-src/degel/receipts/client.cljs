@@ -11,7 +11,7 @@
             [degel.receipts.html :refer [entry-html confirmation-html setup-html history-html]]))
 
 
-(declare submit-receipt add-help remove-help cache-password refresh-history fill-defaults)
+(declare submit-receipt add-help remove-help cache-user-data refresh-history fill-defaults)
 
 (defn page-to-storage
   "Save webpage control values to persistent storage."
@@ -25,6 +25,7 @@
     (.setItem storage :cntl-comment (value (by-id "Comment")))
     (.setItem storage :cntl-for-whom (value (by-id "ForWhom"))))
   (when (by-id "Password")
+    (.setItem storage :cntl-user-id (value (by-id "user-id")))
     (.setItem storage :cntl-password (value (by-id "Password")))))
 
 
@@ -42,7 +43,10 @@
   (when (by-id "Password")
     (let [pwd-from-page (.getItem storage :cntl-password)
           cached-pwd (.getItem storage :password)]
-      (set-value! (by-id "Password") (if (blank? pwd-from-page) cached-pwd pwd-from-page)))))
+      (set-value! (by-id "Password") (if (blank? pwd-from-page) cached-pwd pwd-from-page)))
+    (let [uid-from-page (.getItem storage :cntl-user-id)
+          cached-uid (.getItem storage :user-id)]
+      (set-value! (by-id "user-id") (if (blank? uid-from-page) cached-uid uid-from-page)))))
 
 
 (defn clear-receipt-page []
@@ -78,7 +82,7 @@
                       (listen! submit-btn :mouseout remove-help)))
       setup-tab   (do
                     (set-html! (by-id "contents") (setup-html))
-                    (listen! (by-id "submit-pwd") :click cache-password))
+                    (listen! (by-id "submit-pwd") :click cache-user-data))
       history-tab (do
                     (set-html! (by-id "contents") (history-html))
                     (refresh-history)
@@ -94,6 +98,7 @@
                     :vendor   (-> "Vendor" by-id value)
                     :comment  (-> "Comment" by-id value)
                     :for-whom (-> "ForWhom" by-id value)
+                    :user-id (.getItem storage :user-id)
                     :password (.getItem storage :password)}]
     (page-to-storage)
     (remote-callback :enter-receipt [params-map]
@@ -132,9 +137,11 @@
   (destroy! (by-class "help")))
 
 
-(defn cache-password [e]
-  (let [password (-> e target value)]
-    (.setItem storage :password password)))
+(defn cache-user-data []
+  (let [password (-> "Password" by-id value)]
+    (.setItem storage :password password))
+  (let [user-id (-> "user-id" by-id value)]
+    (.setItem storage :user-id user-id)))
 
 
 (defn fill-defaults []
@@ -143,6 +150,7 @@
                              (html [:datalist {:id "PaymentDevices"}
                                     (for [x %] [:option {:value x}])])))
   (set-value! (by-id "Date") (now-string))
+  (set-value! (by-id "user-id") (.getItem storage :user-id))
   (set-value! (by-id "Password") (.getItem storage :password)))
 
 
