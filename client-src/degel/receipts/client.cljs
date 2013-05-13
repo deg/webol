@@ -125,7 +125,7 @@
   (let [target (target e)
         message (attr target :title)]
     (when (empty? (value target))
-      (append! (by-id "contents") (html [:div.help message])))))
+      (append! (by-id "contents") (html [:div.alert message])))))
 
 
 (defn add-help []
