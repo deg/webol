@@ -59,13 +59,13 @@
   (nuke-db password)
   (put-record {:paid-by "Visa" :date "2013-04-13"
                :currency "NIS" :amount "5.46"
-               :category "Food" :Vendor "Shufersal" :comments "Shufersal online"
+               :category "Food" :Vendor "Shufersal" :comment "Shufersal online"
                :for-whom "DASH"
                :formatted "Dummy"
                :password password})
   (put-record {:paid-by "Check" :Check# "1234" :date "2013-04-28"
                :currency "USD" :amount "15.23"
-               :category "Books" :Vendor "Barnes & Noble" :comments "At airport"
+               :category "Books" :Vendor "Barnes & Noble" :comment "At airport"
                :for-whom "D"
                :formatted "Dummy" ;; [TODO] Generate this at right level
                :password password})

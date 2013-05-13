@@ -10,17 +10,17 @@
       (["Jan" "Feb" "Mar" "Apr" "May" "Jun" "Jul" "Aug" "Sep" "Oct" "Nov" "Dec"] (dec month-val))
       "???")))
 
-(defn format-receipt [{:keys [paid-by date amount category vendor comments for-whom]}]
+(defn format-receipt [{:keys [paid-by date amount category vendor comment for-whom]}]
   (let [[year month day] (split date #"-")]
     (cl-format false "~A;~D~A~D;~A;~A;~A;~A;~A"
                paid-by
                day (month-string month) year
-               amount category vendor comments for-whom)))
+               amount category vendor comment for-whom)))
 
 
-(defn enter-receipt-internal [{:keys [paid-by date amount category vendor comments for-whom password]
+(defn enter-receipt-internal [{:keys [paid-by date amount category vendor comment for-whom password]
                       :as columns}]
-  (let [errors (validate-receipt-fields paid-by date amount category vendor comments for-whom)]
+  (let [errors (validate-receipt-fields paid-by date amount category vendor comment for-whom)]
     (if (empty? errors)
       (let [formatted (format-receipt columns)
             [success guid-or-errmsg] (put-record (assoc columns :formatted formatted))]

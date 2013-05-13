@@ -48,9 +48,9 @@
               :autocomplete "on"
               :MaxLength "30"}]]
     [:div
-     [:label {:for "Comments"} "Comments:"]
-     [:input {:name "Comments"
-              :id "Comments"
+     [:label {:for "Comment"} "Comment:"]
+     [:input {:name "Comment"
+              :id "Comment"
               :autocomplete "on"
               :MaxLength "40"}]]
     [:div

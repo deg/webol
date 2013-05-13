@@ -48,8 +48,6 @@
     (set-value! (by-id "Category") category))
   (when-let [vendor (:vendor prefill-with)]
     (set-value! (by-id "Vendor") vendor))
-  (when-let [comments (:comments prefill-with)]
-    (set-value! (by-id "Comments") comments))
   (when-let [for-whom (:for-whom prefill-with)]
     (set-value! (by-id "ForWhom") for-whom))
   (let [submit-btn (by-id "submit-receipt")]
@@ -82,7 +80,7 @@
                     :amount   (-> "Amount" by-id value)
                     :category (-> "Category" by-id value)
                     :vendor   (-> "Vendor" by-id value)
-                    :comments (-> "Comments" by-id value)
+                    :comment  (-> "Comment" by-id value)
                     :for-whom (-> "ForWhom" by-id value)
                     :password (.getItem storage :password)}]
     (remote-callback :enter-receipt [params-map]
