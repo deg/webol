@@ -57,8 +57,8 @@
   (set-value! (by-id "Vendor") "")
   (set-value! (by-id "Comment") "")
   (set-value! (by-id "ForWhom") "")
-  (page-to-storage)
-  (fill-defaults))
+  (fill-defaults)
+  (page-to-storage))
 
 
 (defn set-tab [tab]
@@ -103,12 +103,12 @@
     (page-to-storage)
     (remote-callback :enter-receipt [params-map]
                      (fn [[success confirmation]]
+                       (when success
+                         (clear-receipt-page))
                        (set-html! (by-id "contents")
                                   (confirmation-html success confirmation))
                        (listen! (by-id "next-receipt") :click
-                                (fn []
-                                  (set-tab (by-id "receipt-tab"))
-                                  (clear-receipt-page)))))))
+                                #(set-tab (by-id "receipt-tab")))))))
 
 
 (defn refresh-history []
