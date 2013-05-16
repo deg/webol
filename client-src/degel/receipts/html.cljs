@@ -54,7 +54,13 @@
                   {:type "text"
                    :autocomplete "on"
                    :MaxLength "15"})
-    (submit-button "submit-receipt" "Submit Receipt")]))
+    [:div
+     [:input {:type "button"
+              :value "Submit Receipt"
+              :id "submit-receipt"}]]
+    ;; Doesn't work; Centers button, but causes POST.
+    ;; [TODO] Fix soon if we don't move to a different lib.
+    #_(submit-button "submit-receipt" "Submit Receipt")]))
 
 
 (defn confirmation-html [success confirmation]
