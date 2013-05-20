@@ -1,8 +1,5 @@
 (ns degel.receipts.utils)
 
-(defn log [s]
-  (.log js/console s))
-
 (def storage (.-localStorage js/window))
 
 

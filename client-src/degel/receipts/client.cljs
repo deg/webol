@@ -1,13 +1,13 @@
 (ns degel.receipts.client
   (:require-macros [hiccups.core :refer [html]])
   (:require [clojure.string :refer [blank?]]
-            [domina :refer [add-class! append! attr by-class by-id destroy!
+            [domina :refer [add-class! append! attr by-class by-id destroy! log
                             remove-class! set-html! set-inner-html! set-value! value]]
             [domina.events :refer [listen! prevent-default target]]
             [hiccups.runtime] ;; Needed by hiccups.core macros
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
-            [degel.receipts.utils :refer [log storage now-string]]
+            [degel.receipts.utils :refer [storage now-string]]
             [degel.receipts.html :refer [entry-html confirmation-html setup-html history-html]]))
 
 
