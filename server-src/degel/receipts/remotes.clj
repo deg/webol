@@ -1,7 +1,5 @@
 (ns degel.receipts.remotes
-  (:require [compojure.handler :refer [site]]
-            [shoreleave.middleware.rpc :refer [defremote wrap-rpc]]
-            [degel.receipts.server :refer [app-routes]]
+  (:require [shoreleave.middleware.rpc :refer [defremote]]
             [degel.receipts.receipts :refer [collect-receipt-history enter-receipt-internal]]))
 
 (defremote fill-paid-by [country]
@@ -13,4 +11,3 @@
 (defremote enter-receipt [columns]
   (enter-receipt-internal columns))
 
-(def app (-> app-routes wrap-rpc site))
