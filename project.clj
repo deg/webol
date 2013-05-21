@@ -39,7 +39,7 @@
   :min-lein-version "2.0.0"
 
   :source-paths ["server-src"]
-  :ring {:handler degel.receipts.remotes/app}
+  :ring {:handler degel.receipts.server/app}
   ;:profiles {:dev {:hooks [leiningen.cljsbuild]}}
   :main degel.receipts.server
 
