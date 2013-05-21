@@ -9,14 +9,10 @@
     <link href="css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
   </head>
   <body>
-    <div class="navbar">
-      <div class="navbar-inner">
-	<ul class="nav">
-	  <li id="receipt-tab" class="active"><a href="#">Receipt</a></li>
-	  <li id="setup-tab"><a href="#">Setup</a></li>
-	  <li id="history-tab"><a href="#">History</a></li>
-	</ul>
-      </div>
+    <div class="btn-group" id="tabbar-menu" data-toggle="buttons-radio">
+      <button type="button" id="receipt-tab" class="btn btn-primary active">Receipt</button>
+      <button type="button" id="setup-tab" class="btn btn-primary">Setup</button>
+      <button type="button" id="history-tab" class="btn btn-primary">History</button>
     </div>
     <div id="contents"/>
     <script src="js/jquery.js"></script>

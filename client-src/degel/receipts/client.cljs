@@ -64,8 +64,7 @@
 (defn set-tab [tab]
   ;; [TODO] This would be a lot cleaner if (1) I knew how to extract the id of a node and
   ;; (2) how to iterate over the children of a node.
-  (let [navbar (by-class "navbar")
-        receipt-tab (by-id "receipt-tab")
+  (let [receipt-tab (by-id "receipt-tab")
         setup-tab (by-id "setup-tab")
         history-tab (by-id "history-tab")]
     (remove-class! receipt-tab "active")
@@ -155,6 +154,6 @@
 
 
 (defn ^:export init []
-  (listen! (by-class "navbar") :click #(set-tab (-> % target .-parentNode)))
+  (listen! (by-id "tabbar-menu"):click #(set-tab (target %)))
   (set-tab (by-id "receipt-tab"))
   (fill-defaults))
