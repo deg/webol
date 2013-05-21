@@ -11,21 +11,38 @@
                  ;; Needed, I think, in order to build a runnable uberjar with compojure
                  [ring/ring-jetty-adapter "1.1.8"]
 
+                 ;; Routing library for Ring web application library
                  [compojure "1.1.5" :exclusions [ring/ring-core org.clojure/tools.macro]]
+
+                 ;; DOM manipulation library for ClojureScript
                  [domina "1.0.2-SNAPSHOT"]
+
+                 ;; HTML generation for Clojurescript (Ported from Clojure Hiccup)
                  [hiccups "0.2.0"]
+
+                 ;; Ring/Compojure RPC
+                 ;; [TODO] Look at the other Shoreleave libs too. Support for local storage,
+                 ;;        browser history, repl, etc.
                  [shoreleave/shoreleave-remote-ring "0.3.0"]
                  [shoreleave/shoreleave-remote "0.3.0"]
+
+                 ;; Clojure/ClojureScript validation
                  [com.cemerick/valip "0.3.2"]
+
+                 ;; Clojure interface to AWS SimpleDB
                  [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]]
+
   :plugins [[lein-cljsbuild "0.3.2" :exclusions [org.clojure/clojure]]
             [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
             [lein-pedantic "0.0.5"]]
+
   :min-lein-version "2.0.0"
+
   :source-paths ["server-src"]
   :ring {:handler degel.receipts.remotes/app}
   ;:profiles {:dev {:hooks [leiningen.cljsbuild]}}
   :main degel.receipts.server
+
   :cljsbuild {
     :crossovers [valip.core valip.predicates degel.receipts.static-validators]
     :builds {
