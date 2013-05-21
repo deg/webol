@@ -24,26 +24,26 @@
                    :list "PaymentDevices"
                    :title "Enter 'cash', 'ck N' or 'vDDDD'"
                    :placeholder "cc #, ck #, or cash"
-                   :required true
+                   :required ""
                    :MaxLength 8})
     (control-pair "Date" "Date"
                   {:type "Date"
-                   :required true})
+                   :required ""})
     (control-pair "Amount" "Amount"
                   {:type "Number"
                    :step "0.01"
                    :title "Enter price"
                    :placeholder "price"
-                   :required true
+                   :required ""
                    :MaxLength 10})
     (control-pair "Category" "Category"
                   {:type "text"
-                   :required true
+                   :required ""
                    :autocomplete "on"
                    :MaxLength 15})
     (control-pair "Vendor" "Vendor"
                   {:type "text"
-                   :required true
+                   :required ""
                    :autocomplete "on"
                    :MaxLength "30"})
     (control-pair "Comment" "Comment"
@@ -77,11 +77,11 @@
    [:form.form-horizontal {:id "setup-account"}
     (control-pair "user-id" "User ID"
                   {:type "text"
-                   :required true
+                   :required ""
                    :MaxLength "10"})
     (control-pair "Password" "Password"
                   {:type "password"
-                   :required true
+                   :required ""
                    :MaxLength "10"})
     (submit-button "submit-pwd" "Setup Account")]
    [:p [:a {:href "help.html"} "Help"] " about this application."]))
