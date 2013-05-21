@@ -8,7 +8,8 @@
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
             [degel.receipts.utils :refer [storage now-string]]
-            [degel.receipts.html :refer [entry-html confirmation-html setup-html history-html]]))
+            [degel.receipts.html :refer [entry-html confirmation-html setup-html history-html
+                                         button-group set-active-button]]))
 
 
 (declare submit-receipt add-help remove-help cache-user-data refresh-history fill-defaults)
@@ -62,31 +63,23 @@
 
 
 (defn set-tab [tab]
-  ;; [TODO] This would be a lot cleaner if (1) I knew how to extract the id of a node and
-  ;; (2) how to iterate over the children of a node.
-  (let [receipt-tab (by-id "receipt-tab")
-        setup-tab (by-id "setup-tab")
-        history-tab (by-id "history-tab")]
-    (remove-class! receipt-tab "active")
-    (remove-class! setup-tab "active")
-    (remove-class! history-tab "active")
-    (add-class! tab "active")
-    (page-to-storage)
-    (condp = tab
-      receipt-tab (do
+  (set-active-button "tabbar-buttons" tab)
+  (page-to-storage)
+  (condp = tab
+    "receipt-tab" (do
                     (set-html! (by-id "contents") (entry-html))
                     (let [submit-btn (by-id "submit-receipt")]
                       (listen! submit-btn :click submit-receipt)
                       (listen! submit-btn :mouseover add-help)
                       (listen! submit-btn :mouseout remove-help)))
-      setup-tab   (do
-                    (set-html! (by-id "contents") (setup-html))
-                    (listen! (by-id "submit-pwd") :click cache-user-data))
-      history-tab (do
+    "setup-tab" (do
+                  (set-html! (by-id "contents") (setup-html))
+                  (listen! (by-id "submit-pwd") :click cache-user-data))
+    "history-tab" (do
                     (set-html! (by-id "contents") (history-html))
                     (refresh-history)
                     (listen! (by-id "refresh-history") :click refresh-history)))
-    (storage-to-page)))
+  (storage-to-page))
 
 
 (defn submit-receipt []
@@ -107,7 +100,7 @@
                        (set-html! (by-id "contents")
                                   (confirmation-html success confirmation))
                        (listen! (by-id "next-receipt") :click
-                                #(set-tab (by-id "receipt-tab")))))))
+                                #(set-tab "receipt-tab"))))))
 
 
 (defn refresh-history []
@@ -154,6 +147,12 @@
 
 
 (defn ^:export init []
-  (listen! (by-id "tabbar-menu"):click #(set-tab (target %)))
-  (set-tab (by-id "receipt-tab"))
+  (set-tab "receipt-tab")
+  (set-html! (by-id "tabbar")
+             (html (button-group "tabbar-buttons" true
+                                 [{:id "receipt-tab" :text "Receipt"}
+                                  {:id "setup-tab" :text "Setup"}
+                                  {:id "history-tab" :text "History"}])))
+  (listen! (by-id "tabbar"):click #(-> % target (. -id) set-tab))
+  (set-active-button "tabbar-buttons" "receipt-tab")
   (fill-defaults))

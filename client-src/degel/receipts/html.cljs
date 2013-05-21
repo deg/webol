@@ -1,7 +1,9 @@
 (ns degel.receipts.html
   (:require-macros [hiccups.core :refer [html]])
   (:require [hiccups.runtime] ;; Needed by hiccups.core macros
-            ))
+            [domina :refer [add-class! append! attr by-class by-id destroy! log
+                            remove-class! set-html! set-inner-html! set-value! value]]))
+
 
 (defn control-pair [id label attrs]
   [:div.control-group
@@ -9,11 +11,37 @@
    [:div.control
     [:input (merge {:name id :id id} attrs)]]])
 
+
 (defn submit-button [id label]
   [:div.control-group
    [:div.controls
     [:button.btn {:type "submit" :id id}
      label]]])
+
+
+(defn button-group
+  "Return HTML for a button-group.
+   id is the id for the group div.
+   radio? (nyi) is true if the group should behave as radio buttons (only one selection at a
+   time) or false to allow multiple selections.
+   buttons is a vector of maps of button attributes. For now, we support just :id and :text"
+  [id radio? buttons]
+  [:div {:class "btn-group"
+         :id id
+         :data-toggle "buttons-radio"}
+   (for [button buttons]
+     [:button {:type "button" :class "btn btn-primary" :id (:id button)}
+      (:text button)])])
+
+
+(defn set-active-button
+  "Set one button to be active in a button-group.
+   [TODO] Need to learn xpath syntax or equivalent, to only search for button within group.
+   [TODO] Efficiency suggests keeping a map of keywords to dom elements, if that is possible,
+          rather than searching each time"
+  [button-group button]
+  (remove-class! (by-id button-group) "active")
+  (add-class! (by-id button) "active"))
 
 
 (defn entry-html []
