@@ -94,23 +94,23 @@
                     :password (.getItem storage :password)}]
     (page-to-storage)
     (remote-callback :enter-receipt [params-map]
-                     (fn [[success confirmation]]
-                       (when success
-                         (clear-receipt-page))
-                       (set-html! (by-id "contents")
-                                  (confirmation-html success confirmation))
-                       (listen! (by-id "next-receipt") :click
-                                #(set-tab "receipt-tab"))))))
+      (fn [[success confirmation]]
+        (when success
+          (clear-receipt-page))
+        (set-html! (by-id "contents")
+          (confirmation-html success confirmation))
+        (listen! (by-id "next-receipt") :click
+                 #(set-tab "receipt-tab"))))))
 
 
 (defn refresh-history []
   (let [password (.getItem storage :password)]
     (remote-callback :fill-receipt-history [password]
-                     (fn [records]
-                       (destroy! (by-class "history"))
-                       (let [h (html [:div.history
-                                      (map (fn [r] [:p r]) records)])]
-                         (append! (by-id "ForHistory") h))))))
+      (fn [records]
+        (destroy! (by-class "history"))
+        (let [h (html [:div.history
+                       (map (fn [r] [:p r]) records)])]
+          (append! (by-id "ForHistory") h))))))
 
 
 (defn verify-not-empty [e]
@@ -122,7 +122,7 @@
 
 (defn add-help []
   (append! (by-id "contents")
-             (html [:div.help "Click here to submit receipt"])))
+    (html [:div.help "Click here to submit receipt"])))
 
 
 (defn remove-help []
@@ -138,9 +138,9 @@
 
 (defn fill-defaults []
   (remote-callback :fill-paid-by [:israel]
-                   #(append! (by-id "PaidBy")
-                             (html [:datalist {:id "PaymentDevices"}
-                                    (for [x %] [:option {:value x}])])))
+    #(append! (by-id "PaidBy")
+       (html [:datalist {:id "PaymentDevices"}
+              (for [x %] [:option {:value x}])])))
   (set-value! (by-id "Date") (now-string))
   (set-value! (by-id "user-id") (.getItem storage :user-id))
   (set-value! (by-id "Password") (.getItem storage :password)))
@@ -149,10 +149,10 @@
 (defn ^:export init []
   (set-tab "receipt-tab")
   (set-html! (by-id "tabbar")
-             (html (button-group "tabbar-buttons" true
-                                 [{:id "receipt-tab" :text "Receipt"}
-                                  {:id "setup-tab" :text "Setup"}
-                                  {:id "history-tab" :text "History"}])))
+    (html (button-group "tabbar-buttons" true
+            [{:id "receipt-tab" :text "Receipt"}
+             {:id "setup-tab" :text "Setup"}
+             {:id "history-tab" :text "History"}])))
   (listen! (by-id "tabbar"):click #(-> % target (. -id) set-tab))
   (set-active-button "tabbar-buttons" "receipt-tab")
   (fill-defaults))

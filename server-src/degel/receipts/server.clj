@@ -21,7 +21,8 @@
 
 
 (defroutes app-routes
-  (GET "/" [] (redirect "/new-receipt.html"))
+  (GET "/" []
+    (redirect "/new-receipt.html"))
   ; to serve static pages saved in resources/public directory
   (resources "/")
   (not-found "<h1>David moans: 'page not found'.</h1>"))
