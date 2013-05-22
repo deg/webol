@@ -1,9 +1,8 @@
 (ns degel.receipts.client
   (:require-macros [hiccups.core :refer [html]])
   (:require [clojure.string :refer [blank?]]
-            [domina :refer [add-class! append! attr by-class by-id destroy! log
-                            remove-class! set-html! set-inner-html! set-value! value]]
-            [domina.events :refer [listen! prevent-default target]]
+            [domina :as dom]
+            [domina.events :as events]
             [hiccups.runtime] ;; Needed by hiccups.core macros
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
@@ -17,47 +16,47 @@
 (defn page-to-storage
   "Save webpage control values to persistent storage."
   []
-  (when (by-id "PaidBy")
-    (.setItem storage :cntl-paid-by (value (by-id "PaidBy")))
-    (.setItem storage :cntl-date (value (by-id "Date")))
-    (.setItem storage :cntl-amount (value (by-id "Amount")))
-    (.setItem storage :cntl-category (value (by-id "Category")))
-    (.setItem storage :cntl-vendor (value (by-id "Vendor")))
-    (.setItem storage :cntl-comment (value (by-id "Comment")))
-    (.setItem storage :cntl-for-whom (value (by-id "ForWhom"))))
-  (when (by-id "Password")
-    (.setItem storage :cntl-user-id (value (by-id "user-id")))
-    (.setItem storage :cntl-password (value (by-id "Password")))))
+  (when (dom/by-id "PaidBy")
+    (.setItem storage :cntl-paid-by (dom/value (dom/by-id "PaidBy")))
+    (.setItem storage :cntl-date (dom/value (dom/by-id "Date")))
+    (.setItem storage :cntl-amount (dom/value (dom/by-id "Amount")))
+    (.setItem storage :cntl-category (dom/value (dom/by-id "Category")))
+    (.setItem storage :cntl-vendor (dom/value (dom/by-id "Vendor")))
+    (.setItem storage :cntl-comment (dom/value (dom/by-id "Comment")))
+    (.setItem storage :cntl-for-whom (dom/value (dom/by-id "ForWhom"))))
+  (when (dom/by-id "Password")
+    (.setItem storage :cntl-user-id (dom/value (dom/by-id "user-id")))
+    (.setItem storage :cntl-password (dom/value (dom/by-id "Password")))))
 
 
 (defn storage-to-page
   "Load webpage control values from persistent storage."
   []
-  (when (by-id "PaidBy")
-    (set-value! (by-id "PaidBy") (.getItem storage :cntl-paid-by))
-    (set-value! (by-id "Date") (.getItem storage :cntl-date))
-    (set-value! (by-id "Amount") (.getItem storage :cntl-amount))
-    (set-value! (by-id "Category") (.getItem storage :cntl-category))
-    (set-value! (by-id "Vendor") (.getItem storage :cntl-vendor))
-    (set-value! (by-id "Comment") (.getItem storage :cntl-comment))
-    (set-value! (by-id "ForWhom") (.getItem storage :cntl-for-whom)))
-  (when (by-id "Password")
+  (when (dom/by-id "PaidBy")
+    (dom/set-value! (dom/by-id "PaidBy") (.getItem storage :cntl-paid-by))
+    (dom/set-value! (dom/by-id "Date") (.getItem storage :cntl-date))
+    (dom/set-value! (dom/by-id "Amount") (.getItem storage :cntl-amount))
+    (dom/set-value! (dom/by-id "Category") (.getItem storage :cntl-category))
+    (dom/set-value! (dom/by-id "Vendor") (.getItem storage :cntl-vendor))
+    (dom/set-value! (dom/by-id "Comment") (.getItem storage :cntl-comment))
+    (dom/set-value! (dom/by-id "ForWhom") (.getItem storage :cntl-for-whom)))
+  (when (dom/by-id "Password")
     (let [pwd-from-page (.getItem storage :cntl-password)
           cached-pwd (.getItem storage :password)]
-      (set-value! (by-id "Password") (if (blank? pwd-from-page) cached-pwd pwd-from-page)))
+      (dom/set-value! (dom/by-id "Password") (if (blank? pwd-from-page) cached-pwd pwd-from-page)))
     (let [uid-from-page (.getItem storage :cntl-user-id)
           cached-uid (.getItem storage :user-id)]
-      (set-value! (by-id "user-id") (if (blank? uid-from-page) cached-uid uid-from-page)))))
+      (dom/set-value! (dom/by-id "user-id") (if (blank? uid-from-page) cached-uid uid-from-page)))))
 
 
 (defn clear-receipt-page []
-  (set-value! (by-id "PaidBy") "")
-  (set-value! (by-id "Date") "")
-  (set-value! (by-id "Amount") "")
-  (set-value! (by-id "Category") "")
-  (set-value! (by-id "Vendor") "")
-  (set-value! (by-id "Comment") "")
-  (set-value! (by-id "ForWhom") "")
+  (dom/set-value! (dom/by-id "PaidBy") "")
+  (dom/set-value! (dom/by-id "Date") "")
+  (dom/set-value! (dom/by-id "Amount") "")
+  (dom/set-value! (dom/by-id "Category") "")
+  (dom/set-value! (dom/by-id "Vendor") "")
+  (dom/set-value! (dom/by-id "Comment") "")
+  (dom/set-value! (dom/by-id "ForWhom") "")
   (fill-defaults)
   (page-to-storage))
 
@@ -67,29 +66,29 @@
   (page-to-storage)
   (condp = tab
     "receipt-tab" (do
-                    (set-html! (by-id "contents") (entry-html))
-                    (let [submit-btn (by-id "submit-receipt")]
-                      (listen! submit-btn :click submit-receipt)
-                      (listen! submit-btn :mouseover add-help)
-                      (listen! submit-btn :mouseout remove-help)))
+                    (dom/set-html! (dom/by-id "contents") (entry-html))
+                    (let [submit-btn (dom/by-id "submit-receipt")]
+                      (events/listen! submit-btn :click submit-receipt)
+                      (events/listen! submit-btn :mouseover add-help)
+                      (events/listen! submit-btn :mouseout remove-help)))
     "setup-tab" (do
-                  (set-html! (by-id "contents") (setup-html))
-                  (listen! (by-id "submit-pwd") :click cache-user-data))
+                  (dom/set-html! (dom/by-id "contents") (setup-html))
+                  (events/listen! (dom/by-id "submit-pwd") :click cache-user-data))
     "history-tab" (do
-                    (set-html! (by-id "contents") (history-html))
+                    (dom/set-html! (dom/by-id "contents") (history-html))
                     (refresh-history)
-                    (listen! (by-id "refresh-history") :click refresh-history)))
+                    (events/listen! (dom/by-id "refresh-history") :click refresh-history)))
   (storage-to-page))
 
 
 (defn submit-receipt []
-  (let [params-map {:paid-by  (-> "PaidBy" by-id value)
-                    :date     (-> "Date" by-id value)
-                    :amount   (-> "Amount" by-id value)
-                    :category (-> "Category" by-id value)
-                    :vendor   (-> "Vendor" by-id value)
-                    :comment  (-> "Comment" by-id value)
-                    :for-whom (-> "ForWhom" by-id value)
+  (let [params-map {:paid-by  (-> "PaidBy" dom/by-id dom/value)
+                    :date     (-> "Date" dom/by-id dom/value)
+                    :amount   (-> "Amount" dom/by-id dom/value)
+                    :category (-> "Category" dom/by-id dom/value)
+                    :vendor   (-> "Vendor" dom/by-id dom/value)
+                    :comment  (-> "Comment" dom/by-id dom/value)
+                    :for-whom (-> "ForWhom" dom/by-id dom/value)
                     :user-id (.getItem storage :user-id)
                     :password (.getItem storage :password)}]
     (page-to-storage)
@@ -97,62 +96,62 @@
       (fn [[success confirmation]]
         (when success
           (clear-receipt-page))
-        (set-html! (by-id "contents")
+        (dom/set-html! (dom/by-id "contents")
           (confirmation-html success confirmation))
-        (listen! (by-id "next-receipt") :click
-                 #(set-tab "receipt-tab"))))))
+        (events/listen! (dom/by-id "next-receipt") :click
+          #(set-tab "receipt-tab"))))))
 
 
 (defn refresh-history []
   (let [password (.getItem storage :password)]
     (remote-callback :fill-receipt-history [password]
       (fn [records]
-        (destroy! (by-class "history"))
+        (dom/destroy! (dom/by-class "history"))
         (let [h (html [:div.history
                        (map (fn [r] [:p r]) records)])]
-          (append! (by-id "ForHistory") h))))))
+          (dom/append! (dom/by-id "ForHistory") h))))))
 
 
 (defn verify-not-empty [e]
-  (let [target (target e)
-        message (attr target :title)]
-    (when (empty? (value target))
-      (append! (by-id "contents") (html [:div.alert message])))))
+  (let [target (events/target e)
+        message (dom/attr target :title)]
+    (when (empty? (dom/value target))
+      (dom/append! (dom/by-id "contents") (html [:div.alert message])))))
 
 
 (defn add-help []
-  (append! (by-id "contents")
+  (dom/append! (dom/by-id "contents")
     (html [:div.help "Click here to submit receipt"])))
 
 
 (defn remove-help []
-  (destroy! (by-class "help")))
+  (dom/destroy! (dom/by-class "help")))
 
 
 (defn cache-user-data []
-  (let [password (-> "Password" by-id value)]
+  (let [password (-> "Password" dom/by-id dom/value)]
     (.setItem storage :password password))
-  (let [user-id (-> "user-id" by-id value)]
+  (let [user-id (-> "user-id" dom/by-id dom/value)]
     (.setItem storage :user-id user-id)))
 
 
 (defn fill-defaults []
   (remote-callback :fill-paid-by [:israel]
-    #(append! (by-id "PaidBy")
+    #(dom/append! (dom/by-id "PaidBy")
        (html [:datalist {:id "PaymentDevices"}
               (for [x %] [:option {:value x}])])))
-  (set-value! (by-id "Date") (now-string))
-  (set-value! (by-id "user-id") (.getItem storage :user-id))
-  (set-value! (by-id "Password") (.getItem storage :password)))
+  (dom/set-value! (dom/by-id "Date") (now-string))
+  (dom/set-value! (dom/by-id "user-id") (.getItem storage :user-id))
+  (dom/set-value! (dom/by-id "Password") (.getItem storage :password)))
 
 
 (defn ^:export init []
   (set-tab "receipt-tab")
-  (set-html! (by-id "tabbar")
+  (dom/set-html! (dom/by-id "tabbar")
     (html (button-group "tabbar-buttons" true
             [{:id "receipt-tab" :text "Receipt"}
              {:id "setup-tab" :text "Setup"}
              {:id "history-tab" :text "History"}])))
-  (listen! (by-id "tabbar"):click #(-> % target (. -id) set-tab))
+  (events/listen! (dom/by-id "tabbar"):click #(-> % dom/target (. -id) set-tab))
   (set-active-button "tabbar-buttons" "receipt-tab")
   (fill-defaults))

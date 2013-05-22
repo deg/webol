@@ -1,8 +1,7 @@
 (ns degel.receipts.html
   (:require-macros [hiccups.core :refer [html]])
   (:require [hiccups.runtime] ;; Needed by hiccups.core macros
-            [domina :refer [add-class! append! attr by-class by-id destroy! log
-                            remove-class! set-html! set-inner-html! set-value! value]]))
+            [domina :as dom]))
 
 
 (defn control-pair [id label attrs]
@@ -40,8 +39,8 @@
    [TODO] Efficiency suggests keeping a map of keywords to dom elements, if that is possible,
           rather than searching each time"
   [button-group button]
-  (remove-class! (by-id button-group) "active")
-  (add-class! (by-id button) "active"))
+  (dom/remove-class! (dom/by-id button-group) "active")
+  (dom/add-class! (dom/by-id button) "active"))
 
 
 (defn entry-html []
