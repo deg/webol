@@ -56,6 +56,6 @@
             :source-paths ["client-src" #_ "client-src-dev"] ; TODO brepl not safe here
             :compiler {:output-to "resources/public/js/receipts.js"
                        :optimizations #_ :advanced :simple ; TODO Until dom issue resolved
-                       :pretty-print false}
+                       :pretty-print #_ false true}
             :jar true}}})
 
