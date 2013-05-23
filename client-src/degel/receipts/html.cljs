@@ -42,7 +42,7 @@
   [id radio? buttons]
   [:div {:class "btn-group"
          :id id
-         :data-toggle "buttons-radio"}
+         :data-toggle (if radio? "buttons-radio" "buttons-checkbox")}
    (for [button buttons]
      [:button {:type "button" :class "btn btn-primary" :id (:id button)}
       (:text button)])])

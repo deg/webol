@@ -63,7 +63,6 @@
 
 
 (defn set-tab [tab]
-  (set-active-button "tabbar-buttons" tab)
   (page-to-storage)
   (condp = tab
     "receipt-tab" (do
