@@ -5,7 +5,7 @@
 
 
 (defn control-pair [id label attrs]
-  [:div.control-group
+  [:div.control-group {:id (str id "-group")}
    [:label.control-label {:for id} (str label ":&nbsp;")]
    [:div.control
     [:input (merge {:name id :id id} attrs)]]])
@@ -16,6 +16,19 @@
    [:div.controls
     [:button.btn {:type "submit" :id id}
      label]]])
+
+
+(defn selection-list [id label selected-value value-text-pairs]
+  [:div.control-group {:id (str id "-group")}
+   [:label.control-label {:for id} (str label ":&nbsp;")]
+   [:div.control
+    [:select {:id id}
+     (for [[value text] value-text-pairs]
+       [:option
+        (if (= selected-value value)
+          {:value value :selected ""}
+          {:value value})
+        text])]]])
 
 
 (defn button-group
@@ -46,13 +59,7 @@
 (defn entry-html []
   (html
    [:form.form-horizontal {:id "receipt-body"}
-    (control-pair "PaidBy" "Paid By"
-                  {:type "text"
-                   :list "PaymentDevices"
-                   :title "Enter 'cash', 'ck N' or 'vDDDD'"
-                   :placeholder "cc #, ck #, or cash"
-                   :required ""
-                   :MaxLength 8})
+    (selection-list "PaidBy" "Paid By" nil [])
     (control-pair "Date" "Date"
                   {:type "Date"
                    :required ""})

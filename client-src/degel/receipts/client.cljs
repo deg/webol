@@ -33,7 +33,8 @@
   "Load webpage control values from persistent storage."
   []
   (when (dom/by-id "PaidBy")
-    (dom/set-value! (dom/by-id "PaidBy") (.getItem storage :cntl-paid-by))
+    ;; [TODO] Now handled in set-tab below. Clean up, once we get the data callback scheme working.
+    ;; (dom/set-value! (dom/by-id "PaidBy") (.getItem storage :cntl-paid-by))
     (dom/set-value! (dom/by-id "Date") (.getItem storage :cntl-date))
     (dom/set-value! (dom/by-id "Amount") (.getItem storage :cntl-amount))
     (dom/set-value! (dom/by-id "Category") (.getItem storage :cntl-category))
@@ -67,6 +68,15 @@
   (condp = tab
     "receipt-tab" (do
                     (dom/set-html! (dom/by-id "contents") (entry-html))
+                    (remote-callback :fill-paid-by [:israel]
+                      #(dom/set-inner-html! (dom/by-id "PaidBy")
+                         (let [selected-paid-by (.getItem storage :cntl-paid-by)]
+                           (html [:select {:name "paidby-choices"}
+                                  (for [paid-by %] [:option
+                                                    (if (= selected-paid-by paid-by)
+                                                      {:value paid-by :selected ""}
+                                                      {:value paid-by})
+                                                    paid-by])]))))
                     (let [submit-btn (dom/by-id "submit-receipt")]
                       (events/listen! submit-btn :click submit-receipt)
                       (events/listen! submit-btn :mouseover add-help)
@@ -136,10 +146,6 @@
 
 
 (defn fill-defaults []
-  (remote-callback :fill-paid-by [:israel]
-    #(dom/append! (dom/by-id "PaidBy")
-       (html [:datalist {:id "PaymentDevices"}
-              (for [x %] [:option {:value x}])])))
   (dom/set-value! (dom/by-id "Date") (now-string))
   (dom/set-value! (dom/by-id "user-id") (.getItem storage :user-id))
   (dom/set-value! (dom/by-id "Password") (.getItem storage :password)))
