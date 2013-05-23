@@ -98,7 +98,7 @@
                     :category (-> "Category" dom/by-id dom/value)
                     :vendor   (-> "Vendor" dom/by-id dom/value)
                     :comment  (-> "Comment" dom/by-id dom/value)
-                    :for-whom (-> "ForWhom" dom/by-id dom/value)
+                    :for-whom (reduce str (-> "ForWhom" dom/by-id dom/value))
                     :user-id (.getItem storage :user-id)
                     :password (.getItem storage :password)}]
     (page-to-storage)

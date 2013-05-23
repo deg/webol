@@ -18,11 +18,13 @@
      label]]])
 
 
-(defn selection-list [id label selected-value value-text-pairs]
+(defn selection-list [id label multiple? selected-value value-text-pairs]
   [:div.control-group {:id (str id "-group")}
    [:label.control-label {:for id} (str label ":&nbsp;")]
    [:div.control
-    [:select {:id id}
+    [:select (if multiple?
+               {:id id :multiple ""}
+               {:id id})
      (for [[value text] value-text-pairs]
        [:option
         (if (= selected-value value)
@@ -59,7 +61,7 @@
 (defn entry-html []
   (html
    [:form.form-horizontal {:id "receipt-body"}
-    (selection-list "PaidBy" "Paid By" nil [])
+    (selection-list "PaidBy" "Paid By" false nil [])
     (control-pair "Date" "Date"
                   {:type "Date"
                    :required ""})
@@ -84,10 +86,8 @@
                   {:type "text"
                    :autocomplete "on"
                    :MaxLength "40"})
-    (control-pair "ForWhom" "For whom"
-                  {:type "text"
-                   :autocomplete "on"
-                   :MaxLength "15"})
+    (selection-list "ForWhom" "For whom" true
+                    nil [["D" "David"] ["H" "Heidi"] ["A" "Aviva"] ["S" "Shoshana"] ["O" "Other"]])
     [:div
      [:input {:type "button"
               :value "Submit Receipt"
