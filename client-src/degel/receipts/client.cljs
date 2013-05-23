@@ -152,6 +152,7 @@
             [{:id "receipt-tab" :text "Receipt"}
              {:id "setup-tab" :text "Setup"}
              {:id "history-tab" :text "History"}])))
-  (events/listen! (dom/by-id "tabbar"):click #(-> % dom/target (. -id) set-tab))
+  (events/listen! (dom/by-id "tabbar") :click
+    #(-> % events/target (. -id) set-tab))
   (set-active-button "tabbar-buttons" "receipt-tab")
   (fill-defaults))
