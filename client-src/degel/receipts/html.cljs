@@ -18,8 +18,8 @@
      label]]])
 
 
-(defn selection-list [id label multiple? selected-value value-text-pairs]
-  [:div.control-group {:id (str id "-group")}
+(defn selection-list [id label attrs multiple? selected-value value-text-pairs]
+  [:div.control-group (merge {:id (str id "-group")} attrs)
    [:label.control-label {:for id} (str label ":&nbsp;")]
    [:div.control
     [:select (if multiple?
@@ -61,7 +61,9 @@
 (defn entry-html []
   (html
    [:form.form-horizontal {:id "receipt-body"}
-    (selection-list "PaidBy" "Paid By" false nil [])
+    (selection-list "PaidBy" "Paid By"
+                    {:style "margin-top:10px"}
+                    false nil [])
     (control-pair "Date" "Date"
                   {:type "Date"
                    :required ""})
@@ -86,8 +88,10 @@
                   {:type "text"
                    :autocomplete "on"
                    :MaxLength "40"})
-    (selection-list "ForWhom" "For whom" true
-                    nil [["D" "David"] ["H" "Heidi"] ["A" "Aviva"] ["S" "Shoshana"] ["O" "Other"]])
+    (selection-list "ForWhom" "For whom"
+                    {:style "margin-bottom:10px"}
+                    true nil
+                    [["D" "David"] ["H" "Heidi"] ["A" "Aviva"] ["S" "Shoshana"] ["O" "Other"]])
     [:div
      [:input {:type "button"
               :value "Submit Receipt"
