@@ -1,6 +1,7 @@
 *#
 *~
 /.lein-repl-history
+/.repl
 out/
 repl/
 resources/public/js/receipts*.js
