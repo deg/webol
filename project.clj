@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
 
                  ;; Degel's Clojure utility library
-                 [degel-clojure-utils "0.1.2"]
+                 [degel-clojure-utils "0.1.3"]
 
                  ;; Needed, I think, in order to build a runnable uberjar with compojure
                  [ring/ring-jetty-adapter "1.1.8"]
@@ -37,7 +37,7 @@
   :plugins [[lein-cljsbuild "0.3.2" :exclusions [org.clojure/clojure]]
             [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
 
-            ;; Not supported in leind 2.2.0, but here as a reminder to get features
+            ;; Not supported in lein 2.2.0, but here as a reminder to get features
             ;; mentioned in https://groups.google.com/forum/#!msg/clojure/9cA5hvFJTkw/fnWwxvALd64J
             #_[lein-pedantic "0.0.5"]
             ]
