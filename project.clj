@@ -30,11 +30,17 @@
                  [com.cemerick/valip "0.3.2"]
 
                  ;; Clojure interface to AWS SimpleDB
-                 [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]]
+                 [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]
+
+                 ]
 
   :plugins [[lein-cljsbuild "0.3.2" :exclusions [org.clojure/clojure]]
             [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
-            [lein-pedantic "0.0.5"]]
+
+            ;; Not supported in leind 2.2.0, but here as a reminder to get features
+            ;; mentioned in https://groups.google.com/forum/#!msg/clojure/9cA5hvFJTkw/fnWwxvALd64J
+            #_[lein-pedantic "0.0.5"]
+            ]
 
   :min-lein-version "2.0.0"
 
