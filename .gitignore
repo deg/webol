@@ -2,6 +2,7 @@
 *~
 /.lein-repl-history
 /.repl
+checkouts/
 out/
 repl/
 resources/public/js/receipts*.js
