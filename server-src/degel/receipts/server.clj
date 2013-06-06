@@ -6,6 +6,7 @@
             [ring.util.response :refer [redirect]]
             [shoreleave.middleware.rpc :refer [wrap-rpc defremote]]
             [compojure.handler :refer [site]]
+            [degel.cljutil.devutils :as dev]
             [degel.receipts.receipts :refer [collect-receipt-history enter-receipt-internal]]))
 
 
