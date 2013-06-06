@@ -4,19 +4,28 @@ Framework setup
 Dependencies
 ------------
 
-- See http://squirrel.pl/blog/2013/01/02/get-started-with-clojurescript-with-leiningen-templates/
-  and https://github.com/konrad-garus/cljs-kickoff.
+- See [get-started-with-clojurescript-with-leiningen-templates
+  ](http://squirrel.pl/blog/2013/01/02/get-started-with-clojurescript-with-leiningen-templates/)
+  and [cljs-kickoff](https://github.com/konrad-garus/cljs-kickoff).
 
 - Options for project.clj are in
-  https://github.com/emezeske/lein-cljsbuild/blob/0.3.0/sample.project.clj from
-  https://github.com/emezeske/lein-cljsbuild
+  [sample.project.clj](https://github.com/emezeske/lein-cljsbuild/blob/0.3.0/sample.project.clj) from
+  [lein-cljsbuild](https://github.com/emezeske/lein-cljsbuild).
 
 Launch
 ------
 
-- lein ring server-headless
-- lein cljsbuild auto
-- (doesn't work for me -- need to compare to tutorial project) lein trampoline cljsbuild repl-listen
+- *In one shell:* `lein ring server-headless`
+- *In second shell:* `lein cljsbuild auto`
+- <del>`lein trampoline cljsbuild repl-listen`</del>
+- *In emacs:*
+  - *In .clj file:* `F8 (M-x nrepl-jack-in)`
+- Still trying to figure out repl+CLJS config stuff, but many tantalizing hints in
+  [piggieback](https://github.com/cemerick/piggieback#piggieback-),
+  [NRepl](https://github.com/kingtim/nrepl.el#installation), and
+  [pedestal](http://dykcode.tumblr.com/post/50119528927/pedestal-cljs-emacs-repl-workflow-using-piggieback)
+  notes.
+
 
 Heroku notes
 ------------
@@ -26,14 +35,15 @@ Heroku notes
     37 * * * * curl http://receipts.goldfarb-family.com
 - Memory monitoring currently off, because too verbose in the logs. Enable with
   heroku labs:enable log-runtime-metrics
-  See https://devcenter.heroku.com/articles/log-runtime-metrics
+  See [log-runtime-metrics](https://devcenter.heroku.com/articles/log-runtime-metrics)
 
 
 Tools
 -----
-SdbNavigator in the Chrome web store. Simple, but effective and
-working, interface to AWS SimpleDB.
-https://chrome.google.com/webstore/detail/sdbnavigator/ddhigekdfabonefhiildaiccafacphgg?hl=en 
+[SdbNavigator
+](https://chrome.google.com/webstore/detail/sdbnavigator/ddhigekdfabonefhiildaiccafacphgg?hl=en)
+in the Chrome web store. Simple, but effective and working, interface to AWS SimpleDB.
+
 
 To-do (dev)
 -----------
