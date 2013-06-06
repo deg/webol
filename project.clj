@@ -32,6 +32,8 @@
                  ;; Clojure interface to AWS SimpleDB
                  [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]
 
+                 ;; For CLJS REPL
+                 [com.cemerick/piggieback "0.0.4"]
                  ]
 
   :plugins [[lein-cljsbuild "0.3.2" :exclusions [org.clojure/clojure]]
@@ -43,6 +45,8 @@
             ]
 
   :min-lein-version "2.0.0"
+
+  :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
 
   :source-paths ["server-src"]
   :ring {:handler degel.receipts.server/app}
@@ -59,7 +63,7 @@
                        :pretty-print true}
             :jar false}
       :production {
-            :source-paths ["client-src" #_ "client-src-dev"] ; TODO brepl not safe here
+            :source-paths ["client-src" "client-src-dev"] ; TODO brepl not safe here
             :compiler {:output-to "resources/public/js/receipts.js"
                        :optimizations #_ :advanced :simple ; TODO Until dom issue resolved
                        :pretty-print #_ false true}

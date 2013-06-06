@@ -20,7 +20,17 @@ Launch
 - <del>`lein trampoline cljsbuild repl-listen`</del>
 - *In emacs:*
   - *In .clj file:* `F8 (M-x nrepl-jack-in)`
-- Still trying to figure out repl+CLJS config stuff, but many tantalizing hints in
+  - *In .clj buffer:* `c-C c-K   c-C m-N`
+  - *In *nrepl* buffer:* `(dev/r15)`  *(not strictly needed)*
+  - *In *nrepl* buffer:* `(require 'cljs.repl.browser)`
+  - *In *nrepl* buffer:* `(cemerick.piggieback/cljs-repl
+			:repl-env (doto (cljs.repl.browser/repl-env :port 9000)
+					cljs.repl/-setup))`
+  - *In .cljs buffer:* `c-C c-K   c-C m-N`
+  - *In .clj file:* `F8 (M-x nrepl-jack-in)`
+  - *In .clj buffer:* `c-C c-K   c-C m-N`
+  - *In *nrepl* buffer:* `(dev/r15)`  *(not strictly needed)*
+- Still trying to figure out rest of repl+CLJS config stuff, but many tantalizing hints in
   [piggieback](https://github.com/cemerick/piggieback#piggieback-),
   [NRepl](https://github.com/kingtim/nrepl.el#installation), and
   [pedestal](http://dykcode.tumblr.com/post/50119528927/pedestal-cljs-emacs-repl-workflow-using-piggieback)
