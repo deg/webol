@@ -1,6 +1,7 @@
-(ns degel.receipts.db
+(ns degel.receipts.simpleDB
   (:require [cemerick.rummage :as sdb]
-            [cemerick.rummage.encoding :as enc]))
+            [cemerick.rummage.encoding :as enc]
+            [degel.cljutil.devutils :as dev]))
 (def aws-key "AKIAI2SJMRRD53FHKY3Q")
 (defn assemble-aws-secret [password]
   ;; Reminder: (MAYNARD (ROOT 1654)) or https://portal.aws.amazon.com/gp/aws/securityCredentials
@@ -13,6 +14,10 @@
 
 (def the-client (atom nil))
 (def the-config (atom nil))
+
+(defn- form-errmsg [e title]
+  (str title ": " (.getStatusCode e) ": " (.getMessage e)))
+
 (defn create-client
   "Connect to DB and validate the password. Return [success error-message]"
   [password]
@@ -25,9 +30,7 @@
                (reset! the-config config)
                [true "New connection"])
            (catch com.amazonaws.AmazonServiceException e
-             [false (str "DB connection failed. Status code: "
-                         (.getStatusCode e) ": "
-                         (.getMessage e))])))
+             [false (form-errmsg e "DB connection failed. Status code: ")])))
     [true "existing connection"]))
 
 
@@ -39,6 +42,29 @@
                  (sdb/put-attrs @the-config "Receipts"
                                 (assoc (dissoc columns :password) ::sdb/id guid))
                  guid))]))
+
+(defn put-user-data-record [key value user-id password]
+  (let [[success errmsg] (create-client password)]
+    (if (false? success)
+      [false errmsg]
+      (try [true (sdb/put-attrs @the-config "User-data"
+                                {::sdb/id [user-id key] :value value})]
+           (catch com.amazonaws.AmazonServiceException e
+             [false  (form-errmsg e "DB put failed. Status code")])))))
+
+
+(defn get-user-data-record
+  "[TODO] Doc TBD"
+  [key user-id password]
+  (let [[success errmsg] (create-client password)]
+    (if (false? success)
+      [false errmsg]
+      (try [true (->> `{select [:value] from User-data limit 1 where (= ::sdb/id [~user-id ~key])}
+                      (sdb/query @the-config)
+                      (map :value)
+                      first)]
+           (catch com.amazonaws.AmazonServiceException e
+             [false (form-errmsg e "DB get failed. Status code")])))))
 
 (defn get-all-records [password columns]
   (let [[success errmsg] (create-client password)]
@@ -52,6 +78,8 @@
     (if (false? success)
       errmsg
       (do
+        (sdb/delete-domain @the-client "User-data")
+        (sdb/create-domain @the-client "User-data")
         (sdb/delete-domain @the-client "Receipts")
         (sdb/create-domain @the-client "Receipts")))))
 

@@ -7,6 +7,7 @@
             [shoreleave.middleware.rpc :refer [wrap-rpc defremote]]
             [compojure.handler :refer [site]]
             [degel.cljutil.devutils :as dev]
+            [degel.receipts.simpleDB :refer [put-user-data-record get-user-data-record]]
             [degel.receipts.receipts :refer [collect-receipt-history enter-receipt-internal]]))
 
 
@@ -19,6 +20,12 @@
 
 (defremote enter-receipt [columns]
   (enter-receipt-internal columns))
+
+(defremote write-storage [key value user-id password]
+  (put-user-data-record key value user-id password))
+
+(defremote read-storage [key user-id password]
+  (get-user-data-record key user-id password))
 
 
 (defroutes app-routes

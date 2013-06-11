@@ -1,8 +1,5 @@
 (ns degel.receipts.utils)
 
-(def storage (.-localStorage js/window))
-
-
 (defn now-string []
   (let [date (js/Date.)
         day (.getDate date)
