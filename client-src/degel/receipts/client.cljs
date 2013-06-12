@@ -7,48 +7,69 @@
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
             [degel.receipts.utils :refer [now-string]]
-            [degel.receipts.storage :refer [storage]]
+            [degel.receipts.storage :refer [read write-local]]
             [degel.receipts.html :refer [entry-html confirmation-html setup-html history-html
                                          button-group set-active-button]]))
 
 
 (declare submit-receipt add-help remove-help cache-user-data refresh-history fill-defaults)
 
+
+(defn- clj-value [id]
+  (-> id dom/by-id dom/value js->clj))
+
+(defn- set-clj-value! [id value]
+  (dom/set-value! (dom/by-id id) (clj->js value)))
+
+
 (defn page-to-storage
   "Save webpage control values to persistent storage."
   []
-  (when (dom/by-id "PaidBy")
-    (.setItem storage :cntl-paid-by (dom/value (dom/by-id "PaidBy")))
-    (.setItem storage :cntl-date (dom/value (dom/by-id "Date")))
-    (.setItem storage :cntl-amount (dom/value (dom/by-id "Amount")))
-    (.setItem storage :cntl-category (dom/value (dom/by-id "Category")))
-    (.setItem storage :cntl-vendor (dom/value (dom/by-id "Vendor")))
-    (.setItem storage :cntl-comment (dom/value (dom/by-id "Comment")))
-    (.setItem storage :cntl-for-whom (dom/value (dom/by-id "ForWhom"))))
-  (when (dom/by-id "Password")
-    (.setItem storage :cntl-user-id (dom/value (dom/by-id "user-id")))
-    (.setItem storage :cntl-password (dom/value (dom/by-id "Password")))))
+  (let [pairs (cond (dom/by-id "PaidBy")   [["PaidBy" :cntl-paid-by]
+                                            ["Date" :cntl-date]
+                                            ["Amount" :cntl-amount]
+                                            ["Category" :cntl-category]
+                                            ["Vendor" :cntl-vendor]
+                                            ["Comment" :cntl-comment]
+                                            ["ForWhom" :cntl-for-whom]]
+                    (dom/by-id "Password") [["user-id" :cntl-user-id]
+                                            ["Password" :cntl-password]])]
+    (doseq [[id key] pairs]
+      (write-local key (clj-value id)))))
 
 
 (defn storage-to-page
   "Load webpage control values from persistent storage."
   []
-  (when (dom/by-id "PaidBy")
-    ;; [TODO] Now handled in set-tab below. Clean up, once we get the data callback scheme working.
-    ;; (dom/set-value! (dom/by-id "PaidBy") (.getItem storage :cntl-paid-by))
-    (dom/set-value! (dom/by-id "Date") (.getItem storage :cntl-date))
-    (dom/set-value! (dom/by-id "Amount") (.getItem storage :cntl-amount))
-    (dom/set-value! (dom/by-id "Category") (.getItem storage :cntl-category))
-    (dom/set-value! (dom/by-id "Vendor") (.getItem storage :cntl-vendor))
-    (dom/set-value! (dom/by-id "Comment") (.getItem storage :cntl-comment))
-    (dom/set-value! (dom/by-id "ForWhom") (.getItem storage :cntl-for-whom)))
-  (when (dom/by-id "Password")
-    (let [pwd-from-page (.getItem storage :cntl-password)
-          cached-pwd (.getItem storage :password)]
-      (dom/set-value! (dom/by-id "Password") (if (blank? pwd-from-page) cached-pwd pwd-from-page)))
-    (let [uid-from-page (.getItem storage :cntl-user-id)
-          cached-uid (.getItem storage :user-id)]
-      (dom/set-value! (dom/by-id "user-id") (if (blank? uid-from-page) cached-uid uid-from-page)))))
+  (let [storage-to-control (fn [key id]
+                             (read key
+                                   :read-fn (fn [{:keys [value]}] (set-clj-value! id value))
+                                   :fail-fn (fn [{:keys [errmsg]}] (js/alert errmsg))))]
+    (when (dom/by-id "PaidBy")
+      ;; [TODO] Now handled in set-tab below. Clean up, once we get the data callback scheme working.
+      ;; (dom/set-value! (dom/by-id "PaidBy") (.getItem storage :cntl-paid-by))
+      (doseq [[key id] [[:cntl-date "Date"]
+                        [:cntl-amount "Amount"]
+                        [:cntl-category "Category"]
+                        [:cntl-vendor "Vendor"]
+                        [:cntl-comment "Comment"]
+                        [:cntl-for-whom "ForWhom"]]]
+        (storage-to-control key id)))
+    (when (dom/by-id "Password")
+      (read :cntl-password
+            :read-fn (fn [{pwd-from-page :value}]
+                       (if (blank? pwd-from-page)
+                         (read :password
+                               :read-fn (fn [{cached-pwd :value}]
+                                          (set-clj-value! "Password" cached-pwd)))
+                         (set-clj-value! "Password" pwd-from-page))))
+      (read :cntl-user-id
+            :read-fn (fn [{uid-from-page :value}]
+                       (if (blank? uid-from-page)
+                         (read :user-id
+                               :read-fn (fn [{cached-uid :value}]
+                                          (set-clj-value! "user-id" cached-uid)))
+                         (set-clj-value! "user-id" uid-from-page)))))))
 
 
 (defn clear-receipt-page []
@@ -70,7 +91,7 @@
                     (dom/set-html! (dom/by-id "contents") (entry-html))
                     (remote-callback :fill-paid-by [:israel]
                       #(dom/set-inner-html! (dom/by-id "PaidBy")
-                         (let [selected-paid-by (.getItem storage :cntl-paid-by)]
+                         (let [selected-paid-by (read :cntl-paid-by)]
                            (html [:select {:name "paidby-choices"}
                                   (for [paid-by %] [:option
                                                     (if (= selected-paid-by paid-by)
@@ -99,8 +120,8 @@
                     :vendor   (-> "Vendor" dom/by-id dom/value)
                     :comment  (-> "Comment" dom/by-id dom/value)
                     :for-whom (reduce str (-> "ForWhom" dom/by-id dom/value))
-                    :user-id (.getItem storage :user-id)
-                    :password (.getItem storage :password)}]
+                    :user-id (read :user-id)
+                    :password (read :password)}]
     (page-to-storage)
     (remote-callback :enter-receipt [params-map]
       (fn [[success confirmation]]
@@ -113,7 +134,7 @@
 
 
 (defn refresh-history []
-  (let [password (.getItem storage :password)]
+  (let [password (read :password)]
     (remote-callback :fill-receipt-history [password]
       (fn [records]
         (dom/destroy! (dom/by-class "history"))
@@ -140,15 +161,15 @@
 
 (defn cache-user-data []
   (let [password (-> "Password" dom/by-id dom/value)]
-    (.setItem storage :password password))
+    (write-local :password password))
   (let [user-id (-> "user-id" dom/by-id dom/value)]
-    (.setItem storage :user-id user-id)))
+    (write-local :user-id user-id)))
 
 
 (defn fill-defaults []
   (dom/set-value! (dom/by-id "Date") (now-string))
-  (dom/set-value! (dom/by-id "user-id") (.getItem storage :user-id))
-  (dom/set-value! (dom/by-id "Password") (.getItem storage :password)))
+  (dom/set-value! (dom/by-id "user-id") (read :user-id))
+  (dom/set-value! (dom/by-id "Password") (read :password)))
 
 
 (defn ^:export init []

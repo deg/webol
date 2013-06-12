@@ -35,7 +35,8 @@
 (defn- read-wrapped-local
   "[TODO] Doc TBD"
   [key]
-  (read-string (.getItem storage key)))
+  (when-let [wrapped-value (.getItem storage key)]
+    (read-string wrapped-value)))
 
 
 (defn write-local
