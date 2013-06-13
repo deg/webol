@@ -120,8 +120,7 @@
     (control-pair "Password" "Password"
                   {:type "password"
                    :required ""
-                   :MaxLength "10"})
-    (submit-button "submit-pwd" "Setup Account")]
+                   :MaxLength "10"})]
    [:p [:a {:href "help.html"} "Help"] " about this application."]))
 
 

@@ -67,10 +67,10 @@
 
 (defn read
   "[TODO] Doc TBD"
-  [key & {:keys [read-fn fail-fn]}]
+  [key read-fn & {:keys [fail-fn]}]
   (let [{:keys [value remotable?]} (read-wrapped-local key)]
     (when read-fn
-      (read-fn {:source :local :key key :value value}))
+      (read-fn value :local))
     (when remotable?
       (let [user-id (.getItem storage :user-id)
             password (.getItem storage :password)]
@@ -78,6 +78,6 @@
           #(let [[success? errmsg-or-value] %]
              (if success?
                (when read-fn
-                 (read-fn {:source :remote :key key :value errmsg-or-value}))
-               (when fail-fn
-                 (fail-fn {:source :remote :key key :errmsg errmsg-or-value})))))))))
+                 (read-fn errmsg-or-value :remote))
+               ((or fail-fn js/alert) errmsg-or-value))))))
+    value))

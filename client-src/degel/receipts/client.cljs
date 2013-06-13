@@ -41,10 +41,7 @@
 (defn storage-to-page
   "Load webpage control values from persistent storage."
   []
-  (let [storage-to-control (fn [key id]
-                             (read key
-                                   :read-fn (fn [{:keys [value]}] (set-clj-value! id value))
-                                   :fail-fn (fn [{:keys [errmsg]}] (js/alert errmsg))))]
+  (let [storage-to-control (fn [key id] (read key #(set-clj-value! id %)))]
     (when (dom/by-id "PaidBy")
       ;; [TODO] Now handled in set-tab below. Clean up, once we get the data callback scheme working.
       ;; (dom/set-value! (dom/by-id "PaidBy") (.getItem storage :cntl-paid-by))
@@ -56,20 +53,9 @@
                         [:cntl-for-whom "ForWhom"]]]
         (storage-to-control key id)))
     (when (dom/by-id "Password")
-      (read :cntl-password
-            :read-fn (fn [{pwd-from-page :value}]
-                       (if (blank? pwd-from-page)
-                         (read :password
-                               :read-fn (fn [{cached-pwd :value}]
-                                          (set-clj-value! "Password" cached-pwd)))
-                         (set-clj-value! "Password" pwd-from-page))))
-      (read :cntl-user-id
-            :read-fn (fn [{uid-from-page :value}]
-                       (if (blank? uid-from-page)
-                         (read :user-id
-                               :read-fn (fn [{cached-uid :value}]
-                                          (set-clj-value! "user-id" cached-uid)))
-                         (set-clj-value! "user-id" uid-from-page)))))))
+      (doseq [[key id] [[:cntl-password "Password"]
+                        [:cntl-user-id "user-id"]]]
+        (storage-to-control key id)))))
 
 
 (defn clear-receipt-page []
@@ -91,7 +77,7 @@
                     (dom/set-html! (dom/by-id "contents") (entry-html))
                     (remote-callback :fill-paid-by [:israel]
                       #(dom/set-inner-html! (dom/by-id "PaidBy")
-                         (let [selected-paid-by (read :cntl-paid-by)]
+                         (let [selected-paid-by (read :cntl-paid-by nil)]
                            (html [:select {:name "paidby-choices"}
                                   (for [paid-by %] [:option
                                                     (if (= selected-paid-by paid-by)
@@ -103,8 +89,7 @@
                       (events/listen! submit-btn :mouseover add-help)
                       (events/listen! submit-btn :mouseout remove-help)))
     "setup-tab" (do
-                  (dom/set-html! (dom/by-id "contents") (setup-html))
-                  (events/listen! (dom/by-id "submit-pwd") :click cache-user-data))
+                  (dom/set-html! (dom/by-id "contents") (setup-html)))
     "history-tab" (do
                     (dom/set-html! (dom/by-id "contents") (history-html))
                     (refresh-history)
@@ -120,8 +105,8 @@
                     :vendor   (-> "Vendor" dom/by-id dom/value)
                     :comment  (-> "Comment" dom/by-id dom/value)
                     :for-whom (reduce str (-> "ForWhom" dom/by-id dom/value))
-                    :user-id (read :user-id)
-                    :password (read :password)}]
+                    :user-id (read :cntl-user-id nil)
+                    :password (read :cntl-password nil)}]
     (page-to-storage)
     (remote-callback :enter-receipt [params-map]
       (fn [[success confirmation]]
@@ -134,7 +119,7 @@
 
 
 (defn refresh-history []
-  (let [password (read :password)]
+  (let [password (read :cntl-password nil)]
     (remote-callback :fill-receipt-history [password]
       (fn [records]
         (dom/destroy! (dom/by-class "history"))
@@ -159,20 +144,12 @@
   (dom/destroy! (dom/by-class "help")))
 
 
-(defn cache-user-data []
-  (let [password (-> "Password" dom/by-id dom/value)]
-    (write-local :password password))
-  (let [user-id (-> "user-id" dom/by-id dom/value)]
-    (write-local :user-id user-id)))
-
-
 (defn fill-defaults []
-  (dom/set-value! (dom/by-id "Date") (now-string))
-  (dom/set-value! (dom/by-id "user-id") (read :user-id))
-  (dom/set-value! (dom/by-id "Password") (read :password)))
+  (dom/set-value! (dom/by-id "Date") (now-string)))
 
 
 (defn ^:export init []
+  (log "Init 0")
   (set-tab "receipt-tab")
   (dom/set-html! (dom/by-id "tabbar")
     (html (button-group "tabbar-buttons" true
