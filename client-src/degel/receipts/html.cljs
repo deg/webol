@@ -58,7 +58,15 @@
   (dom/add-class! (dom/by-id button) "active"))
 
 
-(defn entry-html []
+(def receipt-tab-controls {:paid-by  "PaidBy"
+                           :date     "Date"
+                           :amount   "Amount"
+                           :category "Category"
+                           :vendor   "Vendor"
+                           :comment  "Comment"
+                           :for-whom "ForWhom"})
+
+(defn receipt-tab-html []
   (html
    [:form.form-horizontal {:id "receipt-body"}
     (selection-list "PaidBy" "Paid By"
@@ -110,7 +118,10 @@
              :id "next-receipt"}]]))
 
 
-(defn setup-html []
+(def setup-tab-controls {:user-id "user-id"
+                         :password "Password"})
+
+(defn setup-tab-html []
   (html
    [:form.form-horizontal {:id "setup-account"}
     (control-pair "user-id" "User ID"
@@ -124,7 +135,7 @@
    [:p [:a {:href "help.html"} "Help"] " about this application."]))
 
 
-(defn history-html []
+(defn history-tab-html []
   (html
    [:div {:id "ForHistory"}]
    [:div

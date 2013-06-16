@@ -8,7 +8,10 @@
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
             [degel.receipts.utils :refer [now-string]]
             [degel.receipts.storage :refer [read write-local]]
-            [degel.receipts.html :refer [entry-html confirmation-html setup-html history-html
+            [degel.receipts.html :refer [receipt-tab-controls receipt-tab-html
+                                         confirmation-html
+                                         setup-tab-controls setup-tab-html
+                                         history-tab-html
                                          button-group set-active-button]]))
 
 
@@ -22,26 +25,12 @@
   (dom/set-value! (dom/by-id id) (clj->js value)))
 
 
-(def receipt-tab-controls
-  [["PaidBy"   :paid-by]
-   ["Date"     :date]
-   ["Amount"   :amount]
-   ["Category" :category]
-   ["Vendor"   :vendor]
-   ["Comment"  :comment]
-   ["ForWhom"  :for-whom]])
-
-(def setup-tab-controls
-  [["user-id" :user-id]
-   ["Password" :password]])
-
-
 (defn page-to-storage
   "Save webpage control values to persistent storage."
   []
-  (let [pairs (cond (dom/by-id "PaidBy")   receipt-tab-controls
+  (let [controls (cond (dom/by-id "PaidBy")   receipt-tab-controls
                     (dom/by-id "Password") setup-tab-controls)]
-    (doseq [[id key] pairs]
+    (doseq [[key id] controls]
       (write-local key (clj-value id)))))
 
 
@@ -52,15 +41,15 @@
     (when (dom/by-id "PaidBy")
       ;; [TODO] Now handled in set-tab below. Clean up, once we get the data callback scheme working.
       ;; (dom/set-value! (dom/by-id "PaidBy") (.getItem storage :cntl-paid-by))
-      (doseq [[id key] receipt-tab-controls]
+      (doseq [[key id] receipt-tab-controls]
         (storage-to-control key id)))
     (when (dom/by-id "Password")
-      (doseq [[id key] setup-tab-controls]
+      (doseq [[key id] setup-tab-controls]
         (storage-to-control key id)))))
 
 
 (defn clear-receipt-page []
-  (doseq [[id _] receipt-tab-controls]
+  (doseq [[_ id] receipt-tab-controls]
     (dom/set-value! (dom/by-id id) ""))
   (fill-defaults)
   (page-to-storage))
@@ -70,7 +59,7 @@
   (page-to-storage)
   (condp = tab
     "receipt-tab" (do
-                    (dom/set-html! (dom/by-id "contents") (entry-html))
+                    (dom/set-html! (dom/by-id "contents") (receipt-tab-html))
                     (remote-callback :fill-paid-by [:israel]
                       #(dom/set-inner-html! (dom/by-id "PaidBy")
                          (let [selected-paid-by (read :paid-by nil)]
@@ -85,20 +74,18 @@
                       (events/listen! submit-btn :mouseover add-help)
                       (events/listen! submit-btn :mouseout remove-help)))
     "setup-tab" (do
-                  (dom/set-html! (dom/by-id "contents") (setup-html)))
+                  (dom/set-html! (dom/by-id "contents") (setup-tab-html)))
     "history-tab" (do
-                    (dom/set-html! (dom/by-id "contents") (history-html))
+                    (dom/set-html! (dom/by-id "contents") (history-tab-html))
                     (refresh-history)
                     (events/listen! (dom/by-id "refresh-history") :click refresh-history)))
   (storage-to-page))
 
 
 (defn submit-receipt []
-  (let [params-map (assoc (into {}
-                                (map (fn [[id key]] [key (clj-value id)])
-                                     receipt-tab-controls))
-                     :user-id (read :user-id nil)
-                     :password (read :password nil))
+  (let [params-map (reduce-kv (fn [init key id] (assoc init key (clj-value id)))
+                              {:user-id (read :user-id nil), :password (read :password nil)}
+                              receipt-tab-controls)
         params-map (update-in params-map [:for-whom] (partial reduce str))]
     (page-to-storage)
     (remote-callback :enter-receipt [params-map]
