@@ -50,7 +50,7 @@
 
 (defn clear-receipt-page []
   (doseq [[_ id] receipt-tab-controls]
-    (dom/set-value! (dom/by-id id) ""))
+    (set-clj-value! id ""))
   (fill-defaults)
   (page-to-storage))
 
