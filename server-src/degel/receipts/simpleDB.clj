@@ -38,10 +38,11 @@
   (let [[success errmsg] (create-client (:password columns))]
     [success (if (false? success)
                errmsg
-               (let [guid (str (java.util.UUID/randomUUID))]
+               (let [uid (or (:uid columns) (str (java.util.UUID/randomUUID)))]
                  (sdb/put-attrs @the-config "Receipts"
-                                (assoc (dissoc columns :password) ::sdb/id guid))
-                 guid))]))
+                                (assoc (dissoc columns :password :uid)
+                                  ::sdb/id uid))
+                 uid))]))
 
 (defn put-user-data-record [key value user-id password]
   (let [[success errmsg] (create-client password)]

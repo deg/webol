@@ -83,8 +83,10 @@
 
 
 (defn submit-receipt []
-  (let [params-map (reduce-kv (fn [init key id] (assoc init key (clj-value id)))
-                              {:user-id (read :user-id nil), :password (read :password nil)}
+  (let [params-map {:user-id (read :user-id nil), :password (read :password nil)}
+        params-map (assoc params-map :uid (+ (goog.string.getRandomString) "-" (:user-id params-map)))
+        params-map (reduce-kv (fn [init key id] (assoc init key (clj-value id)))
+                              params-map
                               receipt-tab-controls)
         params-map (update-in params-map [:for-whom] (partial reduce str))]
     (page-to-storage)
