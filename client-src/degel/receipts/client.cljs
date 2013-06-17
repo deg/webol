@@ -12,7 +12,8 @@
                                          confirmation-html
                                          setup-tab-controls setup-tab-html
                                          history-tab-html
-                                         button-group set-active-button]]))
+                                         button-group set-active-button]]
+            [degel.receipts.db :as db]))
 
 
 (declare submit-receipt add-help remove-help cache-user-data refresh-history fill-defaults)
@@ -91,11 +92,14 @@
         params-map (update-in params-map [:for-whom] (partial reduce str))]
     (page-to-storage)
     (remote-callback :enter-receipt [params-map]
-      (fn [[success confirmation]]
-        (when success
-          (clear-receipt-page))
-        (dom/set-html! (dom/by-id "contents")
-          (confirmation-html success confirmation))
+      (fn [result]
+        (condp (:status result) =
+          db/SUCCESS (do
+                       (clear-receipt-page)
+                       (dom/set-html! (dom/by-id "contents")
+                         (confirmation-html true (:formatted result))))
+          db/FAILURE (dom/set-html! (dom/by-id "contents")
+                       (confirmation-html false (:errmsg result))))
         (events/listen! (dom/by-id "next-receipt") :click
           #(set-tab "receipt-tab"))))))
 

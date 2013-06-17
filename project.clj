@@ -54,7 +54,10 @@
   :main degel.receipts.server
 
   :cljsbuild {
-    :crossovers [valip.core valip.predicates degel.receipts.static-validators]
+    :crossovers [valip.core
+                 valip.predicates
+                 degel.receipts.db
+                 degel.receipts.static-validators]
     :builds {
       :dev {
             :source-paths ["client-src" "client-src-dev"]

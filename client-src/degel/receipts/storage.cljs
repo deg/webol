@@ -1,7 +1,8 @@
 (ns degel.receipts.storage
-  (:require [cljs.reader :refer [read-string]] ;; [TODO] Is clojure.edn available in cljs
+  (:require [cljs.reader :refer [read-string]] ;; [TODO] Is clojure.edn available in cljs?
             [domina :refer [log]]
-            [shoreleave.remotes.http-rpc :refer [remote-callback]]))
+            [shoreleave.remotes.http-rpc :refer [remote-callback]]
+            [degel.receipts.db :as db]))
 
 ;;; Use local storage as a cache backed by server-side storage.
 ;;;
@@ -29,7 +30,8 @@
 
 (defn- write-wrapped-local
   [key wrapped-value]
-  (.setItem storage key (pr-str wrapped-value)))
+  (.setItem storage key (pr-str wrapped-value))
+  {:status db/SUCCESS})
 
 
 (defn- read-wrapped-local
@@ -51,19 +53,14 @@
 (defn write
   "Write a value to local storage and to the server.
   The value will be keyed by a vector of the current user-id and the supplied key.
-  remote-callback-fn will be called with a vector of either
-   [:failure error-message]
-  or
-   [:success key value]"
+  remote-callback-fn will be called with a map including :status, :errmsg, and/or :uid."
   [key value remote-callback-fn]
   (write-wrapped-local key (wrap-value value true))
   (let [user-id (.getItem storage :user-id)
         password (.getItem storage :password)]
     (remote-callback :write-storage [key value user-id password]
-      (fn [[success? errmsg]]
-        (remote-callback-fn (if success?
-                              [:success key value]
-                              [:failure errmsg]))))))
+      #(remote-callback-fn %))))
+
 
 (defn read
   "[TODO] Doc TBD"
@@ -75,9 +72,8 @@
       (let [user-id (.getItem storage :user-id)
             password (.getItem storage :password)]
         (remote-callback :read-storage [key user-id password]
-          #(let [[success? errmsg-or-value] %]
-             (if success?
+          #(if (= (:status %) db/SUCCESS)
                (when read-fn
-                 (read-fn errmsg-or-value :remote))
-               ((or fail-fn js/alert) errmsg-or-value))))))
+                 (read-fn (:value %) :remote))
+               ((or fail-fn js/alert) (:errmsg %))))))
     value))

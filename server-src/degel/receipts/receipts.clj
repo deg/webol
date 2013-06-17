@@ -1,6 +1,8 @@
 (ns degel.receipts.receipts
   (:require [clojure.string :refer [split]]
             [clojure.pprint :refer [cl-format]]
+            [degel.cljutil.devutils :as dev]
+            [degel.receipts.db :as db]
             [degel.receipts.simpleDB :refer [put-record get-all-records]]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]))
 
@@ -22,13 +24,14 @@
                                       user-id password]
                       :as columns}]
   (let [errors (validate-receipt-fields paid-by date amount category vendor comment for-whom)]
-    (if (empty? errors)
+    (if (not (empty? errors))
+      {:status db/FAILURE
+       :errmsg (cl-format false "Something didn't validate: ~{~A ~}" (mapcat second errors))}
       (let [formatted (format-receipt columns)
-            [success guid-or-errmsg] (put-record (assoc columns :formatted formatted))]
-        [success (if (true? success)
-                   formatted
-                   guid-or-errmsg)])
-      [false (cl-format false "Something didn't validate: ~{~A ~}" (mapcat second errors))])))
+            result (put-record (assoc columns :formatted formatted))]
+        (if (= db/SUCCESS (:status result))
+          (assoc result :formatted formatted)
+          result)))))
 
 (defn collect-receipt-history [password]
   (let [records (get-all-records password [:formatted])]

@@ -1,7 +1,10 @@
 (ns degel.receipts.simpleDB
   (:require [cemerick.rummage :as sdb]
             [cemerick.rummage.encoding :as enc]
-            [degel.cljutil.devutils :as dev]))
+            [degel.cljutil.devutils :as dev]
+            [degel.receipts.db :as db]))
+
+
 (def aws-key "AKIAI2SJMRRD53FHKY3Q")
 (defn assemble-aws-secret [password]
   ;; Reminder: (MAYNARD (ROOT 1654)) or https://portal.aws.amazon.com/gp/aws/securityCredentials
@@ -18,7 +21,7 @@
 (defn- form-errmsg [e title]
   (str title ": " (.getStatusCode e) ": " (.getMessage e)))
 
-(defn create-client
+(defn- create-client
   "Connect to DB and validate the password. Return [success error-message]"
   [password]
   (if (nil? @the-config)
@@ -36,22 +39,27 @@
 
 (defn put-record [columns]
   (let [[success errmsg] (create-client (:password columns))]
-    [success (if (false? success)
-               errmsg
-               (let [uid (or (:uid columns) (str (java.util.UUID/randomUUID)))]
-                 (sdb/put-attrs @the-config "Receipts"
-                                (assoc (dissoc columns :password :uid)
-                                  ::sdb/id uid))
-                 uid))]))
+    (if (false? success)
+      {:status db/FAILURE :errmsg errmsg}
+      (let [uid (or (:uid columns) (str (java.util.UUID/randomUUID)))]
+        ;; [TODO] Catch failures  in put-attrs here too.
+        ;; [TODO] Better, combine put-record and put-user-data-record
+        (sdb/put-attrs @the-config "Receipts"
+                       (assoc (dissoc columns :password :uid)
+                         ::sdb/id uid))
+        {:status db/SUCCESS :uid uid}))))
+
 
 (defn put-user-data-record [key value user-id password]
   (let [[success errmsg] (create-client password)]
     (if (false? success)
-      [false errmsg]
-      (try [true (sdb/put-attrs @the-config "User-data"
-                                {::sdb/id [user-id key] :value value})]
+      {:status db/FAILURE :errmsg errmsg}
+      (try (let [uid (str [user-id key])]
+             (sdb/put-attrs @the-config "User-data"
+                            {::sdb/id uid :value value})
+             {:status db/SUCCESS :uid uid})
            (catch com.amazonaws.AmazonServiceException e
-             [false  (form-errmsg e "DB put failed. Status code")])))))
+             {:status db/FAILURE :errmsg (form-errmsg e "DB put failed. Status code")})))))
 
 
 (defn get-user-data-record
@@ -59,16 +67,18 @@
   [key user-id password]
   (let [[success errmsg] (create-client password)]
     (if (false? success)
-      [false errmsg]
-      (try [true (->> `{select [:value] from User-data limit 1 where (= ::sdb/id [~user-id ~key])}
-                      (sdb/query @the-config)
-                      (map :value)
-                      first)]
+      {:status db/FAILURE :errmsg errmsg}
+      (try {:status db/SUCCESS
+            :value (->> `{select [:value] from User-data limit 1 where (= ::sdb/id [~user-id ~key])}
+                        (sdb/query @the-config)
+                        (map :value)
+                        first)}
            (catch com.amazonaws.AmazonServiceException e
-             [false (form-errmsg e "DB get failed. Status code")])))))
+             {:status db/FAILURE :errmsg (form-errmsg e "DB get failed. Status code")})))))
 
 (defn get-all-records [password columns]
   (let [[success errmsg] (create-client password)]
+    ;; [TODO] (1) return map; (2) try/catch around query-all
     (if (false? success)
       errmsg
       (map #(dissoc % ::sdb/id) (sdb/query-all @the-config `{select ~columns from Receipts})))))
