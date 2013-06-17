@@ -35,4 +35,4 @@
 
 (defn collect-receipt-history [password]
   (let [records (get-all-records password [:formatted])]
-    (remove nil? (map :formatted records))))
+    (remove nil? (map :formatted (:values records)))))
