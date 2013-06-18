@@ -28,14 +28,13 @@
       {:status db/FAILURE
        :errmsg (cl-format false "Something didn't validate: ~{~A ~}" (mapcat second errors))}
       (let [formatted (format-receipt columns)
-            result (put-record (assoc columns :formatted formatted))]
+            result (put-record "Receipts" (assoc columns :formatted formatted))]
         (if (= db/SUCCESS (:status result))
           (assoc result :formatted formatted)
           result)))))
 
 
 (defn collect-receipt-history [password]
-  (->> (get-all-records password [:formatted])
+  (->> (get-all-records "Receipts" password :formatted)
        :values
-       (map :formatted)
        (remove nil?)))

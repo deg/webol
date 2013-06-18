@@ -54,36 +54,32 @@
              (assoc result :status db/FAILURE :errmsg (form-errmsg e errmsg)))))))
 
 
-(defn put-record [columns]
+(defn put-record [table columns]
   (with-open-db (:password columns) :uid  "DB put failed"
     #(let [uid (or (:uid columns) (str (java.util.UUID/randomUUID)))]
-       (sdb/put-attrs @the-config "Receipts"
-                      (assoc (dissoc columns :password :uid)
-                        ::sdb/id uid))
+       (sdb/put-attrs @the-config table
+                      (assoc (dissoc columns :password :uid) ::sdb/id uid))
        uid)))
 
 
-(defn put-user-data-record [key value user-id password]
-  (with-open-db password :uid  "DB put failed"
-    #(let [uid (str [user-id key])]
-       (sdb/put-attrs @the-config "User-data"
-                      {::sdb/id uid :value value})
-       uid)))
-
-
-(defn get-user-data-record [key user-id password]
+(defn get-record [table uid columns password]
   (with-open-db password :value "DB get failed"
-    #(->> `{select [:value] from User-data limit 1 where (= ::sdb/id [~user-id ~key])}
-          (sdb/query @the-config)
-          (map :value)
-          first)))
+    (fn [] (->> `{select ~(if (vector? columns) columns [columns])
+                  from ~table limit 1 where (= ::sdb/id ~uid)}
+                (sdb/query @the-config)
+                (map #(if (vector? columns)
+                        (select-keys % columns)
+                        (columns %)))
+                first))))
 
 
-(defn get-all-records [password columns]
+(defn get-all-records [table password columns]
   (with-open-db password :values "DB get-all failed."
-    (fn []
-      (map #(dissoc % ::sdb/id)
-           (sdb/query-all @the-config `{select ~columns from Receipts})))))
+    (fn [] (->> `{select ~(if (vector? columns) columns [columns]) from ~table}
+                (sdb/query-all @the-config)
+                (map #(if (vector? columns)
+                        (select-keys % columns)
+                        (columns %)))))))
 
 
 (defn nuke-db [password]
