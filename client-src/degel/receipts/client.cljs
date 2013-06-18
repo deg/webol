@@ -8,11 +8,11 @@
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
             [degel.receipts.utils :refer [now-string]]
             [degel.receipts.storage :refer [read write-local]]
-            [degel.receipts.html :refer [receipt-tab-controls receipt-tab-html
-                                         confirmation-html
-                                         setup-tab-controls setup-tab-html
-                                         history-tab-html
-                                         button-group set-active-button]]
+            [degel.receipts.html :refer [button-group set-active-button]]
+            [degel.receipts.pages :refer [receipt-tab-controls receipt-tab-html
+                                          confirmation-html
+                                          setup-tab-controls setup-tab-html
+                                          history-tab-html]]
             [degel.receipts.db :as db]))
 
 
