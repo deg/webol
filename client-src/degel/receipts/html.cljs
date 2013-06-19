@@ -18,6 +18,15 @@
      label]]])
 
 
+(defn selection [value-text-pairs selected-value]
+  (for [[value text] value-text-pairs]
+    [:option
+     (if (= selected-value value)
+       {:value value :selected ""}
+       {:value value})
+     text]))
+
+
 (defn selection-list [id label attrs multiple? selected-value value-text-pairs]
   [:div.control-group (merge {:id (str id "-group")} attrs)
    [:label.control-label {:for id} (str label ":&nbsp;")]
@@ -25,12 +34,7 @@
     [:select (if multiple?
                {:id id :multiple ""}
                {:id id})
-     (for [[value text] value-text-pairs]
-       [:option
-        (if (= selected-value value)
-          {:value value :selected ""}
-          {:value value})
-        text])]]])
+     (selection value-text-pairs selected-value)]]])
 
 
 (defn button-group

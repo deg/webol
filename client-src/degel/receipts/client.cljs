@@ -8,7 +8,7 @@
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
             [degel.receipts.utils :refer [now-string]]
             [degel.receipts.storage :refer [read write-local]]
-            [degel.receipts.html :refer [button-group set-active-button]]
+            [degel.receipts.html :refer [button-group set-active-button selection]]
             [degel.receipts.pages :refer [receipt-tab-controls receipt-tab-html
                                           confirmation-html
                                           setup-tab-controls setup-tab-html
@@ -63,14 +63,10 @@
                     (dom/set-html! (dom/by-id "contents") (receipt-tab-html))
                     (read :PaidBy-options
                           (fn [vals _]
-                            (let [selected-val (or (clj-value "PaidBy") (read :paid-by nil))]
-                              (dom/set-html! (dom/by-id "PaidBy")
-                                (html [:select {:name "paidby-choices"}
-                                       (for [val vals] [:option
-                                                        (if (= selected-val val)
-                                                          {:value val :selected ""}
-                                                          {:value val})
-                                                        val])])))))
+                            (dom/set-html! (dom/by-id "PaidBy")
+                              (html [:select {:name "paidby-choices"}
+                                     (selection (map (fn [x] [x x]) vals)
+                                                (or (clj-value "PaidBy") (read :paid-by nil)))]))))
                     (let [submit-btn (dom/by-id "submit-receipt")]
                       (events/listen! submit-btn :click submit-receipt)
                       (events/listen! submit-btn :mouseover add-help)
