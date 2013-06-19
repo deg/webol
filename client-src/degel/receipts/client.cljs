@@ -61,15 +61,16 @@
   (condp = tab
     "receipt-tab" (do
                     (dom/set-html! (dom/by-id "contents") (receipt-tab-html))
-                    (remote-callback :fill-paid-by [:israel]
-                      #(dom/set-inner-html! (dom/by-id "PaidBy")
-                         (let [selected-paid-by (read :paid-by nil)]
-                           (html [:select {:name "paidby-choices"}
-                                  (for [paid-by %] [:option
-                                                    (if (= selected-paid-by paid-by)
-                                                      {:value paid-by :selected ""}
-                                                      {:value paid-by})
-                                                    paid-by])]))))
+                    (read :PaidBy-options
+                          (fn [vals _]
+                            (let [selected-val (or (clj-value "PaidBy") (read :paid-by nil))]
+                              (dom/set-html! (dom/by-id "PaidBy")
+                                (html [:select {:name "paidby-choices"}
+                                       (for [val vals] [:option
+                                                        (if (= selected-val val)
+                                                          {:value val :selected ""}
+                                                          {:value val})
+                                                        val])])))))
                     (let [submit-btn (dom/by-id "submit-receipt")]
                       (events/listen! submit-btn :click submit-receipt)
                       (events/listen! submit-btn :mouseover add-help)

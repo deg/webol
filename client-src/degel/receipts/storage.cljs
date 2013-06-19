@@ -24,8 +24,8 @@
 
 (defn- wrap-value
   "[TODO] Doc TBD"
-  [value remotable?]
-  {:value value :remotable? remotable?})
+  [value local-only?]
+  {:value value :local-only? local-only?})
 
 
 (defn- write-wrapped-local
@@ -44,10 +44,29 @@
 (defn write-local
   "[TODO] Doc TBD"
   [key value]
-  (let [{:keys [remotable?]} (.getItem storage key)]
-    (assert (not remotable?)
+  (let [{:keys [local-only?] :as existing} (read-wrapped-local key)]
+    (assert (or (not existing) local-only?)
             (str "'" key "' is stored remotely; can't write local-only copy."))
-    (write-wrapped-local key (wrap-value value false))))
+    (write-wrapped-local key (wrap-value value true))))
+
+
+(defn read
+  "[TODO] Doc TBD"
+  [key read-fn & {:keys [fail-fn]}]
+  (let [{:keys [value local-only?]} (read-wrapped-local key)]
+    (when read-fn
+      (read-fn value :local))
+    (when (not local-only?)
+      (let [user-id (read :user-id nil)
+            password (read :password nil)]
+        (remote-callback :read-storage [key user-id password]
+          #(if (= (:status %) db/SUCCESS)
+             (let [remote-value (read-string (:value %))]
+               (write-wrapped-local key (wrap-value remote-value false))
+               (when read-fn
+                 (read-fn remote-value :remote)))
+             ((or fail-fn js/alert) (:errmsg %))))))
+    value))
 
 
 (defn write
@@ -55,25 +74,8 @@
   The value will be keyed by a vector of the current user-id and the supplied key.
   remote-callback-fn will be called with a map including :status, :errmsg, and/or :uid."
   [key value remote-callback-fn]
-  (write-wrapped-local key (wrap-value value true))
-  (let [user-id (.getItem storage :user-id)
-        password (.getItem storage :password)]
+  (write-wrapped-local key (wrap-value value false))
+  (let [user-id (read :user-id nil)
+        password (read :password nil)]
     (remote-callback :write-storage [key value user-id password]
       #(remote-callback-fn %))))
-
-
-(defn read
-  "[TODO] Doc TBD"
-  [key read-fn & {:keys [fail-fn]}]
-  (let [{:keys [value remotable?]} (read-wrapped-local key)]
-    (when read-fn
-      (read-fn value :local))
-    (when remotable?
-      (let [user-id (.getItem storage :user-id)
-            password (.getItem storage :password)]
-        (remote-callback :read-storage [key user-id password]
-          #(if (= (:status %) db/SUCCESS)
-               (when read-fn
-                 (read-fn (:value %) :remote))
-               ((or fail-fn js/alert) (:errmsg %))))))
-    value))

@@ -11,12 +11,9 @@
             [degel.receipts.receipts :refer [collect-receipt-history enter-receipt-internal]]))
 
 
-
-(defremote fill-paid-by [country]
-  ["Cash" "Ck (# in comment)" "v0223" "v5760" "v9949" "Other"])
-
 (defremote fill-receipt-history [password]
   (remove nil? (collect-receipt-history password)))
+
 
 (defremote enter-receipt [columns]
   (enter-receipt-internal columns))
@@ -24,9 +21,11 @@
 
 (defremote write-storage [key value user-id password]
   (let [columns {:password password
-                 :uid (str [user-id key])
+                 :uid (str key)
+                 :user-id user-id
                  :value value}]
     (put-record "User-data" columns)))
+
 
 (defn init-db [password]
   (nuke-db password)
@@ -36,7 +35,7 @@
 
 
 (defremote read-storage [key user-id password]
-  (get-record "User-data" (str [user-id key]) :value password))
+  (get-record "User-data" key :value password))
 
 
 (defroutes app-routes
