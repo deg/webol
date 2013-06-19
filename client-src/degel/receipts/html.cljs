@@ -21,7 +21,9 @@
 (defn selection [value-text-pairs selected-value]
   (for [[value text] value-text-pairs]
     [:option
-     (if (= selected-value value)
+     (if (if (vector? selected-value)
+           (some #(= value %) selected-value)
+           (= value selected-value))
        {:value value :selected ""}
        {:value value})
      text]))

@@ -44,8 +44,7 @@
                    :MaxLength "40"})
     (selection-list "ForWhom" "For whom"
                     {:style "margin-bottom:10px"}
-                    true nil
-                    [["D" "David"] ["H" "Heidi"] ["A" "Aviva"] ["S" "Shoshana"] ["O" "Other"]])
+                    true nil [])
     [:div
      [:input {:type "button"
               :value "Submit Receipt"

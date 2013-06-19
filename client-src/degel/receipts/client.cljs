@@ -62,6 +62,12 @@
                               (html [:select {:name "paidby-choices"}
                                      (selection (map (fn [x] [x x]) vals)
                                                 (or (clj-value "PaidBy") (read :paid-by nil)))]))))
+                    (read :ForWhom-options
+                          (fn [vals _]
+                            (dom/set-html! (dom/by-id "ForWhom")
+                              (html [:select {:name "ForWhom-choices"}
+                                     (selection vals
+                                                (or (clj-value "ForWhom") (read :for-whom nil)))]))))
                     (let [submit-btn (dom/by-id "submit-receipt")]
                       (events/listen! submit-btn :click submit-receipt)
                       (events/listen! submit-btn :mouseover add-help)
