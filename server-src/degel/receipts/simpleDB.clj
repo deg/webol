@@ -83,14 +83,12 @@
 
 
 (defn nuke-db [password]
-  (let [[success errmsg] (create-client password)]
-    (if (false? success)
-      errmsg
-      (do
-        (sdb/delete-domain @the-client "User-data")
-        (sdb/create-domain @the-client "User-data")
-        (sdb/delete-domain @the-client "Receipts")
-        (sdb/create-domain @the-client "Receipts")))))
+  (with-open-db password :_ "Nuke-db failed"
+    (fn []
+      (sdb/delete-domain @the-client "User-data")
+      (sdb/create-domain @the-client "User-data")
+      (sdb/delete-domain @the-client "Receipts")
+      (sdb/create-domain @the-client "Receipts"))))
 
 
 (defn test-db [password]
