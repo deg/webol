@@ -38,15 +38,10 @@
 (defn storage-to-page
   "Load webpage control values from persistent storage."
   []
-  (let [storage-to-control (fn [key id] (read key #(set-clj-value! id %)))]
-    (when (dom/by-id "PaidBy")
-      ;; [TODO] Now handled in set-tab below. Clean up, once we get the data callback scheme working.
-      ;; (dom/set-value! (dom/by-id "PaidBy") (.getItem storage :cntl-paid-by))
-      (doseq [[key id] receipt-tab-controls]
-        (storage-to-control key id)))
-    (when (dom/by-id "Password")
-      (doseq [[key id] setup-tab-controls]
-        (storage-to-control key id)))))
+  (let [controls (cond (dom/by-id "PaidBy")   receipt-tab-controls
+                       (dom/by-id "Password") setup-tab-controls)]
+    (doseq [[key id] controls]
+      (read key #(set-clj-value! id %)))))
 
 
 (defn clear-receipt-page []
@@ -71,8 +66,7 @@
                       (events/listen! submit-btn :click submit-receipt)
                       (events/listen! submit-btn :mouseover add-help)
                       (events/listen! submit-btn :mouseout remove-help)))
-    "setup-tab" (do
-                  (dom/set-html! (dom/by-id "contents") (setup-tab-html)))
+    "setup-tab"   (dom/set-html! (dom/by-id "contents") (setup-tab-html))
     "history-tab" (do
                     (dom/set-html! (dom/by-id "contents") (history-tab-html))
                     (refresh-history)
