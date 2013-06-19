@@ -30,7 +30,7 @@
   "Save webpage control values to persistent storage."
   []
   (let [controls (cond (dom/by-id "PaidBy")   receipt-tab-controls
-                    (dom/by-id "Password") setup-tab-controls)]
+                       (dom/by-id "Password") setup-tab-controls)]
     (doseq [[key id] controls]
       (write-local key (clj-value id)))))
 
