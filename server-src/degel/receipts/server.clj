@@ -27,15 +27,15 @@
     (put-record "User-data" columns)))
 
 
+(defremote read-storage [key user-id password]
+  (get-record "User-data" key :value password))
+
+
 (defn init-db [password]
   (nuke-db password)
   (write-storage :PaidBy-options (str ["Cash" "Ck (# in comment)" "v0223" "v5760" "v9949" "Other"])
                  nil
                  password))
-
-
-(defremote read-storage [key user-id password]
-  (get-record "User-data" key :value password))
 
 
 (defroutes app-routes
