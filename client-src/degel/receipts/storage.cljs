@@ -57,8 +57,8 @@
     (when read-fn
       (read-fn value :local))
     (when (not local-only?)
-      (let [user-id (read :user-id nil)
-            password (read :password nil)]
+      (let [user-id (:value (read-wrapped-local :user-id))
+            password (:value (read-wrapped-local :password))]
         (remote-callback :read-storage [key user-id password]
           #(if (= (:status %) db/SUCCESS)
              (let [remote-value (read-string (:value %))]

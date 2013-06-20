@@ -20,7 +20,7 @@
 
 
 (defn- clj-value [id]
-  (-> id dom/by-id dom/value js->clj))
+  (-> id dom/by-id (#(when % (dom/value %))) js->clj))
 
 (defn- set-clj-value! [id value]
   (dom/set-value! (dom/by-id id) (clj->js value)))
@@ -76,7 +76,9 @@
     "history-tab" (do
                     (dom/set-html! (dom/by-id "contents") (history-tab-html))
                     (refresh-history)
-                    (events/listen! (dom/by-id "refresh-history") :click refresh-history)))
+                    (events/listen! (dom/by-id "refresh-history") :click refresh-history))
+    ;; Finally, catch clicks on empty parts of tabbar, mostly just for code cleanness.
+    "tabbar"      (do ))
   (storage-to-page))
 
 

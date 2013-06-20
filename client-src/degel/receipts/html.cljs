@@ -1,7 +1,7 @@
 (ns degel.receipts.html
   (:require-macros [hiccups.core :refer [html]])
   (:require [hiccups.runtime] ;; Needed by hiccups.core macros
-            [domina :as dom]))
+            [domina :as dom :refer [log]]))
 
 
 (defn control-pair [id label attrs]
