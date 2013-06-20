@@ -92,7 +92,7 @@
     (page-to-storage)
     (remote-callback :enter-receipt [params-map]
       (fn [result]
-        (condp (:status result) =
+        (condp = (:status result)
           db/SUCCESS (do
                        (clear-receipt-page)
                        (dom/set-html! (dom/by-id "contents")
