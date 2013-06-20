@@ -1,6 +1,7 @@
 (ns degel.receipts.pages
   (:require-macros [hiccups.core :refer [html]])
   (:require [hiccups.runtime] ;; Needed by hiccups.core macros
+            [domina :as dom :refer [log]]
             [degel.receipts.html :refer [control-pair submit-button selection-list]]))
 
 
