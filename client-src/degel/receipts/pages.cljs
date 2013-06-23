@@ -83,7 +83,7 @@
 
 (defn history-tab-html []
   (html
-   [:div {:id "ForHistory"}]
+   [:div {:id "History"}]
    [:div
     [:input {:type "button"
              :value "Refresh"

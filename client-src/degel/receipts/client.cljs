@@ -103,14 +103,26 @@
           #(set-tab "receipt-tab"))))))
 
 
+(defn render-table [rows temp?]
+  ;; [TODO] Use dot notation once https://github.com/teropa/hiccups/issues/4 is resolved.
+  (html [:table {:class "table table-striped table-bordered table-condensed"}
+         [:thead [:tr
+                  (map (fn [s] [:td s])
+                       ["Paid by" "Date" "Amount" "Category" "Vendor" "Comment" "For Whom"])]]
+         [:tbody (map (fn [row] [:tr (if temp? {:class :error} {})
+                                 (map (fn [item] [:td item])
+                                      (clojure.string/split row #";"))])
+                      rows)]]))
+
+
 (defn refresh-history []
-  (let [password (read :password nil)]
+  (let [password (read :password nil)
+        cached-history (read :cached-history nil)]
+    (dom/set-html! (dom/by-id "History") (render-table cached-history true))
     (remote-callback :fill-receipt-history [password]
-      (fn [records]
-        (dom/destroy! (dom/by-class "history"))
-        (let [h (html [:div.history
-                       (map (fn [r] [:p r]) records)])]
-          (dom/append! (dom/by-id "ForHistory") h))))))
+      (fn [history]
+        (dom/set-html! (dom/by-id "History") (render-table history false))
+        (write-local :cached-history history)))))
 
 
 (defn verify-not-empty [e]
