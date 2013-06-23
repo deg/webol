@@ -73,7 +73,7 @@
     (control-pair "user-id" "User ID"
                   {:type "text"
                    :required ""
-                   :MaxLength "10"})
+                   :MaxLength "16"})
     (control-pair "Password" "Password"
                   {:type "password"
                    :required ""
