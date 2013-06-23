@@ -48,6 +48,7 @@
                     true nil [])
     [:div
      [:input {:type "button"
+              :class "btn-large"
               :value "Submit Receipt"
               :id "submit-receipt"}]]
     ;; Doesn't work; Centers button, but causes POST.

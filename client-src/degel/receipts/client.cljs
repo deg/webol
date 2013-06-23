@@ -89,9 +89,11 @@
                               params-map
                               receipt-tab-controls)
         params-map (update-in params-map [:for-whom] (partial reduce str))]
+    (dom/add-class! (dom/by-id "submit-receipt") "btn-danger")
     (page-to-storage)
     (remote-callback :enter-receipt [params-map]
       (fn [result]
+        (dom/remove-class! (dom/by-id "submit-receipt") "btn-danger")
         (condp = (:status result)
           db/SUCCESS (do
                        (clear-receipt-page)
