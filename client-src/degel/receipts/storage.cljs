@@ -53,10 +53,10 @@
 (defn read
   "[TODO] Doc TBD"
   [key read-fn & {:keys [fail-fn]}]
-  (let [{:keys [value local-only?]} (read-wrapped-local key)]
+  (let [{:keys [value local-only?] :as local-wrapper} (read-wrapped-local key)]
     (when read-fn
       (read-fn value :local))
-    (when (not local-only?)
+    (when (and local-wrapper (not local-only?))
       (let [user-id (:value (read-wrapped-local :user-id))
             password (:value (read-wrapped-local :password))]
         (remote-callback :read-storage [key user-id password]
