@@ -22,51 +22,54 @@
 (def storage (.-localStorage js/window))
 
 
-(defn- wrap-value
-  "[TODO] Doc TBD"
-  [value local-only?]
-  {:value value :local-only? local-only?})
-
-
 (defn- write-wrapped-local
-  [key wrapped-value]
-  (.setItem storage key (pr-str wrapped-value))
+  "We store values locally wrapped in a map that includes the value and a tag indicating
+   if it should be backed to the server or be stored only locally."
+  [key value local-only?]
+  (.setItem storage key (pr-str {:value value :local-only? local-only?}))
   {:status db/SUCCESS})
 
 
 (defn- read-wrapped-local
-  "[TODO] Doc TBD"
+  "Unwrap a locally-stored value and return the value itself."
   [key]
   (when-let [wrapped-value (.getItem storage key)]
     (read-string wrapped-value)))
 
 
-(defn write-local
-  "[TODO] Doc TBD"
-  [key value]
-  (let [{:keys [local-only?] :as existing} (read-wrapped-local key)]
-    (assert (or (not existing) local-only?)
-            (str "'" key "' is stored remotely; can't write local-only copy."))
-    (write-wrapped-local key (wrap-value value true))))
-
-
 (defn read
-  "[TODO] Doc TBD"
+  "Read a value. This function always returns the locally-stored value (or nil if there is none).
+   In addition, if read-fn is supplied, it is called up to twice. First it is called with the local
+   result (this is the same value returned from this function. We call read-fn just for symmetry with
+   the remote result).
+   Later, asynchronously, read-fn is called again with the remote value, and the local store is
+   automatically updated with this value.
+   The first parameter passed to read-fn is the value. The second parameter is :local or :remote,
+   indicating the data source of the supplied value."
   [key read-fn & {:keys [fail-fn]}]
   (let [{:keys [value local-only?] :as local-wrapper} (read-wrapped-local key)]
     (when read-fn
       (read-fn value :local))
     (when (and local-wrapper (not local-only?))
-      (let [user-id (:value (read-wrapped-local :user-id))
-            password (:value (read-wrapped-local :password))]
+      (let [user-id (read :user-id nil)
+            password (read :password nil)]
         (remote-callback :read-storage [key user-id password]
           #(if (= (:status %) db/SUCCESS)
              (let [remote-value (read-string (:value %))]
-               (write-wrapped-local key (wrap-value remote-value false))
+               (write-wrapped-local key remote-value false)
                (when read-fn
                  (read-fn remote-value :remote)))
              ((or fail-fn js/alert) (:errmsg %))))))
     value))
+
+
+(defn write-local
+  "Store a value locally only. It is an error to do so if the value has already been stored remotely."
+  [key value]
+  (let [{:keys [local-only?] :as local-wrapper} (read-wrapped-local key)]
+    (assert (or (not local-wrapper) local-only?)
+            (str "'" key "' is stored remotely; can't write local-only copy."))
+    (write-wrapped-local key value true)))
 
 
 (defn write
@@ -74,7 +77,7 @@
   The value will be keyed by a vector of the current user-id and the supplied key.
   remote-callback-fn will be called with a map including :status, :errmsg, and/or :uid."
   [key value remote-callback-fn]
-  (write-wrapped-local key (wrap-value value false))
+  (write-wrapped-local key value false)
   (let [user-id (read :user-id nil)
         password (read :password nil)]
     (remote-callback :write-storage [key value user-id password]
