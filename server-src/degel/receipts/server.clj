@@ -39,8 +39,10 @@
 
 
 (defroutes app-routes
-  (GET "/" []
-    (redirect "/new-receipt.html"))
+  (GET "/" {:keys [server-name] :as all-keys}
+    (cond (re-matches #"(?i).*receipt.*" server-name) (redirect "/new-receipt.html")
+          (re-matches #"(?i).*webol.*"   server-name) (redirect "/webol.html")
+          true (not-found "<h1>David moans: 'app not found'.</h1>")))
   ; to serve static pages saved in resources/public directory
   (resources "/")
   (not-found "<h1>David moans: 'page not found'.</h1>"))
