@@ -8,7 +8,8 @@
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
             [degel.receipts.utils :refer [now-string]]
             [degel.receipts.storage :refer [read write-local]]
-            [degel.receipts.html :refer [button-group set-active-button selection]]
+            [degel.receipts.html :refer [button-group button-handler
+                                         set-active-button selection]]
             [degel.receipts.pages :refer [receipt-tab-controls receipt-tab-html
                                           confirmation-html
                                           setup-tab-controls setup-tab-html
@@ -69,14 +70,15 @@
                                      (selection vals
                                                 (or (clj-value "ForWhom") (read :for-whom nil)))]))))
                     (let [submit-btn (dom/by-id "submit-receipt")]
-                      (events/listen! submit-btn :click submit-receipt)
+                      (events/listen! submit-btn :click (button-handler submit-receipt))
                       (events/listen! submit-btn :mouseover add-help)
                       (events/listen! submit-btn :mouseout remove-help)))
     "setup-tab"   (dom/set-html! (dom/by-id "contents") (setup-tab-html))
     "history-tab" (do
                     (dom/set-html! (dom/by-id "contents") (history-tab-html))
                     (refresh-history)
-                    (events/listen! (dom/by-id "refresh-history") :click refresh-history))
+                    (events/listen! (dom/by-id "refresh-history") :click
+                      (button-handler refresh-history)))
     ;; Finally, catch clicks on empty parts of tabbar, mostly just for code cleanness.
     "tabbar"      (do ))
   (storage-to-page))
@@ -102,7 +104,7 @@
           db/FAILURE (dom/set-html! (dom/by-id "contents")
                        (confirmation-html false (:errmsg result))))
         (events/listen! (dom/by-id "next-receipt") :click
-          #(set-tab "receipt-tab"))))))
+          (button-handler #(set-tab "receipt-tab")))))))
 
 
 (defn render-table [rows temp?]

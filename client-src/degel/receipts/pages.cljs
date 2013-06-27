@@ -46,23 +46,14 @@
     (selection-list "ForWhom" "For whom"
                     {:style "margin-bottom:10px"}
                     true nil [])
-    [:div
-     [:input {:type "button"
-              :class "btn-large"
-              :value "Submit Receipt"
-              :id "submit-receipt"}]]
-    ;; Doesn't work; Centers button, but causes POST.
-    ;; [TODO] Fix soon if we don't move to a different lib.
-    #_(submit-button "submit-receipt" "Submit Receipt")]))
+    (submit-button "submit-receipt" "Submit Receipt")]))
 
 
 (defn confirmation-html [success confirmation]
   (html
-   [:div {:id "receipt-body"}
+   [:form.form-horizontal {:id "receipt-body"}
     [:p.confirmation [:div:label (if success "Ok: " "Error: ")] confirmation]
-    [:input {:type "button"
-             :value (if success "Next receipt" "Try again")
-             :id "next-receipt"}]]))
+    (submit-button "next-receipt" (if success "Next receipt" "Try again"))]))
 
 
 (def setup-tab-controls {:user-id "user-id"
@@ -84,8 +75,6 @@
 
 (defn history-tab-html []
   (html
-   [:div {:id "History"}]
-   [:div
-    [:input {:type "button"
-             :value "Refresh"
-             :id "refresh-history"}]]))
+   [:form.form-horizontal {:id "history-body"}
+    [:div {:id "History"}]
+    (submit-button "refresh-history" "Refresh")]))

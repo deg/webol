@@ -1,7 +1,8 @@
 (ns degel.receipts.html
   (:require-macros [hiccups.core :refer [html]])
   (:require [hiccups.runtime] ;; Needed by hiccups.core macros
-            [domina :as dom :refer [log]]))
+            [domina :as dom :refer [log]]
+            [domina.events :as events]))
 
 
 (defn control-pair [id label attrs]
@@ -14,8 +15,15 @@
 (defn submit-button [id label]
   [:div.control-group
    [:div.controls
-    [:button.btn {:type "submit" :id id}
+    [:button.btn {:type "submit" :id id :class "btn-large"}
      label]]])
+
+(defn button-handler [handler]
+  "Wrap button handler to create a new handler which also disables the
+   standard button post behavior."
+  (fn [evt]
+    (handler)
+    (events/prevent-default evt)))
 
 
 (defn selection [value-text-pairs selected-value]
