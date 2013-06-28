@@ -71,8 +71,8 @@
                                                 (or (clj-value "ForWhom") (read :for-whom nil)))]))))
                     (let [submit-btn (dom/by-id "submit-receipt")]
                       (events/listen! submit-btn :click (button-handler submit-receipt))
-                      (events/listen! submit-btn :mouseover add-help)
-                      (events/listen! submit-btn :mouseout remove-help)))
+                      #_(events/listen! submit-btn :mouseover add-help)
+                      #_(events/listen! submit-btn :mouseout remove-help)))
     "setup-tab"   (dom/set-html! (dom/by-id "contents") (setup-tab-html))
     "history-tab" (do
                     (dom/set-html! (dom/by-id "contents") (history-tab-html))
