@@ -71,6 +71,8 @@
                                                 (or (clj-value "ForWhom") (read :for-whom nil)))]))))
                     (let [submit-btn (dom/by-id "submit-receipt")]
                       (events/listen! submit-btn :click (button-handler submit-receipt))
+                      ;; [TODO] Left these out since (1) we don't have real help anyway; and (2) see
+                      ;; if it fixes Heidi's problem of first click not responding.
                       #_(events/listen! submit-btn :mouseover add-help)
                       #_(events/listen! submit-btn :mouseout remove-help)))
     "setup-tab"   (dom/set-html! (dom/by-id "contents") (setup-tab-html))
