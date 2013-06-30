@@ -52,6 +52,12 @@
   (page-to-storage))
 
 
+(defn maybe-enable-other [list-ctrl-id other-ctrl-id other-text]
+  (dom/set-style! (dom/by-id other-ctrl-id) "display"
+                  (if (= (clj-value list-ctrl-id) other-text)
+                    "block" "none")))
+
+
 (defn set-tab [tab]
   (page-to-storage)
   (condp = tab
@@ -69,6 +75,14 @@
                               (html [:select {:name "ForWhom-choices"}
                                      (selection vals
                                                 (or (clj-value "ForWhom") (read :for-whom nil)))]))))
+                    (read :Category-options
+                          (fn [vals _]
+                            (dom/set-html! (dom/by-id "Category")
+                              (html [:select {:name "Category-choices"}
+                                     (selection (map (fn [x] [x x]) vals)
+                                                (or (clj-value "Category") (read :category nil)))]))
+                            (events/listen! (dom/by-id "Category") :change
+                              #(maybe-enable-other "Category" "CategoryOther-group" "Other"))))
                     (let [submit-btn (dom/by-id "submit-receipt")]
                       (events/listen! submit-btn :click (button-handler submit-receipt))
                       ;; [TODO] Left these out since (1) we don't have real help anyway; and (2) see
@@ -83,7 +97,9 @@
                       (button-handler refresh-history)))
     ;; Finally, catch clicks on empty parts of tabbar, mostly just for code cleanness.
     "tabbar"      (do ))
-  (storage-to-page))
+  (storage-to-page)
+  (when (= tab "receipt-tab")
+    (maybe-enable-other "Category" "CategoryOther-group" "Other")))
 
 
 (defn submit-receipt []
@@ -92,7 +108,11 @@
         params-map (reduce-kv (fn [init key id] (assoc init key (clj-value id)))
                               params-map
                               receipt-tab-controls)
-        params-map (update-in params-map [:for-whom] (partial reduce str))]
+        params-map (update-in params-map [:for-whom] (partial reduce str))
+        params-map (assoc params-map :category (if (= (:category params-map) "Other")
+                                                 (:category-other params-map)
+                                                 (:category params-map)))
+        params-map (dissoc params-map :category-other)]
     (dom/add-class! (dom/by-id "submit-receipt") "btn-danger")
     (page-to-storage)
     (remote-callback :enter-receipt [params-map]

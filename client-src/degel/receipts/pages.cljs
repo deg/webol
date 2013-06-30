@@ -9,6 +9,7 @@
                            :date     "Date"
                            :amount   "Amount"
                            :category "Category"
+                           :category-other "CategoryOther"
                            :vendor   "Vendor"
                            :comment  "Comment"
                            :for-whom "ForWhom"})
@@ -29,8 +30,10 @@
                    :placeholder "price"
                    :required ""
                    :MaxLength 10})
-    (control-pair "Category" "Category"
-                  {:type "text"
+    (selection-list "Category" "Category"
+                    nil false nil [])
+    (control-pair "CategoryOther" "Other category"
+                  {:type "text" "none"
                    :required ""
                    :autocomplete "on"
                    :MaxLength 15})
