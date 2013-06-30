@@ -54,8 +54,9 @@
 
 (defn maybe-enable-other [list-ctrl-id other-ctrl-id other-text]
   (dom/set-style! (dom/by-id other-ctrl-id) "display"
-                  (if (= (clj-value list-ctrl-id) other-text)
-                    "block" "none")))
+                  (let [category (clj-value list-ctrl-id)]
+                  (if (or (empty? category) (= category other-text))
+                    "block" "none"))))
 
 
 (defn set-tab [tab]
