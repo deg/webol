@@ -33,7 +33,7 @@
     (selection-list "Category" "Category"
                     nil false nil [])
     (control-pair "CategoryOther" "Other category"
-                  {:type "text" "none"
+                  {:type "text"
                    :required ""
                    :autocomplete "on"
                    :MaxLength 15})
