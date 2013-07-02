@@ -8,8 +8,12 @@
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
             [degel.receipts.utils :refer [now-string]]
             [degel.receipts.storage :refer [read write-local]]
-            [degel.receipts.html :refer [button-group button-handler
-                                         set-active-button selection]]
+            [degel.receipts.html :refer [button-group
+                                         button-handler
+                                         clj-value
+                                         fill-select-options
+                                         set-active-button
+                                         set-clj-value!]]
             [degel.receipts.pages :refer [receipt-tab-controls receipt-tab-html
                                           confirmation-html
                                           setup-tab-controls setup-tab-html
@@ -18,13 +22,6 @@
 
 
 (declare submit-receipt add-help remove-help cache-user-data refresh-history fill-defaults)
-
-
-(defn- clj-value [id]
-  (-> id dom/by-id (#(when % (dom/value %))) js->clj))
-
-(defn- set-clj-value! [id value]
-  (dom/set-value! (dom/by-id id) (clj->js value)))
 
 
 (defn page-to-storage
@@ -52,34 +49,15 @@
   (page-to-storage))
 
 
-(defn maybe-enable-other [list-ctrl-id other-ctrl-id other-text]
-  (dom/set-style! (dom/by-id other-ctrl-id) "display"
-                  (let [category (clj-value list-ctrl-id)]
-                    (if (or (empty? category) (= category other-text))
-                      "block" "none"))))
-
-(defn fill-select-options [dom-id db-key & {:keys [finally]}]
-  (read db-key
-        (fn [vals source]
-          (dom/set-html! (dom/by-id dom-id)
-            (html [:select
-                   (selection (map #(if (vector? %) % [% %]) vals)
-                              (or (clj-value dom-id) (read db-key nil)))]))
-          (when finally (finally)))))
-
 (defn set-tab [tab]
   (page-to-storage)
   (condp = tab
     "receipt-tab" (do
                     (dom/set-html! (dom/by-id "contents") (receipt-tab-html))
-                    (fill-select-options "PaidBy" :PaidBy-options)
-                    (fill-select-options "ForWhom" :ForWhom-options)
-                    (fill-select-options
-                     "Category" :Category-options
-                     :finally (fn []
-                                (maybe-enable-other "Category" "CategoryOther-group" "Other")
-                                (events/listen! (dom/by-id "Category") :change
-                                  (fn [] (maybe-enable-other "Category" "CategoryOther-group" "Other")))))
+                    (fill-select-options "PaidBy")
+                    (fill-select-options "ForWhom")
+                    (fill-select-options "Category"
+                      :with-other "Other" :other-id "CategoryOther-group")
                     (let [submit-btn (dom/by-id "submit-receipt")]
                       (events/listen! submit-btn :click (button-handler submit-receipt))
                       ;; [TODO] Left these out since (1) we don't have real help anyway; and (2) see

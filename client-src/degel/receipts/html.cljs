@@ -2,7 +2,16 @@
   (:require-macros [hiccups.core :refer [html]])
   (:require [hiccups.runtime] ;; Needed by hiccups.core macros
             [domina :as dom :refer [log]]
-            [domina.events :as events]))
+            [domina.events :as events]
+            [degel.receipts.storage :refer [read]]))
+
+
+(defn- clj-value [id]
+  (-> id dom/by-id (#(when % (dom/value %))) js->clj))
+
+
+(defn- set-clj-value! [id value]
+  (dom/set-value! (dom/by-id id) (clj->js value)))
 
 
 (defn control-pair [id label attrs]
@@ -17,6 +26,7 @@
    [:div.controls
     [:button.btn {:type "submit" :id id :class "btn-large"}
      label]]])
+
 
 (defn button-handler [handler]
   "Wrap button handler to create a new handler which also disables the
@@ -45,6 +55,33 @@
                {:id id :multiple ""}
                {:id id})
      (selection value-text-pairs selected-value)]]])
+
+
+(defn fill-select-options
+  "Fill in the elements of a select control.
+   list-id - DOM id of the select control.
+   db-key - Storage key of the persistent elements list. Defaults to a keyword composing
+            the list-id and '-options'.
+   with-other - If supplied, extra selection element that will invoke an overflow control.
+   other-id - DOM id of the overflow control. This will typically be a text entry box or a div
+            that includes some form of free data entry control within."
+  [list-id & {:keys [db-key with-other other-id]
+              :or {db-key (keyword (str list-id "-options"))}}]
+  (read db-key
+        (fn [vals _]
+          (dom/set-html! (dom/by-id list-id)
+            (html [:select
+                   (selection (map #(if (vector? %) % [% %]) vals)
+                              (or (clj-value list-id) (read db-key nil)))]))
+          (when with-other
+            (let [fill-other
+                  #(let [category (clj-value list-id)
+                         display-style (if (or (empty? category)
+                                               (= category with-other))
+                                         "block" "none")]
+                     (dom/set-style! (dom/by-id other-id) "display" display-style))]
+              (fill-other)
+              (events/listen! (dom/by-id list-id) :change fill-other))))))
 
 
 (defn button-group
