@@ -58,32 +58,28 @@
                     (if (or (empty? category) (= category other-text))
                       "block" "none"))))
 
+(defn fill-select-options [dom-id db-key & {:keys [finally]}]
+  (read db-key
+        (fn [vals source]
+          (dom/set-html! (dom/by-id dom-id)
+            (html [:select
+                   (selection (map #(if (vector? %) % [% %]) vals)
+                              (or (clj-value dom-id) (read db-key nil)))]))
+          (when finally (finally)))))
 
 (defn set-tab [tab]
   (page-to-storage)
   (condp = tab
     "receipt-tab" (do
                     (dom/set-html! (dom/by-id "contents") (receipt-tab-html))
-                    (read :PaidBy-options
-                          (fn [vals _]
-                            (dom/set-html! (dom/by-id "PaidBy")
-                              (html [:select {:name "paidby-choices"}
-                                     (selection (map (fn [x] [x x]) vals)
-                                                (or (clj-value "PaidBy") (read :paid-by nil)))]))))
-                    (read :ForWhom-options
-                          (fn [vals _]
-                            (dom/set-html! (dom/by-id "ForWhom")
-                              (html [:select {:name "ForWhom-choices"}
-                                     (selection vals
-                                                (or (clj-value "ForWhom") (read :for-whom nil)))]))))
-                    (read :Category-options
-                          (fn [vals _]
-                            (dom/set-html! (dom/by-id "Category")
-                              (html [:select {:name "Category-choices"}
-                                     (selection (map (fn [x] [x x]) vals)
-                                                (or (clj-value "Category") (read :category nil)))]))
-                            (events/listen! (dom/by-id "Category") :change
-                              #(maybe-enable-other "Category" "CategoryOther-group" "Other"))))
+                    (fill-select-options "PaidBy" :PaidBy-options)
+                    (fill-select-options "ForWhom" :ForWhom-options)
+                    (fill-select-options
+                     "Category" :Category-options
+                     :finally (fn []
+                                (maybe-enable-other "Category" "CategoryOther-group" "Other")
+                                (events/listen! (dom/by-id "Category") :change
+                                  (fn [] (maybe-enable-other "Category" "CategoryOther-group" "Other")))))
                     (let [submit-btn (dom/by-id "submit-receipt")]
                       (events/listen! submit-btn :click (button-handler submit-receipt))
                       ;; [TODO] Left these out since (1) we don't have real help anyway; and (2) see
@@ -98,9 +94,7 @@
                       (button-handler refresh-history)))
     ;; Finally, catch clicks on empty parts of tabbar, mostly just for code cleanness.
     "tabbar"      (do ))
-  (storage-to-page)
-  (when (= tab "receipt-tab")
-    (maybe-enable-other "Category" "CategoryOther-group" "Other")))
+  (storage-to-page))
 
 
 (defn submit-receipt []
