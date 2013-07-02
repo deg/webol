@@ -2,17 +2,22 @@
   (:require-macros [hiccups.core :refer [html]])
   (:require [hiccups.runtime] ;; Needed by hiccups.core macros
             [domina :as dom :refer [log]]
-            [degel.receipts.html :refer [control-pair submit-button selection-list]]))
+            [degel.receipts.html :refer [control-pair
+                                         label-and-autocomplete-text-field
+                                         submit-button
+                                         selection-list]]))
 
 
-(def receipt-tab-controls {:paid-by  "PaidBy"
-                           :date     "Date"
-                           :amount   "Amount"
-                           :category "Category"
+(def receipt-tab-controls {:paid-by        "PaidBy"
+                           :paid-by-other  "PaidByOther"
+                           :date           "Date"
+                           :amount         "Amount"
+                           :category       "Category"
                            :category-other "CategoryOther"
-                           :vendor   "Vendor"
-                           :comment  "Comment"
-                           :for-whom "ForWhom"})
+                           :vendor         "Vendor"
+                           :comment        "Comment"
+                           :for-whom       "ForWhom"
+                           :for-whom-other "ForWhomOther"})
 
 (defn receipt-tab-html []
   (html
@@ -20,6 +25,7 @@
     (selection-list "PaidBy" "Paid By"
                     {:style "margin-top:10px"}
                     false nil [])
+    (label-and-autocomplete-text-field "PaidByOther" "Other Paid By" 15 {:required ""})
     (control-pair "Date" "Date"
                   {:type "Date"
                    :required ""})
@@ -32,23 +38,13 @@
                    :MaxLength 10})
     (selection-list "Category" "Category"
                     nil false nil [])
-    (control-pair "CategoryOther" "Other category"
-                  {:type "text"
-                   :required ""
-                   :autocomplete "on"
-                   :MaxLength 15})
-    (control-pair "Vendor" "Vendor"
-                  {:type "text"
-                   :required ""
-                   :autocomplete "on"
-                   :MaxLength "30"})
-    (control-pair "Comment" "Comment"
-                  {:type "text"
-                   :autocomplete "on"
-                   :MaxLength "40"})
-    (selection-list "ForWhom" "For whom"
+    (label-and-autocomplete-text-field "CategoryOther" "Other category" 15 {:required ""})
+    (label-and-autocomplete-text-field "Vendor" "Vendor" 30 {:required ""})
+    (label-and-autocomplete-text-field "Comment" "Comment" {})
+    (selection-list "ForWhom" "For Whom"
                     {:style "margin-bottom:10px"}
                     true nil [])
+    (label-and-autocomplete-text-field "ForWhomOther" "Other For Whom" 15 {:required ""})
     (submit-button "submit-receipt" "Submit Receipt")]))
 
 

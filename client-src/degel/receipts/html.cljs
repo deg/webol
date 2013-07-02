@@ -21,6 +21,13 @@
     [:input (merge {:name id :id id} attrs)]]])
 
 
+(defn label-and-autocomplete-text-field [id label max-length attrs]
+  (control-pair id label
+                (assoc attrs :type "text"
+                       :autocomplete "on"
+                       :MaxLength max-length)))
+
+
 (defn submit-button [id label]
   [:div.control-group
    [:div.controls
@@ -76,9 +83,10 @@
                               (or (clj-value list-id) (read db-key nil)))]))
           (when with-other
             (let [fill-other
-                  #(let [category (clj-value list-id)
-                         display-style (if (or (empty? category)
-                                               (= category with-other))
+                  #(let [value (clj-value list-id)
+                         display-style (if (or (empty? value)
+                                               (= value with-other)
+                                               (and (vector? value) (some #{with-other} value)))
                                          "block" "none")]
                      (dom/set-style! (dom/by-id other-id) "display" display-style))]
               (fill-other)
