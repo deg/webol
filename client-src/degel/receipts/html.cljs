@@ -71,7 +71,8 @@
         (fn [vals _]
           (dom/set-html! (dom/by-id list-id)
             (html [:select
-                   (selection (map #(if (vector? %) % [% %]) vals)
+                   (selection (map #(if (vector? %) % [% %])
+                                   (if with-other (conj vals with-other) vals))
                               (or (clj-value list-id) (read db-key nil)))]))
           (when with-other
             (let [fill-other
