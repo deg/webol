@@ -9,23 +9,23 @@
 
 
 (def receipt-tab-controls {:paid-by        "PaidBy"
-                           :paid-by-other  "PaidByOther"
+                           :paid-by-other  "PaidBy-Other"
                            :date           "Date"
                            :amount         "Amount"
                            :category       "Category"
-                           :category-other "CategoryOther"
+                           :category-other "Category-Other"
                            :vendor         "Vendor"
                            :comment        "Comment"
                            :for-whom       "ForWhom"
-                           :for-whom-other "ForWhomOther"})
+                           :for-whom-other "ForWhom-Other"})
 
 (defn receipt-tab-html []
   (html
    [:form.form-horizontal {:id "receipt-body"}
     (selection-list "PaidBy" "Paid By"
-                    {:style "margin-top:10px"}
+                    {:style "margin-top:10px"
+                     :with-other "Other"}
                     false nil [])
-    (label-and-autocomplete-text-field "PaidByOther" "Other Paid By" 15 {:required ""})
     (control-pair "Date" "Date"
                   {:type "Date"
                    :required ""})
@@ -36,15 +36,13 @@
                    :placeholder "price"
                    :required ""
                    :MaxLength 10})
-    (selection-list "Category" "Category"
-                    nil false nil [])
-    (label-and-autocomplete-text-field "CategoryOther" "Other category" 15 {:required ""})
+    (selection-list "Category" "Category" {:with-other "Other"} false nil [])
     (label-and-autocomplete-text-field "Vendor" "Vendor" 30 {:required ""})
     (label-and-autocomplete-text-field "Comment" "Comment" {})
     (selection-list "ForWhom" "For Whom"
-                    {:style "margin-bottom:10px"}
+                    {:style "margin-bottom:10px"
+                     :with-other "Other"}
                     true nil [])
-    (label-and-autocomplete-text-field "ForWhomOther" "Other For Whom" 15 {:required ""})
     (submit-button "submit-receipt" "Submit Receipt")]))
 
 

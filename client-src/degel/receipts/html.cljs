@@ -55,13 +55,21 @@
 
 
 (defn selection-list [id label attrs multiple? selected-value value-text-pairs]
-  [:div.control-group (merge {:id (str id "-group")} attrs)
-   [:label.control-label {:for id} (str label ":&nbsp;")]
-   [:div.control
-    [:select (if multiple?
-               {:id id :multiple ""}
-               {:id id})
-     (selection value-text-pairs selected-value)]]])
+  (let [with-other (:with-other attrs)
+        control-group-attrs (assoc (dissoc attrs :with-others) :id (str id "-group"))
+        control-group [:div.control-group control-group-attrs
+                       [:label.control-label {:for id} (str label ":&nbsp;")]
+                       [:div.control
+                        [:select (if multiple?
+                                   {:id id :multiple ""}
+                                   {:id id})
+                         (selection value-text-pairs selected-value)]]]]
+    (if with-other
+      (let [other-id (str id "-" with-other)
+            other-label (str with-other " " label)
+            other-group (label-and-autocomplete-text-field other-id other-label 15 {:required ""})]
+        [:div control-group other-group])
+      control-group)))
 
 
 (defn fill-select-options
@@ -72,25 +80,46 @@
    with-other - If supplied, extra selection element that will invoke an overflow control.
    other-id - DOM id of the overflow control. This will typically be a text entry box or a div
             that includes some form of free data entry control within."
-  [list-id & {:keys [db-key with-other other-id]
-              :or {db-key (keyword (str list-id "-options"))}}]
-  (read db-key
-        (fn [vals _]
-          (dom/set-html! (dom/by-id list-id)
-            (html [:select
-                   (selection (map #(if (vector? %) % [% %])
-                                   (if with-other (conj vals with-other) vals))
-                              (or (clj-value list-id) (read db-key nil)))]))
-          (when with-other
-            (let [fill-other
-                  #(let [value (clj-value list-id)
-                         display-style (if (or (empty? value)
-                                               (= value with-other)
-                                               (and (vector? value) (some #{with-other} value)))
-                                         "block" "none")]
-                     (dom/set-style! (dom/by-id other-id) "display" display-style))]
-              (fill-other)
-              (events/listen! (dom/by-id list-id) :change fill-other))))))
+  [list-id & {:keys [db-key] :or {db-key (keyword (str list-id "-options"))}}]
+  (let [list-ctrl (dom/by-id list-id)
+        with-other (-> list-ctrl .-parentNode .-parentNode (dom/attr :with-other))
+        other-group-id (str list-id "-" with-other "-group")]
+    (read db-key
+          (fn [vals _]
+            (dom/set-html! list-ctrl
+              (html [:select
+                     (selection (map #(if (vector? %) % [% %])
+                                     (if with-other (conj vals with-other) vals))
+                                (or (clj-value list-id) (read db-key nil)))]))
+            (when with-other
+              (let [fill-other
+                    #(let [value (clj-value list-id)
+                           display-style (if (or (empty? value)
+                                                 (= value with-other)
+                                                 (and (vector? value) (some #{with-other} value)))
+                                           "block" "none")]
+                       (dom/set-style! (dom/by-id other-group-id) "display" display-style))]
+                (fill-other)
+                (events/listen! list-ctrl :change fill-other)))))))
+
+
+(defn value-with-other [ctrl-id]
+  (let [value (clj-value ctrl-id)
+        list-ctrl (dom/by-id ctrl-id)
+        with-other (-> list-ctrl .-parentNode .-parentNode (dom/attr :with-other))]
+    (if (and with-other (if (vector? value)
+                          (some #{with-other} value)
+                          (= value with-other)))
+      (let [other-id (str ctrl-id "-" with-other)
+            other-group-id (str other-id "-group")
+            other-value (clj-value other-id)]
+        (if (vector? value)
+          (mapv #(if (= % with-other)
+                   (str with-other ": " other-value)
+                   %)
+               value)
+          (str with-other ": " other-value)))
+      value)))
 
 
 (defn button-group

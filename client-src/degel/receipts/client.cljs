@@ -13,7 +13,8 @@
                                          clj-value
                                          fill-select-options
                                          set-active-button
-                                         set-clj-value!]]
+                                         set-clj-value!
+                                         value-with-other]]
             [degel.receipts.pages :refer [receipt-tab-controls receipt-tab-html
                                           confirmation-html
                                           setup-tab-controls setup-tab-html
@@ -54,11 +55,9 @@
   (condp = tab
     "receipt-tab" (do
                     (dom/set-html! (dom/by-id "contents") (receipt-tab-html))
-                    (fill-select-options "PaidBy" :with-other "Other" :other-id "PaidByOther-group")
-                    (fill-select-options "Category"
-                      :with-other "Other" :other-id "CategoryOther-group")
-                    (fill-select-options "ForWhom"
-                      :with-other "Other" :other-id "ForWhomOther-group")
+                    (fill-select-options "PaidBy")
+                    (fill-select-options "Category")
+                    (fill-select-options "ForWhom")
                     (let [submit-btn (dom/by-id "submit-receipt")]
                       (events/listen! submit-btn :click (button-handler submit-receipt))
                       ;; [TODO] Left these out since (1) we don't have real help anyway; and (2) see
@@ -79,22 +78,11 @@
 (defn submit-receipt []
   (let [params-map {:user-id (read :user-id nil), :password (read :password nil)}
         params-map (assoc params-map :uid (+ (goog.string.getRandomString) "-" (:user-id params-map)))
-        params-map (reduce-kv (fn [init key id] (assoc init key (clj-value id)))
+        params-map (reduce-kv (fn [init key id] (assoc init key (value-with-other id)))
                               params-map
                               receipt-tab-controls)
-        params-map (assoc params-map :paid-by (if (= (:paid-by params-map) "Other")
-                                                 (str "Other: " (:paid-by-other params-map))
-                                                 (:paid-by params-map)))
-        params-map (dissoc params-map :paidy-by-other)
-        params-map (assoc params-map :category (if (= (:category params-map) "Other")
-                                                 (str "Other: " (:category-other params-map))
-                                                 (:category params-map)))
+        params-map (dissoc params-map :paid-by-other)
         params-map (dissoc params-map :category-other)
-        params-map (assoc params-map :for-whom (let [for-whom (:for-whom params-map)]
-                                                 (map #(if (= % "Other")
-                                                         (str "Other: " (:for-whom-other params-map))
-                                                         %)
-                                                      for-whom)))
         params-map (dissoc params-map :for-whom-other)]
     (dom/add-class! (dom/by-id "submit-receipt") "btn-danger")
     (page-to-storage)
