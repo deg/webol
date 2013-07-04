@@ -56,8 +56,15 @@
 
 
 (defn selection-list [id label attrs multiple? selected-value value-text-pairs]
-  (let [with-others (:with-others attrs)
-        control-group-attrs (assoc attrs :id (str id "-group"))
+  (let [with-others (map #(if (string? %) % (first %))
+                         (:with-others attrs))
+        other-labels (into {} (map #(if (string? %)
+                                      [% (str % " " label)]
+                                      %)
+                                   (:with-others attrs)))
+        control-group-attrs (assoc attrs
+                              :id (str id "-group")
+                              :with-others with-others)
         control-group [:div.control-group control-group-attrs
                        [:label.control-label {:for id} (str label ":&nbsp;")]
                        [:div.control

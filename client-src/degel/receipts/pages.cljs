@@ -25,7 +25,7 @@
    [:form.form-horizontal {:id "receipt-body"}
     (selection-list "PaidBy" "Paid By"
                     {:style "margin-top:10px"
-                     :with-others ["Check" "Other"]}
+                     :with-others [["Check" "Ck #"] ["Other" "Source"]]}
                     false nil [])
     (control-pair "Date" "Date"
                   {:type "Date"
@@ -42,7 +42,7 @@
     (label-and-autocomplete-text-field "Comment" "Comment" {})
     (selection-list "ForWhom" "For Whom"
                     {:style "margin-bottom:10px"
-                     :with-others ["Other"]}
+                     :with-others [["Other" "For other"]]}
                     true nil [])
     (submit-button "submit-receipt" "Submit Receipt")]))
 
