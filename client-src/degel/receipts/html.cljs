@@ -93,10 +93,11 @@
                     #(doseq [other with-others]
                        (let [value (clj-value list-id)
                              other-group-id (str list-id "-" other "-group")
-                             display-style (if (or (empty? value)
-                                                   (= value other)
-                                                   (and (vector? value) (some #{other} value)))
-                                             "block" "none")]
+                             display-style (if (or (and (vector? value)
+                                                        (some #{other} value))
+                                                   (= value other))
+                                             "block" "none")
+                             ]
                          (dom/set-style! (dom/by-id other-group-id) "display" display-style)))]
                 (fill-others)
                 (events/listen! list-ctrl :change fill-others)))))))
