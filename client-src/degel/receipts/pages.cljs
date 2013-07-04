@@ -9,6 +9,7 @@
 
 
 (def receipt-tab-controls {:paid-by        "PaidBy"
+                           :paid-by-check  "PaidBy-Check"
                            :paid-by-other  "PaidBy-Other"
                            :date           "Date"
                            :amount         "Amount"
@@ -24,7 +25,7 @@
    [:form.form-horizontal {:id "receipt-body"}
     (selection-list "PaidBy" "Paid By"
                     {:style "margin-top:10px"
-                     :with-other "Other"}
+                     :with-others ["Check" "Other"]}
                     false nil [])
     (control-pair "Date" "Date"
                   {:type "Date"
@@ -36,12 +37,12 @@
                    :placeholder "price"
                    :required ""
                    :MaxLength 10})
-    (selection-list "Category" "Category" {:with-other "Other"} false nil [])
+    (selection-list "Category" "Category" {:with-others ["Other"]} false nil [])
     (label-and-autocomplete-text-field "Vendor" "Vendor" 30 {:required ""})
     (label-and-autocomplete-text-field "Comment" "Comment" {})
     (selection-list "ForWhom" "For Whom"
                     {:style "margin-bottom:10px"
-                     :with-other "Other"}
+                     :with-others ["Other"]}
                     true nil [])
     (submit-button "submit-receipt" "Submit Receipt")]))
 
