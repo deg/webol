@@ -23,11 +23,10 @@
     [:input (merge {:name id :id id} attrs)]]])
 
 
-(defn label-and-autocomplete-text-field [id label max-length attrs]
+(defn label-and-autocomplete-text-field [id label attrs]
   (control-pair id label
                 (assoc attrs :type "text"
-                       :autocomplete "on"
-                       :MaxLength max-length)))
+                       :autocomplete "on")))
 
 
 (defn submit-button [id label]
@@ -68,7 +67,7 @@
                          (selection value-text-pairs selected-value)]]]]
     (into [:div control-group]
           (map #(label-and-autocomplete-text-field
-                 (str id "-" %) (str % " " label) 15 {:required ""})
+                 (str id "-" %) (% other-labels) {:required ""})
                with-others))))
 
 
