@@ -1,8 +1,8 @@
 (ns degel.receipts.storage
-  (:require [cljs.reader :refer [read-string]] ;; [TODO] Is clojure.edn available in cljs?
-            [domina :refer [log]]
+  (:require [domina :refer [log]]
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
-            [degel.receipts.db :as db]))
+            [degel.receipts.db :as db]
+            [degel.receipts.utils :as utils]))
 
 ;;; Use local storage as a cache backed by server-side storage.
 ;;;
@@ -34,7 +34,7 @@
   "Unwrap a locally-stored value and return the value itself."
   [key]
   (when-let [wrapped-value (.getItem storage key)]
-    (read-string wrapped-value)))
+    (utils/safe-read-string wrapped-value)))
 
 
 (defn read
@@ -55,10 +55,11 @@
             password (:value (read-wrapped-local :password))]
         (remote-callback :read-storage [key user-id password]
           #(if (= (:status %) db/SUCCESS)
-             (let [remote-value (read-string (:value %))]
-               (write-wrapped-local key remote-value false)
-               (when read-fn
-                 (read-fn remote-value :remote)))
+             (let [remote-value (utils/safe-read-string (:value %))]
+               (when remote-value
+                 (write-wrapped-local key remote-value false)
+                 (when read-fn
+                   (read-fn remote-value :remote))))
              ((or fail-fn js/alert) (:errmsg %))))))
     value))
 
