@@ -44,15 +44,22 @@
     (events/prevent-default evt)))
 
 
-(defn selection [value-text-pairs selected-value]
-  (for [[value text] value-text-pairs]
-    [:option
-     (if (if (vector? selected-value)
-           (some #(= value %) selected-value)
-           (= value selected-value))
-       {:value value :selected ""}
-       {:value value})
-     text]))
+(defn selection
+  "Build a selection control.
+   values - vector of values to place in the list. Each value is either a vector of item id and
+   the string to present to the user, or a bare string that will play both roles.
+   selected-values - vector of list ids to be initially selected, or a single such id."
+  [values selected-values]
+  (for [val-or-pair values]
+    (let [value (if (string? val-or-pair) val-or-pair (first val-or-pair))
+          text  (if (string? val-or-pair) val-or-pair (second val-or-pair))]
+      [:option
+       (into {:value value}
+             (when (or (and (vector? selected-values)
+                            (some #{value} selected-values))
+                       (= value selected-values))
+               {:selected ""}))
+       text])))
 
 
 (defn selection-list [id label attrs multiple? selected-value value-text-pairs]
@@ -68,9 +75,8 @@
         control-group [:div.control-group control-group-attrs
                        [:label.control-label {:for id} (str label ":&nbsp;")]
                        [:div.control
-                        [:select (if multiple?
-                                   {:id id :multiple ""}
-                                   {:id id})
+                        [:select (into {:id id}
+                                       (when multiple? { :multiple ""}))
                          (selection value-text-pairs selected-value)]]]]
     (into [:div control-group]
           (map #(label-and-autocomplete-text-field
@@ -91,8 +97,7 @@
           (fn [vals _]
             (dom/set-html! list-ctrl
               (html [:select
-                     (selection (map #(if (vector? %) % [% %]) ;; [TODO] Move this into selection fn
-                                     (into vals with-others))
+                     (selection (into vals with-others)
                                 (or (clj-value list-id) (read db-key nil)))]))
             (when with-others
               (let [fill-others
