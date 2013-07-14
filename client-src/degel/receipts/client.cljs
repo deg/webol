@@ -8,13 +8,7 @@
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
             [degel.receipts.utils :refer [now-string]]
             [degel.receipts.storage :refer [read write-local]]
-            [degel.receipts.html :refer [button-group
-                                         button-handler
-                                         clj-value
-                                         fill-select-options
-                                         set-active-button
-                                         set-clj-value!
-                                         value-with-other]]
+            [degel.receipts.html :as dhtml]
             [degel.receipts.pages :refer [receipt-tab-controls receipt-tab-html
                                           confirmation-html
                                           setup-tab-controls setup-tab-html
@@ -31,7 +25,7 @@
   (let [controls (cond (dom/by-id "PaidBy")   receipt-tab-controls
                        (dom/by-id "Password") setup-tab-controls)]
     (doseq [[key id] controls]
-      (write-local key (clj-value id)))))
+      (write-local key (dhtml/clj-value id)))))
 
 
 (defn storage-to-page
@@ -40,12 +34,12 @@
   (let [controls (cond (dom/by-id "PaidBy")   receipt-tab-controls
                        (dom/by-id "Password") setup-tab-controls)]
     (doseq [[key id] controls]
-      (read key #(set-clj-value! id %)))))
+      (read key #(dhtml/set-clj-value! id %)))))
 
 
 (defn clear-receipt-page []
   (doseq [[_ id] receipt-tab-controls]
-    (set-clj-value! id ""))
+    (dhtml/set-clj-value! id ""))
   (fill-defaults)
   (page-to-storage))
 
@@ -55,11 +49,11 @@
   (condp = tab
     "receipt-tab" (do
                     (dom/set-html! (dom/by-id "contents") (receipt-tab-html))
-                    (fill-select-options "PaidBy")
-                    (fill-select-options "Category")
-                    (fill-select-options "ForWhom")
+                    (dhtml/fill-select-options "PaidBy")
+                    (dhtml/fill-select-options "Category")
+                    (dhtml/fill-select-options "ForWhom")
                     (let [submit-btn (dom/by-id "submit-receipt")]
-                      (events/listen! submit-btn :click (button-handler submit-receipt))
+                      (events/listen! submit-btn :click (dhtml/button-handler submit-receipt))
                       ;; [TODO] Left these out since (1) we don't have real help anyway; and (2) see
                       ;; if it fixes Heidi's problem of first click not responding.
                       #_(events/listen! submit-btn :mouseover add-help)
@@ -69,7 +63,7 @@
                     (dom/set-html! (dom/by-id "contents") (history-tab-html))
                     (refresh-history)
                     (events/listen! (dom/by-id "refresh-history") :click
-                      (button-handler refresh-history)))
+                      (dhtml/button-handler refresh-history)))
     ;; Finally, catch clicks on empty parts of tabbar, mostly just for code cleanness.
     "tabbar"      (do ))
   (storage-to-page))
@@ -78,7 +72,7 @@
 (defn submit-receipt []
   (let [params-map {:user-id (read :user-id nil), :password (read :password nil)}
         params-map (assoc params-map :uid (+ (goog.string.getRandomString) "-" (:user-id params-map)))
-        params-map (reduce-kv (fn [init key id] (assoc init key (value-with-other id)))
+        params-map (reduce-kv (fn [init key id] (assoc init key (dhtml/value-with-other id)))
                               params-map
                               receipt-tab-controls)
         params-map (dissoc params-map :paid-by-other)
@@ -97,7 +91,7 @@
           db/FAILURE (dom/set-html! (dom/by-id "contents")
                        (confirmation-html false (:errmsg result))))
         (events/listen! (dom/by-id "next-receipt") :click
-          (button-handler #(set-tab "receipt-tab")))))))
+          (dhtml/button-handler #(set-tab "receipt-tab")))))))
 
 
 (defn render-table [rows temp?]
@@ -145,11 +139,11 @@
 (defn ^:export init []
   (set-tab "receipt-tab")
   (dom/set-html! (dom/by-id "tabbar")
-    (html (button-group "tabbar-buttons" true
+    (html (dhtml/button-group "tabbar-buttons" true
             [{:id "receipt-tab" :text "Receipt"}
              {:id "setup-tab" :text "Setup"}
              {:id "history-tab" :text "History"}])))
   (events/listen! (dom/by-id "tabbar") :click
     #(-> % events/target (. -id) set-tab))
-  (set-active-button "tabbar-buttons" "receipt-tab")
+  (dhtml/set-active-button "tabbar-buttons" "receipt-tab")
   (fill-defaults))
