@@ -22,7 +22,7 @@
             [degel.receipts.db :as db]))
 
 
-(declare submit-receipt add-help remove-help cache-user-data refresh-history fill-defaults)
+(declare submit-receipt add-help remove-help refresh-history fill-defaults)
 
 
 (defn page-to-storage
