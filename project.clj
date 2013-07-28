@@ -6,7 +6,10 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
 
                  ;; Degel's Clojure utility library
-                 [degel-clojure-utils "0.1.3"]
+                 [degel-clojure-utils "0.1.5"]
+
+                 ;; Degel's Redmapel state tree library
+                 [redmapel "0.1.0"]
 
                  ;; Needed, I think, in order to build a runnable uberjar with compojure
                  [ring/ring-jetty-adapter "1.1.8"]
@@ -56,6 +59,8 @@
   :cljsbuild {
     :crossovers [valip.core
                  valip.predicates
+                 degel.cljutil.utils
+                 redmapel
                  degel.receipts.db
                  degel.receipts.static-validators]
     :builds {

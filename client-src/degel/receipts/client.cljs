@@ -5,6 +5,7 @@
             [domina.events :as events]
             [hiccups.runtime] ;; Needed by hiccups.core macros
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
+            [redmapel :as rml]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
             [degel.receipts.utils :refer [now-string]]
             [degel.receipts.storage :refer [read write-local]]
@@ -17,6 +18,8 @@
 
 
 (declare submit-receipt add-help remove-help refresh-history fill-defaults)
+
+(def ^:export state-tree (rml/make-redmapel-tree))
 
 
 (defn page-to-storage
@@ -45,6 +48,11 @@
 
 
 (defn set-tab [tab]
+  (rml/put! state-tree [:current-tab] tab))
+
+
+(defn on-current-tab  [bb cc old tab]
+  ;;(rml/update! state-tree [:history] conj tab)
   (page-to-storage)
   (condp = tab
     "receipt-tab" (do
@@ -58,6 +66,7 @@
                       ;; if it fixes Heidi's problem of first click not responding.
                       #_(events/listen! submit-btn :mouseover add-help)
                       #_(events/listen! submit-btn :mouseout remove-help)))
+    "status"      ((rml/fetch state-tree [:tab-action]))
     "setup-tab"   (dom/set-html! (dom/by-id "contents") (setup-tab-html))
     "history-tab" (do
                     (dom/set-html! (dom/by-id "contents") (history-tab-html))
@@ -67,6 +76,8 @@
     ;; Finally, catch clicks on empty parts of tabbar, mostly just for code cleanness.
     "tabbar"      (do ))
   (storage-to-page))
+
+(rml/alert! state-tree [:current-tab] :tab-change on-current-tab)
 
 
 (defn submit-receipt []
@@ -83,15 +94,18 @@
     (remote-callback :enter-receipt [params-map]
       (fn [result]
         (dom/remove-class! (dom/by-id "submit-receipt") "btn-danger")
-        (condp = (:status result)
-          db/SUCCESS (do
+        (rml/put! state-tree [:tab-action]
+                  (if (= (:status result) db/SUCCESS)
+                    (fn []
                        (clear-receipt-page)
                        (dom/set-html! (dom/by-id "contents")
                          (confirmation-html true (:formatted result))))
-          db/FAILURE (dom/set-html! (dom/by-id "contents")
-                       (confirmation-html false (:errmsg result))))
-        (events/listen! (dom/by-id "next-receipt") :click
-          (dhtml/button-handler #(set-tab "receipt-tab")))))))
+                    (fn []
+                      (dom/set-html! (dom/by-id "contents")
+                        (confirmation-html false (:errmsg result)))
+                      (events/listen! (dom/by-id "next-receipt") :click
+                        (dhtml/button-handler #(set-tab "receipt-tab"))))))
+        (set-tab "status")))))
 
 
 (defn render-table [rows temp?]
