@@ -6,6 +6,9 @@
 
 (def ^:export webol-tree (rml/make-redmapel-tree))
 
+(defn fetch [key]
+  (rml/fetch webol-tree key))
+
 (def memory-per-row 10)
 (def memory-num-rows 10)
 
@@ -28,6 +31,9 @@
     1 [:register :sp]
     [:error]))
 
+(defn or-empty [s]
+  (str (or s "(empty)")))
+
 
 (defn render-screen []
   (let [canvas (dom/by-id "canvas1")
@@ -46,9 +52,9 @@
                 :cell-fn #(let [loc (+ (* %1 memory-per-row) %2)]
                             (page/location-and-value
                              loc
-                             (->> [:memory loc] (rml/fetch webol-tree) str)))))
+                             (-> [:memory loc] fetch or-empty)))))
   (dom/set-html! (dom/by-id "registers")
     (page/table 1 2
                 :cell-fn #(page/location-and-value
                            (register-name %2)
-                           (rml/fetch webol-tree (register-key %2))))))
+                           (->  (register-key %2) fetch or-empty)))))
