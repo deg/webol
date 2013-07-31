@@ -24,9 +24,9 @@
     [:h1 "Webol Computer"]
     [:h2 [:address.author "Copyright &copy; 2013; "
           [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]
-    [:canvas#sketchboard
-     {:width 500 :height 300 :style "border: 2px solid blue"}
-     "This browser does not support canvases"]
+    [:div.canvas-wrapper
+     [:canvas#sketchboard
+      "This browser does not support canvases"]]
     [:table#memory]
     [:table#registers]
     [:div#program]]))
