@@ -1,6 +1,7 @@
 (ns degel.webol.client
   (:require [domina :as dom :refer [log]]
             [redmapel :as rml]
+            [degel.utils.html :as dhtml]
             [degel.webol.page :as page]))
 
 
@@ -48,13 +49,13 @@
   (clear-all)
   (dom/set-html! (dom/by-id "page") (page/webol-page))
   (dom/set-html! (dom/by-id "memory")
-    (page/table memory-num-rows memory-per-row
-                :cell-fn #(let [loc (+ (* %1 memory-per-row) %2)]
-                            (page/location-and-value
-                             loc
-                             (-> [:memory loc] fetch or-empty)))))
+    (dhtml/table memory-num-rows memory-per-row
+                 :cell-fn #(let [loc (+ (* %1 memory-per-row) %2)]
+                             (page/location-and-value
+                              loc
+                              (-> [:memory loc] fetch or-empty)))))
   (dom/set-html! (dom/by-id "registers")
-    (page/table 1 2
-                :cell-fn #(page/location-and-value
-                           (register-name %2)
-                           (->  (register-key %2) fetch or-empty)))))
+    (dhtml/table 1 2
+                 :cell-fn #(page/location-and-value
+                            (register-name %2)
+                            (->  (register-key %2) fetch or-empty)))))

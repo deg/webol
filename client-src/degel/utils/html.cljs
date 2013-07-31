@@ -16,6 +16,18 @@
   (dom/set-value! (dom/by-id id) (clj->js value)))
 
 
+(defn table
+  "Build an html table, sized rows X columns.
+   cell-fn is called to generate the content of each cell and is passed the
+   zero-based row/column indices."
+  [rows columns & {:keys [cell-fn]}]
+  (html [:table
+         (doall
+          (map (fn [r] [:tr (map (fn [c] [:td (cell-fn r c)])
+                                 (range columns))])
+               (range rows)))]))
+
+
 (defn control-pair [id label attrs]
   [:div.control-group {:id (str id "-group")}
    [:label.control-label {:for id} (str label ":&nbsp;")]

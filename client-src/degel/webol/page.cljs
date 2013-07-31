@@ -4,14 +4,6 @@
             [domina :as dom :refer [log]]))
 
 
-(defn table [rows columns & {:keys [cell-fn]}]
-  (html
-   [:table
-    (doall
-     (map (fn [r] [:tr (map (fn [c] [:td (cell-fn r c)])
-                            (range columns))])
-          (range rows)))]))
-
 (defn location-and-value [location value]
   (html [:div
          [:div.location location]
