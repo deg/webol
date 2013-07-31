@@ -2,10 +2,10 @@
   (:require-macros [hiccups.core :refer [html]])
   (:require [hiccups.runtime] ;; Needed by hiccups.core macros
             [domina :as dom :refer [log]]
-            [degel.receipts.html :refer [control-pair
-                                         label-and-autocomplete-text-field
-                                         submit-button
-                                         selection-list]]))
+            [degel.utils.html :refer [control-pair
+                                      label-and-autocomplete-text-field
+                                      submit-button
+                                      selection-list]]))
 
 
 (def receipt-tab-controls {:paid-by        "PaidBy"

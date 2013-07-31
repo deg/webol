@@ -7,9 +7,9 @@
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [redmapel :as rml]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
-            [degel.receipts.utils :refer [now-string]]
-            [degel.receipts.storage :refer [read write-local]]
-            [degel.receipts.html :as dhtml]
+            [degel.utils.storage :refer [read write-local]]
+            [degel.utils.html :as dhtml]
+            [degel.utils.utils :refer [now-string]]
             [degel.receipts.pages :refer [receipt-tab-controls receipt-tab-html
                                           confirmation-html
                                           setup-tab-controls setup-tab-html

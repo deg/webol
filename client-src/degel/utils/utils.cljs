@@ -1,4 +1,4 @@
-(ns degel.receipts.utils
+(ns degel.utils.utils
   (:require
    ;; [TODO] Is clojure.edn available in cljs?
    [cljs.reader :refer [read-string]]))

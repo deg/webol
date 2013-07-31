@@ -1,8 +1,8 @@
-(ns degel.receipts.storage
+(ns degel.utils.storage
   (:require [domina :refer [log]]
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
-            [degel.receipts.db :as db]
-            [degel.receipts.utils :as utils]))
+            [degel.receipts.db :as db] ;; [TODO] Needs to be moved out of receipts
+            [degel.utils.utils :as utils]))
 
 ;;; Use local storage as a cache backed by server-side storage.
 ;;;

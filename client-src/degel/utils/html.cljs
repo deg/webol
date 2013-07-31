@@ -1,11 +1,11 @@
-(ns degel.receipts.html
+(ns degel.utils.html
   (:require-macros [hiccups.core :refer [html]])
   (:require [clojure.string :as str]
             [hiccups.runtime] ;; Needed by hiccups.core macros
             [domina :as dom :refer [log]]
             [domina.events :as events]
-            [degel.receipts.storage :refer [read]]
-            [degel.receipts.utils :as utils]))
+            [degel.utils.storage :refer [read]]
+            [degel.utils.utils :as utils]))
 
 
 (defn- clj-value [id]
