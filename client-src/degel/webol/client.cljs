@@ -27,5 +27,10 @@
 
 
 (defn ^:export init []
+  (clear-all)
   (dom/set-html! (dom/by-id "page") (page/webol-page))
-  (dom/set-html! (dom/by-id "memory") (page/table memory-num-rows memory-per-row)))
+  (dom/set-html! (dom/by-id "memory")
+    (page/table memory-num-rows memory-per-row
+                :cell-fn (fn [r c]
+                           (str (rml/fetch webol-tree
+                                           [:memory (+ (* r memory-per-row) c)]))))))

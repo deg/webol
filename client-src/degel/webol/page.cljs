@@ -4,15 +4,14 @@
             [domina :as dom :refer [log]]))
 
 
-(defn table [rows columns]
+(defn table [rows columns & {:keys [cell-fn]}]
   (html
    [:table
     (doall
-     (map (fn [r]
-            [:tr (map (fn [c]
-                        [:td (str "R:" r ";C:" c)])
-                      (range columns))])
+     (map (fn [r] [:tr (map (fn [c] [:td (cell-fn r c)])
+                            (range columns))])
           (range rows)))]))
+
 
 (defn webol-page []
   (html
