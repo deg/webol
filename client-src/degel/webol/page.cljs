@@ -12,6 +12,11 @@
                             (range columns))])
           (range rows)))]))
 
+(defn location-and-value [location value]
+  (html [:div
+         [:div.location location]
+         [:div.value value]]))
+
 
 (defn webol-page []
   (html
