@@ -18,7 +18,8 @@
   (html
    [:div#main
     [:h1 "Webol Computer"]
-    [:h2 "Copyright (C) 2013; " [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]
+    [:h2 [:address.author "Copyright &copy; 2013; "
+          [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]
     [:canvas#sketchboard
      {:width 500 :height 300 :style "border: 2px solid blue"}
      "This browser does not support canvases"]
