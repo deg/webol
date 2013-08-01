@@ -36,13 +36,19 @@
   (str (or s "(empty)")))
 
 
-(defn render-screen []
-  (let [canvas (dom/by-id "canvas1")
-        ctx    (.getContext canvas "2d")
+(defn on-screen [fcn]
+  (let [canvas (dom/by-id "sketchboard")
+        context    (.getContext canvas "2d")
         width  (.-width canvas)
         height (.-height canvas)]
-    (set! (-> canvas .-style .-border) "2px dashed gray")
-    [canvas ctx width height]))
+    (fcn {:canvas canvas :context context :width width :height height})))
+
+(defn print-to-screen [text]
+  (on-screen (fn [{:keys [context]}]
+               (set! (.-fillStyle context) "black")
+               (set! (.-textBaseline context) "top")
+               (set! (.-font context) "0.8em Monospace")
+               (.fillText context text 0 0))))
 
 
 (defn ^:export init []
