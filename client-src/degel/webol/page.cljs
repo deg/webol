@@ -1,7 +1,8 @@
 (ns degel.webol.page
   (:require-macros [hiccups.core :refer [html]])
   (:require [hiccups.runtime] ;; Needed by hiccups.core macros
-            [domina :as dom :refer [log]]))
+            [domina :as dom :refer [log]]
+            [degel.utils.html :as dhtml]))
 
 
 (defn location-and-value [location value]
@@ -21,4 +22,5 @@
       "This browser does not support canvases"]]
     [:table#memory]
     [:table#registers]
+    (dhtml/label-and-autocomplete-text-field :input "Cmd" {:size 64})
     [:div#program]]))

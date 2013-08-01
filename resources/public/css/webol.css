@@ -20,7 +20,7 @@ address {
     font-size:0.6em;
 }
 
-table, canvas {
+table, canvas, .control-group {
     padding-left: 0;
     padding-right: 0;
     margin-left: 10px;
@@ -38,20 +38,24 @@ table {
     background-color: CornSilk;
 }
 
-th, td {
+th, td, input {
     border: 0px dashed black;
     padding: 2px;
     min-width: 40px;
     background-color: DarkGoldenrod;
 }
 
-.location {
+.location, .control-label {
     font-size: 0.9em;
     font-style: italic;
     text-align: left;
     padding: 1px;
     color: DarkRed;
     display: inline;
+}
+
+input {
+    max-width: 98%;
 }
 
 .value {
