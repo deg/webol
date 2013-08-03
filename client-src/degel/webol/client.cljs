@@ -18,6 +18,9 @@
   (apply rml/update! webol-tree key f args)
   (fetch key))
 
+(defn alert! [key id f]
+  (rml/alert! webol-tree key id f))
+
 (def memory-per-row 10)
 (def memory-num-rows 10)
 
@@ -57,15 +60,11 @@
 (defn text-mode []
   (on-screen (fn [{:keys [context width height]}]
                (let [char-height 14]
-                 (set! (.-globalCompositeOperation context) "copy")
-                 (set! (.-fillStyle context) "black")
                  (set! (.-textBaseline context) "top")
                  (set! (.-font context) (str char-height "px Monospace"))
                  (let [char-width (-> context (.measureText "M") .-width)
                        width-in-chars (fix (/ width char-width))
                        height-in-lines (fix (/ height char-height))]
-                   (log "TM D: " height-in-lines " " width-in-chars)
-                   (.clearRect context 0 0 width height)
                    (put! [:screen :mode] :text)
                    (put! [:screen :line-height] char-height)
                    (put! [:screen :char-width] char-width)
@@ -73,9 +72,16 @@
                    (put! [:screen :height-in-lines] height-in-lines)
                    (put! [:screen :text-x] 0)
                    (put! [:screen :text-y] 0)
+                   (alert! [:screen :line] :text-draw-line
+                           (fn [_ [_ _ line] _ text]
+                             (set! (.-fillStyle context) "BurlyWood")
+                             (.fillRect context 0 (* line char-height) width char-height)
+                             (set! (.-fillStyle context) "DarkBlue")
+                             (.fillText context text 0 (* line char-height))))
                    (doseq [n (range height-in-lines)]
                        (put! [:screen :line n]
                            (clojure.string/join (repeat width-in-chars " ")))))))))
+
 
 (defn text-pixel-pos
   ([]
@@ -90,46 +96,27 @@
      (text-scroll 1))
   ([num-lines]
      (when (= (fetch [:screen :mode]) :text)
-       (on-screen
-        (fn [{:keys [canvas context width height]}]
-          (log "scrolling")
-          (let [height-in-lines (fetch [:screen :height-in-lines])
-                line-height (fetch [:screen :line-height])
-                rect-start (* line-height num-lines)
-                rect-height (- height rect-start)]
-            (log "height in lines: " height-in-lines)
-            (log "line height: " line-height)
-            (log "rect start: " rect-start)
-            (log "rect height: " rect-height)
-            (doseq [n (range height-in-lines)]
-              (let [line (fetch [:screen :text n])]
-                (.fillText context line 0 (* n line-height))))
-            #_(.drawImage context
-                        canvas 0 rect-start width rect-height
-                        0 0 width rect-height)))))))
+       (let [height-in-lines (fetch [:screen :height-in-lines])]
+         (doseq [n (rest (range height-in-lines))]
+           (put! [:screen :line (dec n)]
+                 (fetch [:screen :line n])))))))
+
 
 (defn text-out [text]
-  (when (= (fetch [:screen :mode]) :text)
-    (on-screen
-     (fn [{:keys [context width height]}]
-       (let [x (fetch [:screen :text-x])
-             y (fetch [:screen :text-y])
-             [canvas-x canvas-y] (text-pixel-pos x y)]
-         (.fillText context text canvas-x canvas-y)
-         (update! [:screen :text-x] + (count text))
-         (log "TO F: y=" y " x=" x " text=" text)
-         (update! [:screen :line y] identity text))))))
+  (when (= :text (fetch [:screen :mode]))
+    (let [start-x (fetch [:screen :text-x])
+          start-y (fetch [:screen :text-y])]
+      (update! [:screen :text-x] + (count text))
+      (update! [:screen :line start-y] string-into start-x text))))
 
 
 (defn newline-out []
   (when (= (fetch [:screen :mode]) :text)
-    (on-screen
-     (fn [{:keys [height]}]
-       (put! [:screen :text-x] 0)
-       (let [new-y (update! [:screen :text-y] inc)]
-         (when (>= new-y (fetch [:screen :height-in-lines]))
-           (text-scroll)
-           (update! [:screen :text-y] dec)))))))
+    (put! [:screen :text-x] 0)
+    (let [new-y (update! [:screen :text-y] inc)]
+      (when (>= new-y (fetch [:screen :height-in-lines]))
+        (text-scroll 1)
+        (update! [:screen :text-y] dec)))))
 
 
 (defn ^:export init []
@@ -148,6 +135,7 @@
                             (->  (register-key %2) fetch or-empty))))
   (text-mode)
   (text-out "abc")
-  (doseq [n (range 24)]
+  (doseq [n (range (fix (rand 30)))]
     (text-out (str "line " n))
+    (text-out (str " foo " (rand)))
     (newline-out)))
