@@ -28,7 +28,7 @@
     1 [:register :sp]
     [:error]))
 
-(defn or-empty [s]
+(defn- or-empty [s]
   (str (or s "(empty)")))
 
 (defn ^:export init []

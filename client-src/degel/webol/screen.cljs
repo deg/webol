@@ -6,8 +6,8 @@
 
 (defn- on-screen [fcn]
   (let [canvas (dom/by-id "sketchboard")
-        context    (.getContext canvas "2d")
-        width  (.-width canvas)
+        context (.getContext canvas "2d")
+        width (.-width canvas)
         height (.-height canvas)]
     (fcn {:canvas canvas :context context :width width :height height})))
 
