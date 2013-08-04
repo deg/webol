@@ -59,15 +59,13 @@
 
 (defn text-mode []
   (on-screen (fn [{:keys [context width height]}]
-               (let [char-height 14]
+               (let [line-height 14]
                  (set! (.-textBaseline context) "top")
-                 (set! (.-font context) (str char-height "px Monospace"))
+                 (set! (.-font context) (str line-height "px Monospace"))
                  (let [char-width (-> context (.measureText "M") .-width)
                        width-in-chars (fix (/ width char-width))
-                       height-in-lines (fix (/ height char-height))]
+                       height-in-lines (fix (/ height line-height))]
                    (put! [:screen :mode] :text)
-                   (put! [:screen :line-height] char-height)
-                   (put! [:screen :char-width] char-width)
                    (put! [:screen :width-in-chars] width-in-chars)
                    (put! [:screen :height-in-lines] height-in-lines)
                    (put! [:screen :text-x] 0)
@@ -75,20 +73,12 @@
                    (alert! [:screen :line] :text-draw-line
                            (fn [_ [_ _ line] _ text]
                              (set! (.-fillStyle context) "BurlyWood")
-                             (.fillRect context 0 (* line char-height) width char-height)
+                             (.fillRect context 0 (* line line-height) width line-height)
                              (set! (.-fillStyle context) "DarkBlue")
-                             (.fillText context text 0 (* line char-height))))
+                             (.fillText context text 0 (* line line-height))))
                    (doseq [n (range height-in-lines)]
                        (put! [:screen :line n]
                            (clojure.string/join (repeat width-in-chars " ")))))))))
-
-
-(defn text-pixel-pos
-  ([]
-     (text-pixel-pos (fetch [:screen :text-x]) (fetch [:screen :text-y])))
-  ([text-x text-y]
-     [(* text-x (fetch [:screen :char-width]))
-      (* text-y (fetch [:screen :line-height]))]))
 
 
 (defn text-scroll
