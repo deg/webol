@@ -1,25 +1,10 @@
 (ns degel.webol.client
   (:require [domina :as dom :refer [log]]
-            [redmapel :as rml]
             [degel.utils.html :as dhtml]
+            [degel.webol.store :as store]
+            [degel.webol.screen :as screen]
             [degel.webol.page :as page]))
 
-
-(def ^:export webol-tree (rml/make-redmapel-tree))
-
-(defn fetch [key]
-  (rml/fetch webol-tree key))
-
-(defn put! [key value]
-  (rml/put! webol-tree key value)
-  value)
-
-(defn update! [key f & args]
-  (apply rml/update! webol-tree key f args)
-  (fetch key))
-
-(defn alert! [key id f]
-  (rml/alert! webol-tree key id f))
 
 (def memory-per-row 10)
 (def memory-num-rows 10)
@@ -27,9 +12,9 @@
 
 (defn clear-all []
   (doseq [n (range (* memory-per-row memory-num-rows))]
-    (rml/put! webol-tree [:memory n] 0))
-  (rml/put! webol-tree [:register :pc] 0)
-  (rml/put! webol-tree [:register :sp] nil))
+    (store/put! [:memory n] 0))
+  (store/put! [:register :pc] 0)
+  (store/put! [:register :sp] nil))
 
 (defn register-name [index]
   (case index
@@ -46,69 +31,6 @@
 (defn or-empty [s]
   (str (or s "(empty)")))
 
-(defn string-into [s n s1]
-  (str (subs s 0 n) s1 (subs s (+ n (count s1)))))
-
-
-(defn on-screen [fcn]
-  (let [canvas (dom/by-id "sketchboard")
-        context    (.getContext canvas "2d")
-        width  (.-width canvas)
-        height (.-height canvas)]
-    (fcn {:canvas canvas :context context :width width :height height})))
-
-(defn text-mode []
-  (on-screen (fn [{:keys [context width height]}]
-               (let [line-height 14]
-                 (set! (.-textBaseline context) "top")
-                 (set! (.-font context) (str line-height "px Monospace"))
-                 (let [char-width (-> context (.measureText "M") .-width)
-                       width-in-chars (fix (/ width char-width))
-                       height-in-lines (fix (/ height line-height))]
-                   (put! [:screen :mode] :text)
-                   (put! [:screen :width-in-chars] width-in-chars)
-                   (put! [:screen :height-in-lines] height-in-lines)
-                   (put! [:screen :text-x] 0)
-                   (put! [:screen :text-y] 0)
-                   (alert! [:screen :line] :text-draw-line
-                           (fn [_ [_ _ line] _ text]
-                             (set! (.-fillStyle context) "BurlyWood")
-                             (.fillRect context 0 (* line line-height) width line-height)
-                             (set! (.-fillStyle context) "DarkBlue")
-                             (.fillText context text 0 (* line line-height))))
-                   (doseq [n (range height-in-lines)]
-                       (put! [:screen :line n]
-                           (clojure.string/join (repeat width-in-chars " ")))))))))
-
-
-(defn text-scroll
-  ([]
-     (text-scroll 1))
-  ([num-lines]
-     (when (= (fetch [:screen :mode]) :text)
-       (let [height-in-lines (fetch [:screen :height-in-lines])]
-         (doseq [n (rest (range height-in-lines))]
-           (put! [:screen :line (dec n)]
-                 (fetch [:screen :line n])))))))
-
-
-(defn text-out [text]
-  (when (= :text (fetch [:screen :mode]))
-    (let [start-x (fetch [:screen :text-x])
-          start-y (fetch [:screen :text-y])]
-      (update! [:screen :text-x] + (count text))
-      (update! [:screen :line start-y] string-into start-x text))))
-
-
-(defn newline-out []
-  (when (= (fetch [:screen :mode]) :text)
-    (put! [:screen :text-x] 0)
-    (let [new-y (update! [:screen :text-y] inc)]
-      (when (>= new-y (fetch [:screen :height-in-lines]))
-        (text-scroll 1)
-        (update! [:screen :text-y] dec)))))
-
-
 (defn ^:export init []
   (clear-all)
   (dom/set-html! (dom/by-id "page") (page/webol-page))
@@ -117,15 +39,15 @@
                  :cell-fn #(let [loc (+ (* %1 memory-per-row) %2)]
                              (page/location-and-value
                               loc
-                              (-> [:memory loc] fetch or-empty)))))
+                              (-> [:memory loc] store/fetch or-empty)))))
   (dom/set-html! (dom/by-id "registers")
     (dhtml/table 1 2
                  :cell-fn #(page/location-and-value
                             (register-name %2)
-                            (->  (register-key %2) fetch or-empty))))
-  (text-mode)
-  (text-out "abc")
+                            (->  (register-key %2) store/fetch or-empty))))
+  (screen/text-mode)
+  (screen/text-out "abc")
   (doseq [n (range (fix (rand 30)))]
-    (text-out (str "line " n))
-    (text-out (str " foo " (rand)))
-    (newline-out)))
+    (screen/text-out (str "line " n))
+    (screen/text-out (str " foo " (rand)))
+    (screen/newline-out)))
