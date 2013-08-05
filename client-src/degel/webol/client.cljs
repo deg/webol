@@ -3,6 +3,7 @@
             [domina.events :as events]
             [degel.utils.html :as dhtml]
             [degel.webol.store :as store]
+            [degel.webol.line-parser :as parser]
             [degel.webol.screen :as screen]
             [degel.webol.page :as page]))
 
@@ -52,8 +53,9 @@
   (screen/text-mode)
   (store/alert! [:input :line] :input-line
                 (fn [_ _ _ line]
-                  (screen/text-out line)
-                  (screen/newline-out)))
+                  (let [line-map (parser/parse line)]
+                    (screen/text-out line-map)
+                    (screen/newline-out))))
   (events/listen! (dom/by-id "input") :keyup
     #(when (= 13 (-> % events/raw-event .-keyCode))
        (let [control (-> % events/target)]
