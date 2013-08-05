@@ -51,11 +51,17 @@
                             (register-name %2)
                             (->  (register-key %2) store/fetch or-empty))))
   (screen/text-mode)
-  (store/alert! [:input :line] :input-line
+  (store/guard! [:input :line] :input-line
+                ;; This somewhat abuses the guard metaphor. I'm using it here as a
+                ;; one-shot: We don't need or want to store anything in [:input :line];
+                ;; we just want to play with triggering. (To be honest: this has
+                ;; zero advantage over simply skipping this whole trampoline, but
+                ;; I hope the ideas will lead to enhancing redmapel).
                 (fn [_ _ _ line]
                   (let [line-map (parser/parse line)]
                     (screen/text-out line-map)
-                    (screen/newline-out))))
+                    (screen/newline-out)
+                    false)))
   (events/listen! (dom/by-id "input") :keyup
     #(when (= 13 (-> % events/raw-event .-keyCode))
        (let [control (-> % events/target)]

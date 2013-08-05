@@ -19,3 +19,6 @@
 (defn alert! [key id f]
   (rml/alert! webol-tree key id f))
 
+(defn guard! [key id f]
+  (rml/guard! webol-tree key id f))
+
