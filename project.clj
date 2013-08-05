@@ -9,7 +9,7 @@
                  [degel-clojure-utils "0.1.5"]
 
                  ;; Degel's Redmapel state tree library
-                 [redmapel "0.1.0"]
+                 [redmapel "0.1.1"]
 
                  ;; Needed, I think, in order to build a runnable uberjar with compojure
                  [ring/ring-jetty-adapter "1.1.8"]
