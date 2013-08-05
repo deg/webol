@@ -12,6 +12,10 @@
     (fcn {:canvas canvas :context context :width width :height height})))
 
 
+(defn blank-line []
+  (clojure.string/join
+   (repeat (store/fetch [:screen :width-in-chars]) " ")))
+
 
 (defn text-mode []
   (on-screen (fn [{:keys [context width height]}]
@@ -33,8 +37,7 @@
                                    (set! (.-fillStyle context) "DarkBlue")
                                    (.fillText context text 0 (* line line-height))))
                    (doseq [n (range height-in-lines)]
-                     (store/put! [:screen :line n]
-                                 (clojure.string/join (repeat width-in-chars " ")))))))))
+                     (store/put! [:screen :line n] (blank-line))))))))
 
 
 (defn text-scroll
@@ -45,7 +48,8 @@
        (let [height-in-lines (store/fetch [:screen :height-in-lines])]
          (doseq [n (rest (range height-in-lines))]
            (store/put! [:screen :line (dec n)]
-                       (store/fetch [:screen :line n])))))))
+                       (store/fetch [:screen :line n])))
+         (store/put! [:screen :line (dec height-in-lines)] (blank-line))))))
 
 
 (defn- string-into [s n s1]
