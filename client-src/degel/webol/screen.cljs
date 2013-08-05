@@ -19,9 +19,10 @@
 
 (defn text-mode []
   (on-screen (fn [{:keys [context width height]}]
-               (let [line-height 14]
+               (let [char-height 13
+                     line-height (+ char-height 2)]
                  (set! (.-textBaseline context) "top")
-                 (set! (.-font context) (str line-height "px Monospace"))
+                 (set! (.-font context) (str char-height "px Monospace"))
                  (let [char-width (-> context (.measureText "M") .-width)
                        width-in-chars (fix (/ width char-width))
                        height-in-lines (fix (/ height line-height))]
