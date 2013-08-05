@@ -1,5 +1,6 @@
 (ns degel.webol.client
   (:require [domina :as dom :refer [log]]
+            [domina.events :as events]
             [degel.utils.html :as dhtml]
             [degel.webol.store :as store]
             [degel.webol.screen :as screen]
@@ -9,6 +10,9 @@
 (def memory-per-row 10)
 (def memory-num-rows 10)
 
+(defn debug [x]
+   (js* "debugger;")
+   x)
 
 (defn clear-all []
   (doseq [n (range (* memory-per-row memory-num-rows))]
@@ -46,8 +50,12 @@
                             (register-name %2)
                             (->  (register-key %2) store/fetch or-empty))))
   (screen/text-mode)
-  (screen/text-out "abc")
-  (doseq [n (range (fix (rand 30)))]
-    (screen/text-out (str "line " n))
-    (screen/text-out (str " foo " (rand)))
-    (screen/newline-out)))
+  (store/alert! [:input :line] :input-line
+                (fn [_ _ _ line]
+                  (screen/text-out line)
+                  (screen/newline-out)))
+  (events/listen! (dom/by-id "input") :keyup
+    #(when (= 13 (-> % events/raw-event .-keyCode))
+       (let [control (-> % events/target)]
+         (store/put! [:input :line] (-> control dom/value))
+         (dom/set-value! control "")))))
