@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
 
                  ;; Degel's Clojure utility library
-                 [degel-clojure-utils "0.1.6"]
+                 [degel-clojure-utils "0.1.7"]
 
                  ;; Degel's Redmapel state tree library
                  [redmapel "0.1.7"]
@@ -61,6 +61,7 @@
                  valip.predicates
                  degel.cljutil.utils
                  degel.redmapel
+                 degel.redmapel.node
                  degel.receipts.db
                  degel.receipts.static-validators]
     :builds {
