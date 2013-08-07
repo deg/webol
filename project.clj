@@ -9,7 +9,7 @@
                  [degel-clojure-utils "0.1.5"]
 
                  ;; Degel's Redmapel state tree library
-                 [redmapel "0.1.1"]
+                 [redmapel "0.1.5"]
 
                  ;; Needed, I think, in order to build a runnable uberjar with compojure
                  [ring/ring-jetty-adapter "1.1.8"]
@@ -60,7 +60,7 @@
     :crossovers [valip.core
                  valip.predicates
                  degel.cljutil.utils
-                 redmapel
+                 degel.redmapel
                  degel.receipts.db
                  degel.receipts.static-validators]
     :builds {

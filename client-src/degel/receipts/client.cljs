@@ -5,7 +5,7 @@
             [domina.events :as events]
             [hiccups.runtime] ;; Needed by hiccups.core macros
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
-            [redmapel :as rml]
+            [degel.redmapel :as rml]
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
             [degel.utils.storage :refer [read write-local]]
             [degel.utils.html :as dhtml]

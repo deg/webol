@@ -1,6 +1,6 @@
 (ns degel.webol.store
   (:require [domina :as dom :refer [log]]
-            [redmapel :as rml]))
+            [degel.redmapel :as rml]))
 
 
 (def ^:export webol-tree (rml/make-redmapel-tree))
