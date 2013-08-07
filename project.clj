@@ -6,10 +6,10 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
 
                  ;; Degel's Clojure utility library
-                 [degel-clojure-utils "0.1.5"]
+                 [degel-clojure-utils "0.1.6"]
 
                  ;; Degel's Redmapel state tree library
-                 [redmapel "0.1.5"]
+                 [redmapel "0.1.7"]
 
                  ;; Needed, I think, in order to build a runnable uberjar with compojure
                  [ring/ring-jetty-adapter "1.1.8"]
