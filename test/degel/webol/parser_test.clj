@@ -46,8 +46,7 @@
       (let [test (str "print " in " " in " " in)]
         (testing (str "multi-" test)
           (is (= (parse-line test) (wrap [:print-cmd parse parse parse]))))))
-    ;; Expensive test, and not terribly interesting
-    #_
+    ;; [TODO] Relatively expensive test, and not terribly interesting. Maybe delete
     (doall (for [[in1 parse1] parses
                  [in2 parse2] parses]
       (let [test (str "print " in1 " " in2)]

@@ -8,9 +8,10 @@
   ([filename]
      (slurp filename)))
 
+(def ^:private line-parser (insta/parser (read-grammar)))
+
 (defn parse-line [line]
-  (let [parser (insta/parser (read-grammar))
-        rslt (->> (parser line)
+  (let [rslt (->> (line-parser line)
                   (insta/transform
                    {:integer clojure.edn/read-string
                     :float #(clojure.edn/read-string
