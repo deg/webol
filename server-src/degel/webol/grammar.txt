@@ -1,0 +1,39 @@
+input-line = <whitespace>? (action | progline) <whitespace>?
+
+<action> = edit-cmd | help-cmd | print-cmd | renumber-cmd | run-cmd | trace-cmd
+
+edit-cmd  = <#"(?i)edit"> <whitespace>? line-num
+help-cmd = <#"(?i)help">
+print-cmd = <#"(?i)print"> (<whitespace> expr)*
+renumber-cmd   = <#"(?i)renumber"> (<whitespace> line-num)?
+run-cmd   = <#"(?i)run"> (<whitespace> line-num)?
+trace-cmd = <#"(?i)trace">
+
+progline  = line-num
+
+<expr> = quoted-string | number | arith
+
+<quoted-string> = <dquote> string-with-embedded-dquotes <dquote>
+<simple-string> = #"[^\"]*"
+string-with-embedded-dquotes = simple-string | simple-string '""' string-with-embedded-dquotes
+
+line-num = integer
+
+arith = add-sub
+<add-sub> = mul-div | add | sub
+add = add-sub <'+'> mul-div
+sub = add-sub <'-'> mul-div
+<mul-div> = term | mul | div
+mul = mul-div <'*'> term
+div = mul-div <'/'> term
+<term> = atom | <'('> add-sub <')'>
+<atom> = number | var
+var = #'[A-Za-z][A-Za-z0-9]*'
+<number> = integer | float
+float = #'[0-9]*\.[0-9]+'
+integer = #'[0-9]+'
+
+dquote = '"'
+squote = "'"
+whitespace = #'\s+'
+

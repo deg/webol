@@ -11,6 +11,9 @@
                  ;; Degel's Redmapel state tree library
                  [redmapel "0.1.7"]
 
+                 ;; Parser tools
+                 [instaparse "1.2.2"]
+
                  ;; Needed, I think, in order to build a runnable uberjar with compojure
                  [ring/ring-jetty-adapter "1.1.8"]
 
@@ -52,6 +55,7 @@
   :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
 
   :source-paths ["server-src"]
+  :test-paths ["test"]
   :ring {:handler degel.receipts.server/app}
   ;:profiles {:dev {:hooks [leiningen.cljsbuild]}}
   :main degel.receipts.server
