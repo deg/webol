@@ -2,8 +2,8 @@
   (:require [domina :as dom :refer [log]]
             [domina.events :as events]
             [degel.utils.html :as dhtml]
+            [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [degel.webol.store :as store]
-            [degel.webol.line-parser :as parser]
             [degel.webol.screen :as screen]
             [degel.webol.page :as page]))
 
@@ -58,10 +58,13 @@
                 ;; zero advantage over simply skipping this whole trampoline, but
                 ;; I hope the ideas will lead to enhancing redmapel).
                 (fn [_ _ _ line]
-                  (let [line-map (parser/parse line)]
-                    (screen/text-out line-map)
-                    (screen/newline-out)
-                    false)))
+                  (screen/text-out line)
+                  (screen/newline-out)
+                  (remote-callback :get-parse-tree [line]
+                    (fn [line-back]
+                      (screen/text-out line-back)
+                      (screen/newline-out)))
+                  false))
   (events/listen! (dom/by-id "input") :keyup
     #(when (= 13 (-> % events/raw-event .-keyCode))
        (let [control (-> % events/target)]

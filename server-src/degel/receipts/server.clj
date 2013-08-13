@@ -7,6 +7,7 @@
             [shoreleave.middleware.rpc :refer [wrap-rpc defremote]]
             [compojure.handler :refer [site]]
             [degel.cljutil.devutils :as dev]
+            [degel.webol.parser :refer [parse-line]]
             [degel.receipts.simpleDB :refer [put-record get-record nuke-db]]
             [degel.receipts.receipts :refer [collect-receipt-history enter-receipt-internal]]))
 
@@ -29,6 +30,10 @@
 
 (defremote read-storage [key user-id password]
   (get-record "User-data" key :value password))
+
+
+(defremote get-parse-tree [line]
+  (parse-line line))
 
 
 (defn init-db [password]
