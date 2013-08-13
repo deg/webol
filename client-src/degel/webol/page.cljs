@@ -17,10 +17,10 @@
     [:h1 "Webol Computer"]
     [:h2 [:address.author "Copyright &copy; 2013; "
           [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]
+    (dhtml/label-and-autocomplete-text-field :input "Cmd" {:size 64})
     [:div.canvas-wrapper
      [:canvas#sketchboard {:width "640px" :height "360px"}
       "This browser does not support canvases"]]
     [:table#memory]
     [:table#registers]
-    (dhtml/label-and-autocomplete-text-field :input "Cmd" {:size 64})
     [:div#program]]))
