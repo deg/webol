@@ -6,7 +6,7 @@
   :dependencies [[org.clojure/clojure "1.5.1"]
 
                  ;; Degel's Clojure utility library
-                 [degel-clojure-utils "0.1.7"]
+                 [degel-clojure-utils "0.1.12"]
 
                  ;; Degel's Redmapel state tree library
                  [redmapel "0.1.7"]
@@ -39,7 +39,7 @@
                  [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]
 
                  ;; For CLJS REPL
-                 [com.cemerick/piggieback "0.0.4"]
+                 [com.cemerick/piggieback "0.1.0"]
                  ]
 
   :plugins [[lein-cljsbuild "0.3.2" :exclusions [org.clojure/clojure]]
