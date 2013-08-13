@@ -73,12 +73,15 @@
             :source-paths ["client-src" "client-src-dev"]
             :compiler {:output-to "resources/public/js/receipts-dev.js"
                        :optimizations :whitespace
+                       :libs [""] ;; See https://github.com/cemerick/pprng/
                        :pretty-print true}
             :jar false}
       :production {
             :source-paths ["client-src" "client-src-dev"] ; TODO brepl not safe here
             :compiler {:output-to "resources/public/js/receipts.js"
-                       :optimizations #_ :advanced :simple ; TODO Until dom issue resolved
-                       :pretty-print #_ false true}
+                       ;; TODO No :advanced until dom issue resolved;
+                       :optimizations #_ :advanced :simple #_:whitespace
+                       :libs [""] ;; See https://github.com/cemerick/pprng/
+                       :pretty-print false}
             :jar true}}})
 
