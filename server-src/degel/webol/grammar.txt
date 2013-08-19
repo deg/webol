@@ -1,5 +1,7 @@
+(* A full line to be parsed *)
 input-line = <whitespace>? (action | progline) <whitespace>?
 
+(* Immediate mode commands *)
 <action> = edit-cmd | help-cmd | print-cmd | renumber-cmd | run-cmd | trace-cmd
 
 edit-cmd  = <#"(?i)edit"> <whitespace>? line-num
@@ -19,6 +21,7 @@ string-with-embedded-dquotes = simple-string | simple-string '""' string-with-em
 
 line-num = integer
 
+(* Arithmetic expression parser *)
 arith = add-sub
 <add-sub> = mul-div | add | sub
 add = add-sub <'+'> mul-div
@@ -33,6 +36,7 @@ var = #'[A-Za-z][A-Za-z0-9]*'
 float = #'[0-9]*\.[0-9]+'
 integer = #'[0-9]+'
 
+(* Lexical items *)
 dquote = '"'
 squote = "'"
 whitespace = #'\s+'
