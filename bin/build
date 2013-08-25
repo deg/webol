@@ -6,4 +6,5 @@
 # temporary, until I understand the tool chain better.
 
 lein cljsbuild once
-lein compile :all
+lein compile :production
+

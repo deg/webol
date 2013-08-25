@@ -66,17 +66,20 @@
                            degel.redmapel.node
                            degel.receipts.db
                            degel.receipts.static-validators]
-              :builds {:dev {:source-paths ["client-src"]
-                             :compiler {:output-to "resources/public/js/receipts-dev.js"
-                                        :optimizations :whitespace
-                                        :libs [""] ;; See https://github.com/cemerick/pprng/
-                                        :pretty-print true}
-                             :jar false}
-                       :production {:source-paths ["client-src"]
-                                    :compiler {:output-to "resources/public/js/receipts.js"
-                                               ;; TODO No :advanced until dom issue resolved;
-                                               :optimizations #_ :advanced :simple
-                                               :libs [""] ;; See https://github.com/cemerick/pprng/
-                                               :pretty-print false}
-                                    :jar true}}})
+              :builds {#_ :dev
+                       #_
+                       {:source-paths ["client-src"]
+                        :compiler {:output-to "resources/public/js/receipts-dev.js"
+                                   :optimizations :whitespace
+                                   :libs [""] ;; See https://github.com/cemerick/pprng/
+                                   :pretty-print true}
+                        :jar false},
+                       :production
+                       {:source-paths ["client-src"]
+                        :compiler {:output-to "resources/public/js/receipts.js"
+                                   ;; TODO No :advanced until dom issue resolved;
+                                   :optimizations #_ :advanced :simple
+                                   :libs [""] ;; See https://github.com/cemerick/pprng/
+                                   :pretty-print false}
+                        :jar true}}})
 
