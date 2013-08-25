@@ -59,11 +59,13 @@
                 ;; zero advantage over simply skipping this whole trampoline, but
                 ;; I hope the ideas will lead to enhancing redmapel).
                 (fn [_ _ _ line]
-                  (screen/text-out line)
+                  (screen/text-out (str "=> " line))
                   (screen/newline-out)
                   (remote-callback :get-parse-tree [line]
-                    (fn [line-back]
-                      (screen/text-out line-back)
+                    (fn [{:keys [status parse error]}]
+                      (condp = status
+                        :error (screen/text-out (str "ERROR: " error))
+                        :success (screen/text-out (str "PARSE: " parse)))
                       (screen/newline-out)))
                   false))
   (events/listen! (dom/by-id "input") :keyup

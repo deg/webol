@@ -1,5 +1,6 @@
 (ns degel.webol.screen
-  (:require [domina :as dom :refer [log]]
+  (:require [clojure.string :as str]
+            [domina :as dom :refer [log]]
             [degel.webol.store :as store]))
 
 
@@ -57,14 +58,6 @@
   (str (subs s 0 n) s1 (subs s (+ n (count s1)))))
 
 
-(defn text-out [text]
-  (when (= :text (store/fetch [:screen :mode]))
-    (let [start-x (store/fetch [:screen :text-x])
-          start-y (store/fetch [:screen :text-y])]
-      (store/update! [:screen :text-x] + (count text))
-      (store/update! [:screen :line start-y] string-into start-x text))))
-
-
 (defn newline-out []
   (when (= (store/fetch [:screen :mode]) :text)
     (store/put! [:screen :text-x] 0)
@@ -72,3 +65,15 @@
       (when (>= new-y (store/fetch [:screen :height-in-lines]))
         (text-scroll 1)
         (store/update! [:screen :text-y] dec)))))
+
+
+(defn text-out [text]
+  (when (= :text (store/fetch [:screen :mode]))
+    (loop [[line & rest] (str/split-lines text)]
+      (let [start-x (store/fetch [:screen :text-x])
+            start-y (store/fetch [:screen :text-y])]
+        (store/update! [:screen :text-x] + (count line))
+        (store/update! [:screen :line start-y] string-into start-x line))
+      (when (seq rest)
+        (newline-out)
+        (recur rest)))))
