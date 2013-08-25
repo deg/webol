@@ -1,11 +1,14 @@
 (ns degel.receipts.server
   (:gen-class)
-  (:require [compojure.core :refer [defroutes GET]]
+  (:require [clojure.java.io :as io]
+            [compojure.core :refer [defroutes GET]]
             [compojure.route :refer [resources not-found]]
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.util.response :refer [redirect]]
             [shoreleave.middleware.rpc :refer [wrap-rpc defremote]]
+            [net.cgrand.enlive-html :as enlive]
             [compojure.handler :refer [site]]
+            [cemerick.austin.repls :refer (browser-connected-repl-js)]
             [degel.cljutil.devutils :as dev]
             [degel.webol.parser :refer [parse-line]]
             [degel.receipts.simpleDB :refer [put-record get-record nuke-db]]
@@ -43,10 +46,20 @@
                  password))
 
 
+(def repl-env
+  (reset! cemerick.austin.repls/browser-repl-env (cemerick.austin/repl-env)))
+
+(enlive/deftemplate webol-page
+  (io/resource "public/webol.html")
+  []
+  [:body] (enlive/append
+            (enlive/html [:script (browser-connected-repl-js)])))
+
+
 (defroutes app-routes
   (GET "/" {:keys [server-name] :as all-keys}
     (cond (re-matches #"(?i).*receipt.*" server-name) (redirect "/new-receipt.html")
-          (re-matches #"(?i).*webol.*"   server-name) (redirect "/webol.html")
+          (re-matches #"(?i).*webol.*"   server-name) (webol-page)
           true (not-found "<h1>David moans: 'app not found'.</h1>")))
   ; to serve static pages saved in resources/public directory
   (resources "/")
@@ -57,5 +70,7 @@
 
 
 (defn -main [& [port]]
-      (let [port (Integer. (or port (System/getenv "PORT") 3000))]
-        (run-jetty #'app {:port port :join? false})))
+  (let [port (Integer. (or port (System/getenv "PORT") 3000))]
+    (defonce ^:private server
+      (run-jetty #'app {:port port :join? false}))
+    server))

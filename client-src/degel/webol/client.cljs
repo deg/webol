@@ -3,6 +3,7 @@
             [domina.events :as events]
             [degel.utils.html :as dhtml]
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
+            [clojure.browser.repl]
             [degel.webol.store :as store]
             [degel.webol.screen :as screen]
             [degel.webol.page :as page]))

@@ -23,6 +23,10 @@
                  ;; DOM manipulation library for ClojureScript
                  [domina "1.0.2-SNAPSHOT"]
 
+                 ;; HTML templating.
+                 ;; [TODO] Compare with Hiccup. Maybe choose just one
+                 [enlive "1.1.1"]
+
                  ;; HTML generation for Clojurescript (Ported from Clojure Hiccup)
                  [hiccups "0.2.0"]
 
@@ -39,11 +43,12 @@
                  [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]
 
                  ;; For CLJS REPL
-                 [com.cemerick/piggieback "0.1.0"]
+                 ;; [com.cemerick/piggieback "0.1.0"]
                  ]
 
   :plugins [[lein-cljsbuild "0.3.2" :exclusions [org.clojure/clojure]]
             [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
+            [com.cemerick/austin "0.1.0"]
 
             ;; Not supported in lein 2.2.0, but here as a reminder to get features
             ;; mentioned in https://groups.google.com/forum/#!msg/clojure/9cA5hvFJTkw/fnWwxvALd64J
@@ -52,7 +57,7 @@
 
   :min-lein-version "2.0.0"
 
-  :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
+  ;; :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
 
   :source-paths ["server-src"]
   :test-paths ["test"]
@@ -70,14 +75,14 @@
                  degel.receipts.static-validators]
     :builds {
       :dev {
-            :source-paths ["client-src" "client-src-dev"]
+            :source-paths ["client-src"]
             :compiler {:output-to "resources/public/js/receipts-dev.js"
                        :optimizations :whitespace
                        :libs [""] ;; See https://github.com/cemerick/pprng/
                        :pretty-print true}
             :jar false}
       :production {
-            :source-paths ["client-src" "client-src-dev"] ; TODO brepl not safe here
+            :source-paths ["client-src"]
             :compiler {:output-to "resources/public/js/receipts.js"
                        ;; TODO No :advanced until dom issue resolved;
                        :optimizations #_ :advanced :simple #_:whitespace
