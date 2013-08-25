@@ -9,7 +9,7 @@
 
 
 (defn- clj-value [id]
-  (-> id dom/by-id (#(when % (dom/value %))) js->clj))
+  (some-> id dom/by-id dom/value js->clj))
 
 
 (defn- set-clj-value! [id value]
