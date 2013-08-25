@@ -36,7 +36,7 @@
 
 
 (defremote get-parse-tree [line]
-  (parse-line line))
+  (parse-line line true))
 
 
 (defn init-db [password]

@@ -10,7 +10,11 @@
 
 (def ^:private line-parser (insta/parser (read-grammar)))
 
-(defn parse-line [line]
+(defn- err-to-str [parse-result]
+  (-> parse-result insta/get-failure
+      (#(with-out-str (instaparse.failure/pprint-failure %)))))
+
+(defn parse-line [line errs-to-strs?]
   (let [rslt (->> (line-parser line)
                   (insta/transform
                    {:integer clojure.edn/read-string
@@ -20,11 +24,11 @@
                     :string-with-embedded-dquotes str}))]
     (cond
      (insta/failure? rslt)
-     {:status :error :error (insta/get-failure rslt)}
+     {:status :error :error (if errs-to-strs? (err-to-str rslt) rslt)}
 
      (and (= (count rslt) 2) (= (first rslt) :input-line))
      {:status :success :parse (second rslt)}
 
      ;; Should never happen, unless grammar is broken
-     :else {:status :error :error rslt})))
+     :else {:status :error :error (if errs-to-strs? (err-to-str rslt) rslt)})))
 
