@@ -40,11 +40,7 @@
                  [com.cemerick/valip "0.3.2"]
 
                  ;; Clojure interface to AWS SimpleDB
-                 [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]
-
-                 ;; For CLJS REPL
-                 ;; [com.cemerick/piggieback "0.1.0"]
-                 ]
+                 [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]]
 
   :plugins [[lein-cljsbuild "0.3.2" :exclusions [org.clojure/clojure]]
             [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
@@ -57,36 +53,30 @@
 
   :min-lein-version "2.0.0"
 
-  ;; :repl-options {:nrepl-middleware [cemerick.piggieback/wrap-cljs-repl]}
-
   :source-paths ["server-src"]
   :test-paths ["test"]
   :ring {:handler degel.receipts.server/app}
   ;:profiles {:dev {:hooks [leiningen.cljsbuild]}}
   :main degel.receipts.server
 
-  :cljsbuild {
-    :crossovers [valip.core
-                 valip.predicates
-                 degel.cljutil.utils
-                 degel.redmapel
-                 degel.redmapel.node
-                 degel.receipts.db
-                 degel.receipts.static-validators]
-    :builds {
-      :dev {
-            :source-paths ["client-src"]
-            :compiler {:output-to "resources/public/js/receipts-dev.js"
-                       :optimizations :whitespace
-                       :libs [""] ;; See https://github.com/cemerick/pprng/
-                       :pretty-print true}
-            :jar false}
-      :production {
-            :source-paths ["client-src"]
-            :compiler {:output-to "resources/public/js/receipts.js"
-                       ;; TODO No :advanced until dom issue resolved;
-                       :optimizations #_ :advanced :simple #_:whitespace
-                       :libs [""] ;; See https://github.com/cemerick/pprng/
-                       :pretty-print false}
-            :jar true}}})
+  :cljsbuild {:crossovers [valip.core
+                           valip.predicates
+                           degel.cljutil.utils
+                           degel.redmapel
+                           degel.redmapel.node
+                           degel.receipts.db
+                           degel.receipts.static-validators]
+              :builds {:dev {:source-paths ["client-src"]
+                             :compiler {:output-to "resources/public/js/receipts-dev.js"
+                                        :optimizations :whitespace
+                                        :libs [""] ;; See https://github.com/cemerick/pprng/
+                                        :pretty-print true}
+                             :jar false}
+                       :production {:source-paths ["client-src"]
+                                    :compiler {:output-to "resources/public/js/receipts.js"
+                                               ;; TODO No :advanced until dom issue resolved;
+                                               :optimizations #_ :advanced :simple
+                                               :libs [""] ;; See https://github.com/cemerick/pprng/
+                                               :pretty-print false}
+                                    :jar true}}})
 
