@@ -31,7 +31,7 @@
                    (store/put! [:screen :width-in-chars] width-in-chars)
                    (store/put! [:screen :height-in-lines] height-in-lines)
                    (store/put! [:screen :text-x] 0)
-                   (store/put! [:screen :text-y] 0)
+                   (store/put! [:screen :text-y] (dec height-in-lines))
                    (store/alert! [:screen :line] :text-draw-line
                                  (fn [_ [_ _ line] _ text]
                                    (set! (.-fillStyle context) "BurlyWood")
