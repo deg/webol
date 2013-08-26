@@ -22,7 +22,7 @@ string-with-embedded-dquotes = simple-string | simple-string '""' string-with-em
 line-num = integer
 
 (* Arithmetic expression parser *)
-arith = add-sub
+<arith> = add-sub
 <add-sub> = mul-div | add | sub
 add = add-sub <'+'> mul-div
 sub = add-sub <'-'> mul-div

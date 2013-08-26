@@ -4,8 +4,9 @@
             [degel.utils.html :as dhtml]
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [clojure.browser.repl]
-            [degel.webol.store :as store]
+            [degel.webol.runtime :as rt]
             [degel.webol.screen :as screen]
+            [degel.webol.store :as store]
             [degel.webol.page :as page]))
 
 
@@ -64,9 +65,8 @@
                   (remote-callback :get-parse-tree [line]
                     (fn [{:keys [status parse error]}]
                       (condp = status
-                        :error (screen/text-out (str "ERROR: " error) {:color "DarkRed"})
-                        :success (screen/text-out (str "PARSE: " parse) {:color "DarkGreen"}))
-                      (screen/newline-out)))
+                        :error (screen/line-out (str "ERROR: " error) {:color "DarkRed"})
+                        :success (rt/interpret parse))))
                   false))
   (events/listen! (dom/by-id "input") :keyup
     #(when (= 13 (-> % events/raw-event .-keyCode))

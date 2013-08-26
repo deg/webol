@@ -82,3 +82,7 @@
       (when (seq rest)
         (newline-out)
         (recur rest)))))
+
+(defn line-out [text {:keys [color] :or {color "DarkBlue"}}]
+  (text-out text :color color)
+  (newline-out))
