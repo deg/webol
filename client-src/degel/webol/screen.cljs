@@ -36,7 +36,8 @@
                                  (fn [_ [_ _ line] _ text]
                                    (set! (.-fillStyle context) "BurlyWood")
                                    (.fillRect context 0 (* line line-height) width line-height)
-                                   (set! (.-fillStyle context) "DarkBlue")
+                                   (set! (.-fillStyle context)
+                                         (or (store/fetch [:screen :line-color line]) "DarkBlue"))
                                    (.fillText context text 0 (* line line-height))))
                    (doseq [n (range height-in-lines)]
                      (store/put! [:screen :line n] (blank-line))))))))
@@ -49,9 +50,12 @@
      (when (= (store/fetch [:screen :mode]) :text)
        (let [height-in-lines (store/fetch [:screen :height-in-lines])]
          (doseq [n (rest (range height-in-lines))]
+           (store/put! [:screen :line-color (dec n)]
+                       (store/fetch [:screen :line-color n]))
            (store/put! [:screen :line (dec n)]
                        (store/fetch [:screen :line n])))
-         (store/put! [:screen :line (dec height-in-lines)] (blank-line))))))
+         (store/put! [:screen :line (dec height-in-lines)] (blank-line))
+         (store/put! [:screen :line-color (dec height-in-lines)] "DarkBlue")))))
 
 
 (defn- string-into [s n s1]
@@ -67,12 +71,13 @@
         (store/update! [:screen :text-y] dec)))))
 
 
-(defn text-out [text]
+(defn text-out [text {:keys [color] :or {color "DarkBlue"}}]
   (when (= :text (store/fetch [:screen :mode]))
     (loop [[line & rest] (str/split-lines text)]
       (let [start-x (store/fetch [:screen :text-x])
             start-y (store/fetch [:screen :text-y])]
         (store/update! [:screen :text-x] + (count line))
+        (store/put! [:screen :line-color start-y] color)
         (store/update! [:screen :line start-y] string-into start-x line))
       (when (seq rest)
         (newline-out)
