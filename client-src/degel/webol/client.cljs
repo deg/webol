@@ -60,8 +60,7 @@
                 ;; zero advantage over simply skipping this whole trampoline, but
                 ;; I hope the ideas will lead to enhancing redmapel).
                 (fn [_ _ _ line]
-                  (screen/text-out (str "=> " line) {:color "DarkBlue"})
-                  (screen/newline-out)
+                  (screen/line-out (str "=> " line) {:color "DarkGreen"})
                   (remote-callback :get-parse-tree [line]
                     (fn [{:keys [status parse error]}]
                       (condp = status
