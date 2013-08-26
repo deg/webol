@@ -24,4 +24,7 @@
     :print-cmd
     (->> (map interpret-expr rest) (str/join " ") screen/line-out)
 
+    :help-cmd
+    (.open js/window "/webol-help.html" "Webol Help" "width=700,height=500,resizable=1")
+
     (screen/line-out (str "*** Unknown PARSE: " action ": " rest) {:color "DarkRed"})))

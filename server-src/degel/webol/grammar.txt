@@ -1,15 +1,18 @@
 (* A full line to be parsed *)
-input-line = <whitespace>? (action | progline) <whitespace>?
+input-line = <whitespace>? (action | (!action bad-cmd) | progline) <whitespace>?
 
 (* Immediate mode commands *)
-<action> = edit-cmd | help-cmd | print-cmd | renumber-cmd | run-cmd | trace-cmd
+<action> = edit-cmd | help-cmd | list-cmd | print-cmd | renumber-cmd | run-cmd | trace-cmd
 
-edit-cmd  = <#"(?i)edit"> <whitespace>? line-num
-help-cmd = <#"(?i)help">
-print-cmd = <#"(?i)print"> (<whitespace> expr)*
-renumber-cmd   = <#"(?i)renumber"> (<whitespace> line-num)?
-run-cmd   = <#"(?i)run"> (<whitespace> line-num)?
-trace-cmd = <#"(?i)trace">
+edit-cmd     = <#"(?i)edit"> <whitespace>? line-num
+help-cmd     = <#"(?i)help">
+list-cmd     = <#"(?i)list">
+print-cmd    = <#"(?i)print"> (<whitespace> expr)*
+renumber-cmd = <#"(?i)renumber"> (<whitespace> line-num)?
+run-cmd      = <#"(?i)run"> (<whitespace> line-num)?
+trace-cmd    = <#"(?i)trace">
+
+bad-cmd      = #"[a-zA-Z].*"
 
 progline  = line-num
 
