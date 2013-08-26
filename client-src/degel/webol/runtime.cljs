@@ -52,6 +52,15 @@
     (screen/line-out (format-line line-num statement))))
 
 
+(declare interpret)
+(defn run-program [{:keys [trace]}]
+  (log "Trace is: " trace)
+  (doseq [[line-num statement] (store/fetch [:program])]
+    (when trace
+      (screen/line-out (format-line line-num statement) {:color "Red"}))
+    (interpret statement)))
+
+
 (defn interpret-expr [expr]
   (cond (number? expr) expr
         (string? expr) expr
@@ -73,6 +82,12 @@
 
     :list-cmd
     (list-program)
+
+    :run-cmd
+    (run-program {:trace false})
+
+    :trace-cmd
+    (run-program {:trace true})
 
     :progline
     (record-progline rest)
