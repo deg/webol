@@ -15,7 +15,9 @@ trace-cmd    = <#"(?i)trace">
 
 bad-cmd      = #"[a-zA-Z].*"
 
-progline  = line-num
+progline  = line-num <whitespace>? statement
+
+statement = print-cmd
 
 <expr> = quoted-string | number | arith
 
@@ -33,7 +35,8 @@ sub = add-sub <'-'> mul-div
 <mul-div> = term | mul | div
 mul = mul-div <'*'> term
 div = mul-div <'/'> term
-<term> = atom | <'('> add-sub <')'>
+<term> = atom | parens
+parens = <'('> add-sub <')'>
 <atom> = number | var
 var = #'[A-Za-z][A-Za-z0-9]*'
 <number> = integer | float

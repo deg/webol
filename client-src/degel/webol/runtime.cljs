@@ -18,16 +18,41 @@
         "  RUN (not yet implemented)\n"
         "  TRACE (not yet implemented)")
    {:color (if bad-cmd "DarkRed" "DarkBlue")}))
+
+
+(defn format-expr [expr]
+  (cond (number? expr) (str expr)
+        (string? expr) (str "\"" expr "\" ")
+        (vector? expr) (let [[expr-type & expr-vals] expr]
+                         (condp = expr-type
+                           :print-cmd (str "PRINT " (str/join " " (map format-expr expr-vals)))
+                           :add (str/join "+" (map format-expr expr-vals))
+                           :sub (str/join "-" (map format-expr expr-vals))
+                           :mul (str/join "*" (map format-expr expr-vals))
+                           :div (str/join "/" (map format-expr expr-vals))
+                           :parens (str "(" (format-expr (first expr-vals)) ")")
+                           (str "<*** UNKNOWN VEXPR: " expr-type " " expr-vals ">")))))
+
+
+(defn format-line [line-num statement-tree]
+  (str line-num " " (format-expr statement-tree)))
+
+
+(defn record-progline [[[- line-num] [- statement]]]
+  (store/put! [:program line-num] statement)
+  (screen/line-out (format-line line-num statement)))
+
+
 (defn interpret-expr [expr]
   (cond (number? expr) expr
         (string? expr) expr
         (vector? expr) (let [[expr-type & expr-vals] expr]
                          (condp = expr-type
-                           :arith (interpret-expr (first expr-vals))
                            :add (reduce + (map interpret-expr expr-vals))
                            :sub (reduce - (map interpret-expr expr-vals))
                            :mul (reduce * (map interpret-expr expr-vals))
                            :div (reduce / (map interpret-expr expr-vals))
+                           :parens (interpret-expr (first expr-vals))
                            (str "<*** UNKNOWN VEXPR: " expr-type " " expr-vals ">")))
         :else "<*** UNKNOWN EXPR: " expr ">"))
 
@@ -36,6 +61,9 @@
   (condp = action
     :print-cmd
     (->> (map interpret-expr rest) (str/join " ") screen/line-out)
+
+    :progline
+    (record-progline rest)
 
     :manual-cmd
     (.open js/window "/webol-help.html" "Webol Help" "width=700,height=500,resizable=1")
