@@ -18,6 +18,7 @@
    x)
 
 (defn clear-all []
+  (rt/clear-program)
   (doseq [n (range (* memory-per-row memory-num-rows))]
     (store/put! [:memory n] 0))
   (store/put! [:register :pc] 0)

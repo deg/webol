@@ -20,6 +20,10 @@
    {:color (if bad-cmd "DarkRed" "DarkBlue")}))
 
 
+(defn clear-program []
+  (store/put! [:program (sorted-map)]))
+
+
 (defn format-expr [expr]
   (cond (number? expr) (str expr)
         (string? expr) (str "\"" expr "\" ")
@@ -39,8 +43,13 @@
 
 
 (defn record-progline [[[- line-num] [- statement]]]
-  (store/put! [:program line-num] statement)
+  (store/update! [:program] assoc line-num statement)
   (screen/line-out (format-line line-num statement)))
+
+
+(defn list-program []
+  (doseq [[line-num statement] (store/fetch [:program])]
+    (screen/line-out (format-line line-num statement))))
 
 
 (defn interpret-expr [expr]
@@ -61,6 +70,9 @@
   (condp = action
     :print-cmd
     (->> (map interpret-expr rest) (str/join " ") screen/line-out)
+
+    :list-cmd
+    (list-program)
 
     :progline
     (record-progline rest)
