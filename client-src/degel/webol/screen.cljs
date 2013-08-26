@@ -84,5 +84,5 @@
         (recur rest)))))
 
 (defn line-out [text {:keys [color] :or {color "DarkBlue"}}]
-  (text-out text :color color)
+  (text-out text {:color color})
   (newline-out))
