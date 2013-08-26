@@ -2,11 +2,12 @@
 input-line = <whitespace>? (action | (!action bad-cmd) | progline) <whitespace>?
 
 (* Immediate mode commands *)
-<action> = edit-cmd | help-cmd | list-cmd | print-cmd | renumber-cmd | run-cmd | trace-cmd
+<action> = edit-cmd | help-cmd | list-cmd | manual-cmd | print-cmd | renumber-cmd | run-cmd | trace-cmd
 
 edit-cmd     = <#"(?i)edit"> <whitespace>? line-num
 help-cmd     = <#"(?i)help">
 list-cmd     = <#"(?i)list">
+manual-cmd   = <(#"(?i)man"|#"(?i)manual")> (<whitespace> expr)*
 print-cmd    = <#"(?i)print"> (<whitespace> expr)*
 renumber-cmd = <#"(?i)renumber"> (<whitespace> line-num)?
 run-cmd      = <#"(?i)run"> (<whitespace> line-num)?
