@@ -17,7 +17,14 @@ bad-cmd      = #"[a-zA-Z].*"
 
 progline  = line-num <whitespace>? statement
 
-statement = print-cmd
+statement = goto-statement | let-statement | print-statement | rem-statement
+
+goto-statement = <#"(?i)goto"> <whitespace>? line-num
+let-statement = <#"(?i)let">
+<print-statement> = print-cmd
+rem-statement = <#"(?i)rem"> comment
+
+comment = #".*"
 
 <expr> = quoted-string | number | arith
 

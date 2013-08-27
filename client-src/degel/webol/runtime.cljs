@@ -30,6 +30,7 @@
         (vector? expr) (let [[expr-type & expr-vals] expr]
                          (condp = expr-type
                            :print-cmd (str "PRINT " (str/join " " (map format-expr expr-vals)))
+                           :goto-statement (str "GOTO " (-> expr-vals first second))
                            :add (str/join "+" (map format-expr expr-vals))
                            :sub (str/join "-" (map format-expr expr-vals))
                            :mul (str/join "*" (map format-expr expr-vals))
@@ -52,13 +53,30 @@
     (screen/line-out (format-line line-num statement))))
 
 
+(defn next-line
+  "[TODO] No way this can be efficent. But, may not matter yet. Optimize when needed."
+  [program line]
+  (first (subseq program > line)))
+
+
 (declare interpret)
+
 (defn run-program [{:keys [trace]}]
-  (log "Trace is: " trace)
-  (doseq [[line-num statement] (store/fetch [:program])]
-    (when trace
-      (screen/line-out (format-line line-num statement) {:color "Red"}))
-    (interpret statement)))
+  (let [program (store/fetch [:program])
+        max-lines 50] ;; [TODO] TEMP.. needed until we have vars and/or if and/or end and/or interrupt
+    (loop [[line-num statement] (next-line program 0)
+           ttl max-lines]
+      (store/put! [:register :pc] line-num)
+      (when (and line-num (> ttl 0))
+        (when trace
+          (screen/line-out (format-line line-num statement) {:color "Red"}))
+        (interpret statement)
+        (recur (next-line program (store/fetch [:register :pc]))
+               (dec ttl))))))
+
+
+(defn interpret-goto [[[- line-num]]]
+  (store/put! [:register :pc] (dec line-num)))
 
 
 (defn interpret-expr [expr]
@@ -77,6 +95,9 @@
 
 (defn interpret [[action & rest]]
   (condp = action
+    :goto-statement
+    (interpret-goto rest)
+
     :print-cmd
     (->> (map interpret-expr rest) (str/join " ") screen/line-out)
 
