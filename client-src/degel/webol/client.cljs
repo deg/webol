@@ -39,6 +39,13 @@
 (defn- or-empty [s]
   (str (or s "(empty)")))
 
+(defn- draw-registers []
+  (dom/set-html! (dom/by-id "registers")
+    (dhtml/table 1 2
+                 :cell-fn #(page/location-and-value
+                            (register-name %2)
+                            (->  (register-key %2) store/fetch or-empty)))))
+
 (defn ^:export init []
   (clear-all)
   (dom/set-html! (dom/by-id "page") (page/webol-page))
@@ -48,12 +55,9 @@
                              (page/location-and-value
                               loc
                               (-> [:memory loc] store/fetch or-empty)))))
-  (dom/set-html! (dom/by-id "registers")
-    (dhtml/table 1 2
-                 :cell-fn #(page/location-and-value
-                            (register-name %2)
-                            (->  (register-key %2) store/fetch or-empty))))
+  (draw-registers)
   (screen/text-mode)
+  (store/alert! [:register] :draw-pc (fn [_ _ _ _] (draw-registers)))
   (store/guard! [:input :line] :input-line
                 ;; This somewhat abuses the guard metaphor. I'm using it here as a
                 ;; one-shot: We don't need or want to store anything in [:input :line];
