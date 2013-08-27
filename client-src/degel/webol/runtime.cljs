@@ -21,21 +21,34 @@
 
 
 (defn clear-program []
-  (store/put! [:program] (sorted-map)))
+  (store/put! [:program] (sorted-map))
+  (store/put! [:program-vars] {}))
+
+
+(declare format-expr)
+(defn- format-list [exprs]
+  (str/join ", " (map format-expr exprs)))
+
+
+(defn- format-let [[lhs rhs]]
+  (str "LET " (format-expr lhs) " = " (format-expr rhs)))
 
 
 (defn format-expr [expr]
   (cond (number? expr) (str expr)
-        (string? expr) (str "\"" expr "\" ")
+        (string? expr) (str "\"" expr "\"")
         (vector? expr) (let [[expr-type & expr-vals] expr]
                          (condp = expr-type
-                           :print-cmd (str "PRINT " (str/join " " (map format-expr expr-vals)))
+                           :print-cmd (str "PRINT " (format-list expr-vals))
+                           :dim-statement (str "DIM " (format-list expr-vals))
                            :goto-statement (str "GOTO " (-> expr-vals first second))
+                           :let-statement (format-let expr-vals)
                            :add (str/join "+" (map format-expr expr-vals))
                            :sub (str/join "-" (map format-expr expr-vals))
                            :mul (str/join "*" (map format-expr expr-vals))
                            :div (str/join "/" (map format-expr expr-vals))
                            :parens (str "(" (format-expr (first expr-vals)) ")")
+                           :var (first expr-vals)
                            (str "<*** UNKNOWN VEXPR: " expr-type " " expr-vals ">")))))
 
 
@@ -59,11 +72,11 @@
   (first (subseq program > line)))
 
 
-(declare interpret)
+(declare interpret interpret-expr)
 
 (defn run-program [{:keys [trace]}]
   (let [program (store/fetch [:program])
-        max-lines 50] ;; [TODO] TEMP.. needed until we have vars and/or if and/or end and/or interrupt
+        max-lines 100] ;; [TODO] TEMP.. needed until we have vars and/or if and/or end and/or interrupt
     (loop [[line-num statement] (next-line program 0)
            ttl max-lines]
       (store/put! [:register :pc] line-num)
@@ -72,11 +85,36 @@
           (screen/line-out (format-line line-num statement) {:color "Red"}))
         (interpret statement)
         (recur (next-line program (store/fetch [:register :pc]))
-               (dec ttl))))))
+               (dec ttl))))
+    (screen/line-out "** DONE **")))
+
+
+(defn interpret-dim [vars]
+  (doseq [[- var] vars]
+    (store/update! [:program-vars] assoc var 0)))
 
 
 (defn interpret-goto [[[- line-num]]]
   (store/put! [:register :pc] (dec line-num)))
+
+
+(defn error ;; [TODO] TEMP
+  [& msg]
+  (let [line (store/fetch [:register :pc])]
+  (screen/line-out
+   (apply str (if line (str "[line " (store/fetch [:register :pc]) "] ") "")
+          msg)))
+
+
+(defn interpret-let [[[- lhs] rhs]]
+  (if (get (store/fetch [:program-vars]) lhs)
+    (store/update! [:program-vars] assoc lhs (interpret-expr rhs))
+    (error "Undefined lhs variable: " lhs)))
+
+
+(defn get-var-val [var]
+  (or (get (store/fetch [:program-vars]) var)
+      (error "Undefined variable: " var)))
 
 
 (defn interpret-expr [expr]
@@ -89,14 +127,21 @@
                            :mul (reduce * (map interpret-expr expr-vals))
                            :div (reduce / (map interpret-expr expr-vals))
                            :parens (interpret-expr (first expr-vals))
+                           :var (get-var-val (first expr-vals))
                            (str "<*** UNKNOWN VEXPR: " expr-type " " expr-vals ">")))
         :else "<*** UNKNOWN EXPR: " expr ">"))
 
 
 (defn interpret [[action & rest]]
   (condp = action
+    :dim-statement
+    (interpret-dim rest)
+
     :goto-statement
     (interpret-goto rest)
+
+    :let-statement
+    (interpret-let rest)
 
     :print-cmd
     (->> (map interpret-expr rest) (str/join " ") screen/line-out)

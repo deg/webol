@@ -8,7 +8,7 @@ edit-cmd     = <#"(?i)edit"> <whitespace>? line-num
 help-cmd     = <#"(?i)help">
 list-cmd     = <#"(?i)list">
 manual-cmd   = <(#"(?i)man"|#"(?i)manual")> (<whitespace> expr)*
-print-cmd    = <#"(?i)print"> (<whitespace> expr)*
+print-cmd    = <#"(?i)print"> <whitespace>? expr-list
 renumber-cmd = <#"(?i)renumber"> (<whitespace> line-num)?
 run-cmd      = <#"(?i)run"> (<whitespace> line-num)?
 trace-cmd    = <#"(?i)trace">
@@ -17,16 +17,20 @@ bad-cmd      = #"[a-zA-Z].*"
 
 progline  = line-num <whitespace>? statement
 
-statement = goto-statement | let-statement | print-statement | rem-statement
+statement = dim-statement | goto-statement | let-statement | print-statement | rem-statement
 
+dim-statement = <#"(?i)dim"> <whitespace>? var-list
 goto-statement = <#"(?i)goto"> <whitespace>? line-num
-let-statement = <#"(?i)let">
+let-statement = <#"(?i)let">  <whitespace>? var <"="> expr
 <print-statement> = print-cmd
 rem-statement = <#"(?i)rem"> comment
 
+<var-list> = var | var-list <whitespace>? <","> <whitespace>? var
+
 comment = #".*"
 
-<expr> = quoted-string | number | arith
+<expr-list> = expr | expr-list <whitespace>? <","> <whitespace>? expr
+<expr> = quoted-string | arith
 
 <quoted-string> = <dquote> string-with-embedded-dquotes <dquote>
 <simple-string> = #"[^\"]*"
