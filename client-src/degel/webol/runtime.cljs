@@ -21,7 +21,7 @@
 
 
 (defn clear-program []
-  (store/put! [:program (sorted-map)]))
+  (store/put! [:program] (sorted-map)))
 
 
 (defn format-expr [expr]
