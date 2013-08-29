@@ -155,6 +155,9 @@
     :rem-statement
     (do)
 
+    :clear-cmd
+    (clear-program rest)
+
     :print-cmd
     (->> (map interpret-expr rest) (str/join " ") screen/line-out)
 

@@ -2,8 +2,10 @@
 input-line = <whitespace>? (action | (!action bad-cmd) | progline) <whitespace>?
 
 (* Immediate mode commands *)
-<action> = edit-cmd | help-cmd | list-cmd | manual-cmd | print-cmd | renumber-cmd | run-cmd | trace-cmd
+<action> = clear-cmd | edit-cmd | help-cmd | list-cmd | manual-cmd | print-cmd |
+           renumber-cmd | run-cmd | trace-cmd
 
+clear-cmd     = <#"(?i)clear">
 edit-cmd     = <#"(?i)edit"> <whitespace>? line-num
 help-cmd     = <#"(?i)help">
 list-cmd     = <#"(?i)list">
