@@ -61,8 +61,16 @@
   (screen/line-out (format-line line-num statement)))
 
 
+(defn set-program [program]
+  (store/put! [:program] (into (sorted-map) program)))
+
+
+(defn get-program []
+  (store/fetch [:program]))
+
+
 (defn list-program []
-  (doseq [[line-num statement] (store/fetch [:program])]
+  (doseq [[line-num statement] (get-program)]
     (screen/line-out (format-line line-num statement))))
 
 

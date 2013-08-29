@@ -17,6 +17,9 @@
     [:h1 "Webol Computer"]
     [:h2 [:address.author "Copyright &copy; 2013; "
           [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]
+    [:div.save-load
+     (dhtml/submit-button :save-program "Save")
+     #_(dhtml/selection-list "Programs" "My Programs" {} false nil ["AAA" "BBB" "CCC"])]
     [:div.canvas-wrapper
      [:canvas#sketchboard {:width "640px" :height "360px"}
       "This browser does not support canvases"]]

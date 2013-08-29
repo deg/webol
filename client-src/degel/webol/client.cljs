@@ -4,6 +4,7 @@
             [degel.utils.html :as dhtml]
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
             [clojure.browser.repl]
+            [degel.utils.storage :refer [read write-local]]
             [degel.webol.runtime :as rt]
             [degel.webol.screen :as screen]
             [degel.webol.store :as store]
@@ -72,6 +73,9 @@
                         :error (screen/line-out (str "ERROR: " error) {:color "DarkRed"})
                         :success (rt/interpret parse))))
                   false))
+  (rt/set-program (read "program"))
+  (events/listen! (dom/by-id :save-program) :click
+    #(write-local "program" (rt/get-program)))
   (events/listen! (dom/by-id "input") :keyup
     #(when (= 13 (-> % events/raw-event .-keyCode))
        (let [control (-> % events/target)]
