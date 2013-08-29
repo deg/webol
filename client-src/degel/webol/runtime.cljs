@@ -103,7 +103,7 @@
   (let [line (store/fetch [:register :pc])]
   (screen/line-out
    (apply str (if line (str "[line " (store/fetch [:register :pc]) "] ") "")
-          msg)))
+          msg))))
 
 
 (defn interpret-let [[[- lhs] rhs]]
