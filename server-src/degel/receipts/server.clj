@@ -74,3 +74,10 @@
     (defonce ^:private server
       (run-jetty #'app {:port port :join? false}))
     server))
+
+
+(defn start-cljs-repl []
+  (-main)
+  (cemerick.austin.repls/cljs-repl repl-env)
+  (js/alert "REPL is up"))
+
