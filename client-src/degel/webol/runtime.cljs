@@ -43,6 +43,7 @@
                            :dim-statement (str "DIM " (format-list expr-vals))
                            :goto-statement (str "GOTO " (-> expr-vals first second))
                            :let-statement (format-let expr-vals)
+                           :rem-statement (str "REM" (-> expr-vals first second))
                            :add (str/join "+" (map format-expr expr-vals))
                            :sub (str/join "-" (map format-expr expr-vals))
                            :mul (str/join "*" (map format-expr expr-vals))
@@ -150,6 +151,9 @@
 
     :let-statement
     (interpret-let rest)
+
+    :rem-statement
+    (do)
 
     :print-cmd
     (->> (map interpret-expr rest) (str/join " ") screen/line-out)
