@@ -78,6 +78,5 @@
 
 (defn start-cljs-repl []
   (-main)
-  (cemerick.austin.repls/cljs-repl repl-env)
-  (js/alert "REPL is up"))
+  (cemerick.austin.repls/cljs-repl repl-env))
 
