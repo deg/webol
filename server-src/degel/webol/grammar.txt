@@ -19,13 +19,18 @@ bad-cmd      = #"[a-zA-Z].*"
 
 progline  = line-num <whitespace>? statement
 
-statement = dim-statement | goto-statement | let-statement | print-statement | rem-statement
+statement = dim-statement | goto-statement | if-statement | let-statement|
+            print-statement | rem-statement
 
 dim-statement = <#"(?i)dim"> <whitespace>? var-list
 goto-statement = <#"(?i)goto"> <whitespace>? line-num
-let-statement = <#"(?i)let">  <whitespace>? var <"="> expr
+if-statement = <#"(?i)if"> <whitespace>? condition <whitespace>? <#"(?i)then"> <whitespace>? statement
+let-statement = <#"(?i)let">  <whitespace>? var <whitespace>? <"="> <whitespace>? expr
 <print-statement> = print-cmd
 rem-statement = <#"(?i)rem"> comment
+
+condition = expr <whitespace>? cond-op <whitespace>? expr
+<cond-op> = "==" | "!=" | "<" | "<=" | ">" | ">="
 
 <var-list> = var | var-list <whitespace>? <","> <whitespace>? var
 

@@ -33,6 +33,8 @@
 (defn- format-let [[lhs rhs]]
   (str "LET " (format-expr lhs) " = " (format-expr rhs)))
 
+(defn- format-if [[[- lhs op rhs] [- statement]]]
+  (str "IF " (format-expr lhs) " " op " " (format-expr rhs) " THEN " (format-expr statement)))
 
 (defn format-expr [expr]
   (cond (number? expr) (str expr)
@@ -43,6 +45,7 @@
                            :dim-statement (str "DIM " (format-list expr-vals))
                            :goto-statement (str "GOTO " (-> expr-vals first second))
                            :let-statement (format-let expr-vals)
+                           :if-statement (format-if expr-vals)
                            :rem-statement (str "REM" (-> expr-vals first second))
                            :add (str/join "+" (map format-expr expr-vals))
                            :sub (str/join "-" (map format-expr expr-vals))
@@ -103,6 +106,15 @@
     (store/update! [:program-vars] assoc var 0)))
 
 
+
+(defn- interpret-if [[[- lhs op rhs] [- statement]]]
+  (let [left (interpret-expr lhs)
+        right (interpret-expr rhs)
+        fcn (get {"==" == "!=" not= "<" < "<=" <= ">" > ">=" >=} op)]
+    (if (fcn left right)
+      (interpret statement))))
+
+
 (defn interpret-goto [[[- line-num]]]
   (store/put! [:register :pc] (dec line-num)))
 
@@ -148,6 +160,9 @@
 
     :goto-statement
     (interpret-goto rest)
+
+    :if-statement
+    (interpret-if rest)
 
     :let-statement
     (interpret-let rest)
