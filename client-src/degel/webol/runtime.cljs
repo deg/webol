@@ -86,18 +86,27 @@
 
 (declare interpret interpret-expr)
 
+(declare continue-program)
 (defn run-program [{:keys [trace]}]
   (let [program (store/fetch [:program])
-        max-lines 100] ;; [TODO] TEMP.. needed until we have vars and/or if and/or end and/or interrupt
-    (loop [[line-num statement] (next-line program 0)
-           ttl max-lines]
-      (store/put! [:register :pc] line-num)
-      (when (and line-num (> ttl 0))
-        (when trace
-          (screen/line-out (format-line line-num statement) {:color "Red"}))
-        (interpret statement)
-        (recur (next-line program (store/fetch [:register :pc]))
-               (dec ttl))))
+        max-lines 100000] ;; [TODO] TEMP.. needed until we have vars and/or if and/or end and/or interrupt
+    (continue-program trace
+                      program
+                      (next-line program 0)
+                      max-lines)))
+
+(defn continue-program [trace program [line-num statement] ttl]
+  (store/put! [:register :pc] line-num)
+  (if (and line-num (> ttl 0))
+    (do
+      (when trace
+        (screen/line-out (format-line line-num statement) {:color "Red"}))
+      (interpret statement)
+      ((.-setTimeout js/window) #(continue-program
+                                  trace
+                                  program
+                                  (next-line program (store/fetch [:register :pc]))
+                                  (dec ttl))))
     (screen/line-out "** DONE **")))
 
 
