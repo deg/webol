@@ -79,35 +79,29 @@
 
 
 (defn next-line
-  "[TODO] No way this can be efficent. But, may not matter yet. Optimize when needed."
+  "[TODO] No way this is efficent. But, may not matter yet. Optimize when needed."
   [program line]
   (first (subseq program > line)))
 
 
 (declare interpret interpret-expr)
 
-(declare continue-program)
-(defn run-program [{:keys [trace]}]
-  (let [program (store/fetch [:program])
-        max-lines 100000] ;; [TODO] TEMP.. needed until we have vars and/or if and/or end and/or interrupt
-    (continue-program trace
-                      program
-                      (next-line program 0)
-                      max-lines)))
 
-(defn continue-program [trace program [line-num statement] ttl]
-  (store/put! [:register :pc] line-num)
-  (if (and line-num (> ttl 0))
-    (do
-      (when trace
-        (screen/line-out (format-line line-num statement) {:color "Red"}))
-      (interpret statement)
-      ((.-setTimeout js/window) #(continue-program
-                                  trace
-                                  program
-                                  (next-line program (store/fetch [:register :pc]))
-                                  (dec ttl))))
-    (screen/line-out "** DONE **")))
+(defn- continue-program [program {:keys [trace] :as flags}]
+  (let [[line-num statement] (next-line program (store/fetch [:register :pc]))]
+    (store/put! [:register :pc] line-num)
+    (if (nil? line-num)
+      (screen/line-out "** DONE **")
+      (do
+        (when trace
+          (screen/line-out (format-line line-num statement) {:color "Red"}))
+        (interpret statement)
+        ((.-setTimeout js/window) #(continue-program program flags) 0)))))
+
+(defn run-program [{:keys [trace] :as flags}]
+  (let [program (store/fetch [:program])]
+    (store/put! [:register :pc] 0)
+    (continue-program program trace)))
 
 
 (defn interpret-dim [vars]
