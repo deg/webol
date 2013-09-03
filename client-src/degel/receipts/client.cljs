@@ -52,7 +52,6 @@
 
 
 (defn on-current-tab  [bb cc old tab]
-  ;;(rml/update! state-tree [:history] conj tab)
   (page-to-storage)
   (condp = tab
     "receipt-tab" (do
