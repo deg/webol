@@ -101,7 +101,7 @@
    list-id - DOM id of the select control.
    db-key - Storage key of the persistent elements list. Defaults to a keyword composing
             the list-id and '-options'."
-  [list-id & {:keys [db-key] :or {db-key (keyword (str list-id "-options"))}}]
+  [list-id & {:keys [db-key callback] :or {db-key (keyword (str list-id "-options"))}}]
   (let [list-ctrl (dom/by-id list-id)
         with-others (-> list-ctrl .-parentNode .-parentNode
                         (dom/attr :with-others) utils/safe-read-string)]
@@ -113,15 +113,16 @@
                                 (or (clj-value list-id) (read db-key nil)))]))
             (when with-others
               (let [fill-others
-                    #(doseq [other with-others]
-                       (let [value (clj-value list-id)
-                             other-group-id (str list-id "-" other "-group")
-                             display-style (if (or (and (vector? value)
-                                                        (some #{other} value))
-                                                   (= value other))
-                                             "block" "none")
-                             ]
-                         (dom/set-style! (dom/by-id other-group-id) "display" display-style)))]
+                    #(let [value (clj-value list-id)]
+                       (doseq [other with-others]
+                         (let [other-group-id (str list-id "-" other "-group")
+                               display-style (if (or (and (vector? value)
+                                                          (some #{other} value))
+                                                     (= value other))
+                                               "block" "none")]
+                           (dom/set-style! (dom/by-id other-group-id) "display" display-style)))
+                       (when callback
+                         (callback list-id value)))]
                 (fill-others)
                 (events/listen! list-ctrl :change fill-others)))))))
 

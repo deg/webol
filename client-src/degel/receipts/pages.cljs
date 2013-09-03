@@ -38,7 +38,7 @@
                    :required ""
                    :MaxLength 10})
     (selection-list "Category" "Category" {:with-others ["Other"]} false nil [])
-    (label-and-autocomplete-text-field "Vendor" "Vendor" {:required ""})
+    (selection-list "Vendor" "Vendor" {:with-others ["Other"]} false nil [])
     (label-and-autocomplete-text-field "Comment" "Comment" {})
     (selection-list "ForWhom" "For Whom"
                     {:style "margin-bottom:10px"

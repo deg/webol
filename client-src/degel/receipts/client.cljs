@@ -50,6 +50,10 @@
 (defn set-tab [tab]
   (rml/put! state-tree [:current-tab] tab))
 
+(defn update-vendors [- category]
+  (let [db-key (keyword (str "Category-" category "-options"))]
+    (dhtml/fill-select-options "Vendor" :db-key db-key)))
+
 
 (defn on-current-tab  [bb cc old tab]
   (page-to-storage)
@@ -57,7 +61,7 @@
     "receipt-tab" (do
                     (dom/set-html! (dom/by-id "contents") (receipt-tab-html))
                     (dhtml/fill-select-options "PaidBy")
-                    (dhtml/fill-select-options "Category")
+                    (dhtml/fill-select-options "Category" :callback update-vendors)
                     (dhtml/fill-select-options "ForWhom")
                     (let [submit-btn (dom/by-id "submit-receipt")]
                       (events/listen! submit-btn :click (dhtml/button-handler submit-receipt))
