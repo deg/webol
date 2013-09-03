@@ -81,7 +81,7 @@
                        "Travel"])
                  nil password)
   (write-storage :Category-Books-options
-                 (str ["Sefarim v'od"	"Steimatzky" "Tzomet Sefarim"])
+                 (str ["Masada" "Sefarim v'od" "Steimatzky" "Tzomet Sefarim"])
                  nil
                  password)
   (write-storage :Category-Car-options
@@ -95,7 +95,7 @@
                                                  "Mouth or foot painting artists"
                                                  "Swim4Sadna"])
                  nil password)
-  (write-storage :Category-Cleaning-options (str ["..."]) nil password)
+  (write-storage :Category-Cleaning-options (str ["Levana"]) nil password)
   (write-storage :Category-Clothing-options (str ["200 meter fashion"
                                                   "Amnon shoes"
                                                   "Autenti"
@@ -124,14 +124,111 @@
                                                   "Tamnoon"
                                                   "Zara"]) nil password)
   (write-storage :Category-Dogs-options (str ["Chayot HaBayit" "Dod Moshe" "Vet"]) nil password)
-  (write-storage :Category-Entertainment-options (str ["..."]) nil password)
-  (write-storage :Category-Food-options (str ["..."]) nil password)
-  (write-storage :Category-Garden-options (str ["..."]) nil password)
-  (write-storage :Category-Gift-options (str ["..."]) nil password)
-  (write-storage :Category-Health-options (str ["..."]) nil password)
-  (write-storage :Category-Home-options (str ["..."]) nil password)
-  (write-storage :Category-Jewelry-options (str ["..."]) nil password)
-  (write-storage :Category-Kids-options (str ["..."]) nil password)
+  (write-storage :Category-Entertainment-options (str ["Al Derech Burma"
+                                                       "BS Chamber Music Series"
+                                                       "Ba B'tov"
+                                                       "Bowling Modiin"
+                                                       "Cinema City"
+                                                       "Country Beit Shemesh"
+                                                       "Disc Club"
+                                                       "Ezra"
+                                                       "Globus Max"
+                                                       "Mesilat Zion pool"
+                                                       "Nitzanim Beach"
+                                                       "Rav Chen Modiin"
+                                                       "Yamit 2000"]) nil password)
+  (write-storage :Category-Food-options (str ["Alonit"
+                                              "Angel"
+                                              "Benny's"
+                                              "Café Neeman"
+                                              "Co-op"
+                                              "Kanyon Mamtakim"
+                                              "Kimat Chinam"
+                                              "Mister Zol"
+                                              "Naomi's Cookies"
+                                              "Osher ad"
+                                              "Paz Yellow"
+                                              "Pommeranz"
+                                              "Shufersal deal"
+                                              "Shufersal online"
+                                              "Super Aviv"
+                                              "Super Hatzlacha"
+                                              "SuperPharm"
+                                              "Supersol Deal"]) nil password)
+  (write-storage :Category-Garden-options (str ["Beit Shemesh"
+                                                "Hapina Hayeroka"
+                                                "Mishtelet Habayit"
+                                                "Nursery Chatzer Hamashtela"
+                                                "Richard's Flower Shop"]) nil password)
+  (write-storage :Category-Gift-options (str ["Devarim Yafim"
+                                              "Kangaroo"
+                                              "Kfar HaShaashuim"
+                                              "Magnolia"
+                                              "Tachshit Plus"]) nil password)
+  (write-storage :Category-Health-options (str ["Arthur's Pharmacy"
+                                                "Chaya Shames"
+                                                "Dr. Metz"
+                                                "Hadassa SHaRaP"
+                                                "Hamashbir LeTzarchan"
+                                                "Meuchedet RBS drugstore"
+                                                "Meuchedet"
+                                                "Meuhedet drugstore"
+                                                "Optika Ayin Tov"
+                                                "Optika Halperin"
+                                                "Optika Speed"
+                                                "Optiko Petel-Natali"
+                                                "Pharma shaul"
+                                                "Shaarei Tzedek"
+                                                "Superpharm"
+                                                "Terem"]) nil password)
+  (write-storage :Category-Home-options (str ["Ashley Coleman"
+                                              "Ben Harush"
+                                              "Big Deal"
+                                              "Buy2"
+                                              "Chana Weiss"
+                                              "City Shop"
+                                              "Cobbler"
+                                              "Devarim Yafim"
+                                              "Ehud Exterminator"
+                                              "Graphos"
+                                              "Gris"
+                                              "Hakol Labait RBS"
+                                              "Hakol lashulchan"
+                                              "Hamashbir LaTzarchan"
+                                              "Hidur"
+                                              "Keter"
+                                              "Kol Bo Yehezkel"
+                                              "Kolbo Ohel Zahav"
+                                              "Lighting store"
+                                              "Limor Zakuto"
+                                              "M S Photos"
+                                              "Machsanei Hakol LaShulchan"
+                                              "Marvadim"
+                                              "Masada"
+                                              "Office Depot"
+                                              "Post Office"
+                                              "Reuven Fabrics"
+                                              "Sefarim v'od (R R Shivuk)"
+                                              "Super Binyan"
+                                              "Tachshit Plus"
+                                              "Tza'atzu'ei Hagiva"
+                                              "Yossi Zadiki"]) nil password)
+  (write-storage :Category-Jewelry-options (str ["Magnolia" "Tachshit plus"]) nil password)
+  (write-storage :Category-Kids-options (str ["Beit Shemesh"
+                                              "Bnei Akiva"
+                                              "Conservatory"
+                                              "Ezra"
+                                              "Library"
+                                              "Matnas"
+                                              "Moadon Sport RBS"
+                                              "Naomi Ocean"
+                                              "Pelech"
+                                              "S'farim V'od"
+                                              "Devarim Yafim"
+                                              "HaPirate HaAdom"
+                                              "Kangaroo"
+                                              "Kfar HaShaashuim"
+                                              "Red Pirate"]) nil password)
   (write-storage :Category-Restaurant-options (str ["Aldo"
                                                     "Aroma"
                                                     "Big Apple Pizza"
@@ -155,7 +252,7 @@
                                                     "Sbarro"
                                                     "Shwarma Skouri"
                                                     "Tom's Place"]) nil password)
-  (write-storage :Category-Tax-options (str ["..."]) nil password)
+  (write-storage :Category-Tax-options (str ["Meches" "Philip Stein"]) nil password)
   (write-storage :Category-Travel-options (str ["Bus" "Taxi" "Train"]) nil password))
 
 
