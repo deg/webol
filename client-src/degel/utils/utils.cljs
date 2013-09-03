@@ -1,6 +1,6 @@
 (ns degel.utils.utils
   (:require
-   ;; [TODO] {FogBugz:141} Is clojure.edn available in cljs?
+   ;; [TODO] {FogBugz:141} Is clojure.edn available in cljs? Is read-string a security hole?
    [cljs.reader :refer [read-string]]))
 
 (defn now-string []
