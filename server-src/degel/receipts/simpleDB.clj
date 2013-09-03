@@ -103,7 +103,7 @@
                :currency "USD" :amount "15.23"
                :category "Books" :Vendor "Barnes & Noble" :comment "At airport"
                :for-whom "D"
-               :formatted "Dummy" ;; [TODO] Generate this at right level
+               :formatted "Dummy" ;; [TODO] {FogBugz:138} Generate this at right level
                :password password})
   (map #(dissoc % :cemerick.rummage/id)
        (sdb/query-all @the-config '{select * from Receipts})))

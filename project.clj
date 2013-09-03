@@ -24,15 +24,15 @@
                  [domina "1.0.2-SNAPSHOT"]
 
                  ;; HTML templating.
-                 ;; [TODO] Compare with Hiccup. Maybe choose just one
+                 ;; [TODO] {FogBugz:139} Compare with Hiccup. Maybe choose just one
                  [enlive "1.1.1"]
 
                  ;; HTML generation for Clojurescript (Ported from Clojure Hiccup)
                  [hiccups "0.2.0"]
 
                  ;; Ring/Compojure RPC
-                 ;; [TODO] Look at the other Shoreleave libs too. Support for local storage,
-                 ;;        browser history, repl, etc.
+                 ;; [TODO] {FogBugz:139} Look at the other Shoreleave libs too. Support for
+                 ;;        local storage, browser history, repl, etc.
                  [shoreleave/shoreleave-remote-ring "0.3.0"]
                  [shoreleave/shoreleave-remote "0.3.0"]
 
@@ -77,9 +77,11 @@
                        :production
                        {:source-paths ["client-src"]
                         :compiler {:output-to "resources/public/js/receipts.js"
-                                   ;; TODO No :advanced until dom issue resolved;
+                                   ;; TODO {FogBugz:134} No :advanced until dom issue resolved;
+                                   ;;      No :advanced so REPL will work, until :dev is
+                                   ;;      usable again (per 'lib ""' bug)
                                    :optimizations #_ :advanced :simple
                                    :libs [""] ;; See https://github.com/cemerick/pprng/
-                                   :pretty-print false}
+                                   :pretty-print #_ false true}
                         :jar true}}})
 

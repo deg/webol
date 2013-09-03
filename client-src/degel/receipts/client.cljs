@@ -64,11 +64,7 @@
                     (dhtml/fill-select-options "Category" :callback update-vendors)
                     (dhtml/fill-select-options "ForWhom")
                     (let [submit-btn (dom/by-id "submit-receipt")]
-                      (events/listen! submit-btn :click (dhtml/button-handler submit-receipt))
-                      ;; [TODO] Left these out since (1) we don't have real help anyway; and (2) see
-                      ;; if it fixes Heidi's problem of first click not responding.
-                      #_(events/listen! submit-btn :mouseover add-help)
-                      #_(events/listen! submit-btn :mouseout remove-help)))
+                      (events/listen! submit-btn :click (dhtml/button-handler submit-receipt))))
     "status"      ((rml/fetch state-tree [:tab-action]))
     "setup-tab"   (dom/set-html! (dom/by-id "contents") (setup-tab-html))
     "history-tab" (do
@@ -112,7 +108,8 @@
 
 
 (defn render-table [rows temp?]
-  ;; [TODO] Use dot notation once https://github.com/teropa/hiccups/issues/4 is resolved.
+  ;; [TODO] {FogBugz:142} Use dot notation once https://github.com/teropa/hiccups/issues/4
+  ;;        is resolved.
   (html [:table {:class "table table-striped table-bordered table-condensed"}
          [:thead [:tr
                   (map (fn [s] [:td s])

@@ -41,7 +41,7 @@
 
 (defn init-db [password]
   (nuke-db password)
-  ;; [TODO] This is ugly.  Store these in a text (or json or xml) file.
+  ;; [TODO] {FogBugz:138} This is ugly.  Store these in a text (or json or xml) file.
   (write-storage :PaidBy-options
                  (str ["Cash"
                        ["v9949" "H Shufersal"]

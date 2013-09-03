@@ -79,7 +79,7 @@
 
 
 (defn next-line
-  "[TODO] No way this is efficent. But, may not matter yet. Optimize when needed."
+  ;; [TODO] {FogBugz:143} No way this is efficent. But, may not matter yet. Optimize when needed.
   [program line]
   (first (subseq program > line)))
 
@@ -122,7 +122,7 @@
   (store/put! [:register :pc] (dec line-num)))
 
 
-(defn error ;; [TODO] TEMP
+(defn error ;; [TODO] {FogBugz:144} TEMP
   [& msg]
   (let [line (store/fetch [:register :pc])]
   (screen/line-out

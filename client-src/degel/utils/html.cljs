@@ -158,9 +158,6 @@
 
 (defn set-active-button
   "Set one button to be active in a button-group.
-   [TODO] Need to learn xpath syntax or equivalent, to only search for button within group.
-   [TODO] Efficiency suggests keeping a map of keywords to dom elements, if that is possible,
-          rather than searching each time"
   [button-group button]
   (dom/remove-class! (dom/by-id button-group) "active")
   (dom/add-class! (dom/by-id button) "active"))
