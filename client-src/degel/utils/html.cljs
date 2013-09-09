@@ -157,7 +157,7 @@
 
 
 (defn set-active-button
-  "Set one button to be active in a button-group.
+  "Set one button to be active in a button-group."
   [button-group button]
   (dom/remove-class! (dom/by-id button-group) "active")
   (dom/add-class! (dom/by-id button) "active"))
