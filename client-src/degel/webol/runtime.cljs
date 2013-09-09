@@ -16,6 +16,7 @@
         "  PRINT - print an expression\n"
         "  RENUMBER (not yet implemented)\n"
         "  RUN (not yet implemented)\n"
+        "  STEP (not yet implemented)\n"
         "  TRACE (not yet implemented)")
    {:color (if bad-cmd "DarkRed" "DarkBlue")}))
 
@@ -200,3 +201,20 @@
     (show-language-help nil)
 
     (screen/line-out (str "*** Unknown PARSE: " action ": " rest) {:color "DarkRed"})))
+
+;; STILL TO DO:
+;;
+;; Graphics mode
+;; - GMODE
+;; - GSET x y
+;; - GCLEAR
+;; - GLINE x y
+;;
+;; INPUT
+;;
+;; FUNCTIONS
+;; - Math functions
+;;   ABS, trig, SQRT, FLOOR, CEILING
+
+
+
