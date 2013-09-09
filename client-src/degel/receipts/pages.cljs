@@ -8,63 +8,62 @@
                                       selection-list]]))
 
 
-(def receipt-tab-controls {:paid-by        "PaidBy"
-                           :paid-by-check  "PaidBy-Check"
-                           :paid-by-other  "PaidBy-Other"
-                           :date           "Date"
-                           :amount         "Amount"
-                           :category       "Category"
-                           :category-other "Category-Other"
-                           :vendor         "Vendor"
-                           :comment        "Comment"
-                           :for-whom       "ForWhom"
-                           :for-whom-other "ForWhom-Other"})
+(def receipt-tab-controls [:paid-by
+                           :paid-by-check
+                           :paid-by-other
+                           :date
+                           :amount
+                           :category
+                           :category-other
+                           :vendor
+                           :comment
+                           :for-whom
+                           :for-whom-other])
 
 (defn receipt-tab-html []
   (html
    [:form.form-horizontal {:id "receipt-body"}
-    (selection-list "PaidBy" "Paid By"
+    (selection-list :paid-by "Paid By"
                     {:style "margin-top:10px"
-                     :with-others [["Check" "Ck #"] ["Other" "Source"]]}
+                     :with-others [[:check "Ck #"] [:other "Source"]]}
                     false nil [])
-    (control-pair "Date" "Date"
+    (control-pair :date "Date"
                   {:type "Date"
                    :required ""})
-    (control-pair "Amount" "Amount"
+    (control-pair :amount "Amount"
                   {:type "Number"
                    :step "0.01"
                    :title "Enter price"
                    :placeholder "price"
                    :required ""
                    :MaxLength 10})
-    (selection-list "Category" "Category" {:with-others ["Other"]} false nil [])
-    (selection-list "Vendor" "Vendor" {:with-others ["Other"]} false nil [])
-    (label-and-autocomplete-text-field "Comment" "Comment" {})
-    (selection-list "ForWhom" "For Whom"
+    (selection-list :category "Category" {:with-others [[:other "Other"]]} false nil [])
+    (selection-list :vendor "Vendor" {:with-others [[:other "Other"]]} false nil [])
+    (label-and-autocomplete-text-field :comment "Comment" {})
+    (selection-list :for-whom "For Whom"
                     {:style "margin-bottom:10px"
-                     :with-others [["Other" "For other"]]}
+                     :with-others [[:other "For other"]]}
                     true nil [])
-    (submit-button "submit-receipt" "Submit Receipt")]))
+    (submit-button :submit-receipt "Submit Receipt")]))
 
 
 (defn confirmation-html [success confirmation]
   (html
    [:form.form-horizontal {:id "receipt-body"}
     [:p.confirmation [:div:label (if success "Ok: " "Error: ")] confirmation]
-    (submit-button "next-receipt" (if success "Next receipt" "Try again"))]))
+    (submit-button :next-receipt (if success "Next receipt" "Try again"))]))
 
 
-(def setup-tab-controls {:user-id "user-id"
-                         :password "Password"})
+(def setup-tab-controls [:user-id :password])
 
 (defn setup-tab-html []
   (html
    [:form.form-horizontal {:id "setup-account"}
-    (control-pair "user-id" "User ID"
+    (control-pair :user-id "User ID"
                   {:type "text"
                    :required ""
                    :MaxLength "16"})
-    (control-pair "Password" "Password"
+    (control-pair :password "Password"
                   {:type "password"
                    :required ""
                    :MaxLength "10"})]
@@ -75,4 +74,4 @@
   (html
    [:form.form-horizontal {:id "history-body"}
     [:div {:id "History"}]
-    (submit-button "refresh-history" "Refresh")]))
+    (submit-button :refresh-history "Refresh")]))

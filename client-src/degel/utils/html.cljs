@@ -16,6 +16,13 @@
   (dom/set-value! (dom/by-id id) (clj->js value)))
 
 
+(defn- kstr [& keys-or-strings]
+  (keyword (reduce str (map name keys-or-strings))))
+
+(defn- string-or-keyword? [x]
+  (or (string? x) (keyword? x)))
+
+
 (defn table
   "Build an html table, sized rows X columns.
    cell-fn is called to generate the content of each cell and is passed the
@@ -29,7 +36,7 @@
 
 
 (defn control-pair [id label attrs]
-  [:div.control-group {:id (str id "-group")}
+  [:div.control-group {:id (kstr id "-group")}
    [:label.control-label {:for id} (str label ":&nbsp;")]
    [:div.control
     [:input (merge {:name id :id id} attrs)]]])
@@ -63,8 +70,8 @@
    selected-values - vector of list ids to be initially selected, or a single such id."
   [values selected-values]
   (for [val-or-pair values]
-    (let [value (if (string? val-or-pair) val-or-pair (first val-or-pair))
-          text  (if (string? val-or-pair) val-or-pair (second val-or-pair))]
+    (let [value (if (string-or-keyword? val-or-pair) val-or-pair (first val-or-pair))
+          text  (if (string-or-keyword? val-or-pair) val-or-pair (second val-or-pair))]
       [:option
        (into {:value value}
              (when (or (and (vector? selected-values)
@@ -75,15 +82,11 @@
 
 
 (defn selection-list [id label attrs multiple? selected-value value-text-pairs]
-  (let [with-others (map #(if (string? %) % (first %))
-                         (:with-others attrs))
-        other-labels (into {} (map #(if (string? %)
-                                      [% (str % " " label)]
-                                      %)
-                                   (:with-others attrs)))
+  (let [other-ids (map first (:with-others attrs))
+        other-ids-and-labels (into {} (:with-others attrs))
         control-group-attrs (assoc attrs
-                              :id (str id "-group")
-                              :with-others with-others)
+                              :id (kstr id "-group")
+                              :with-others other-ids)
         control-group [:div.control-group control-group-attrs
                        [:label.control-label {:for id} (str label ":&nbsp;")]
                        [:div.control
@@ -92,8 +95,8 @@
                          (selection value-text-pairs selected-value)]]]]
     (into [:div control-group]
           (map #(label-and-autocomplete-text-field
-                 (str id "-" %) (% other-labels) {:required ""})
-               with-others))))
+                 (kstr id "-" %) (% other-ids-and-labels) {:required ""})
+              other-ids))))
 
 
 (defn fill-select-options
@@ -101,8 +104,8 @@
    list-id - DOM id of the select control.
    db-key - Storage key of the persistent elements list. Defaults to a keyword composing
             the list-id and '-options'."
-  [list-id & {:keys [db-key callback] :or {db-key (keyword (str list-id "-options"))}}]
-  (let [list-ctrl (dom/by-id list-id)
+  [list-id & {:keys [db-key callback] :or {db-key (kstr list-id "-options")}}]
+  (let [list-ctrl (dom/by-id (name list-id))
         with-others (-> list-ctrl .-parentNode .-parentNode
                         (dom/attr :with-others) utils/safe-read-string)]
     (read db-key
@@ -115,7 +118,8 @@
               (let [fill-others
                     #(let [value (clj-value list-id)]
                        (doseq [other with-others]
-                         (let [other-group-id (str list-id "-" other "-group")
+                         (let [other (name other)
+                               other-group-id (kstr list-id "-" other "-group")
                                display-style (if (or (and (vector? value)
                                                           (some #{other} value))
                                                      (= value other))
