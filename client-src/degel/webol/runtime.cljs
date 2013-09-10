@@ -159,6 +159,19 @@
         :else "<*** UNKNOWN EXPR: " expr ">"))
 
 
+;; STILL TO DO:
+;;
+;; Graphics mode
+;; - GMODE
+;; - GSET x y
+;; - GCLEAR
+;; - GLINE x y
+;;
+;; INPUT
+;;
+;; FUNCTIONS
+;; - Math functions
+;;   ABS, trig, SQRT, FLOOR, CEILING
 
 (defn- interpret1 [[action & rest]]
   (condp = action
@@ -204,21 +217,6 @@
     (show-language-help nil)
 
     (screen/line-out (str "*** Unknown PARSE: " action ": " rest) {:color "DarkRed"})))
-
-;; STILL TO DO:
-;;
-;; Graphics mode
-;; - GMODE
-;; - GSET x y
-;; - GCLEAR
-;; - GLINE x y
-;;
-;; INPUT
-;;
-;; FUNCTIONS
-;; - Math functions
-;;   ABS, trig, SQRT, FLOOR, CEILING
-
 
 
 (defn interpret [statement]
