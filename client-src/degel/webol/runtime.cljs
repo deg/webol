@@ -85,7 +85,7 @@
   (first (subseq program > line)))
 
 
-(declare interpret interpret-expr)
+(declare interpret interpret1 interpret-expr)
 
 
 (defn- continue-program [program {:keys [trace] :as flags}]
@@ -98,6 +98,7 @@
           (screen/line-out (format-line line-num statement) {:color "Red"}))
         (interpret statement)
         ((.-setTimeout js/window) #(continue-program program flags) 0)))))
+
 
 (defn run-program [{:keys [trace] :as flags}]
   (let [program (store/fetch [:program])]
@@ -116,7 +117,7 @@
         right (interpret-expr rhs)
         fcn (get {"==" == "!=" not= "<" < "<=" <= ">" > ">=" >=} op)]
     (if (fcn left right)
-      (interpret statement))))
+      (interpret1 statement))))
 
 
 (defn interpret-goto [[[- line-num]]]
@@ -124,22 +125,23 @@
 
 
 (defn error ;; [TODO] {FogBugz:144} TEMP
-  [& msg]
-  (let [line (store/fetch [:register :pc])]
-  (screen/line-out
-   (apply str (if line (str "[line " (store/fetch [:register :pc]) "] ") "")
-          msg))))
+  [& msg-and-params]
+  (let [line (store/fetch [:register :pc])
+        line-prefix (when (and line (> line 0))
+                    (str "[line " (store/fetch [:register :pc]) "] "))
+        errmsg (apply str line-prefix msg-and-params)]
+    (throw (js/Error. errmsg "(no file yet)" line))))
 
 
 (defn interpret-let [[[- lhs] rhs]]
   (if (get (store/fetch [:program-vars]) lhs)
     (store/update! [:program-vars] assoc lhs (interpret-expr rhs))
-    (error "Undefined lhs variable: " lhs)))
+    (error "Undefined assignment '" lhs "'")))
 
 
 (defn get-var-val [var]
   (or (get (store/fetch [:program-vars]) var)
-      (error "Undefined variable: " var)))
+      (error "Undefined variable '" var "'")))
 
 
 (defn interpret-expr [expr]
@@ -157,7 +159,8 @@
         :else "<*** UNKNOWN EXPR: " expr ">"))
 
 
-(defn interpret [[action & rest]]
+
+(defn- interpret1 [[action & rest]]
   (condp = action
     :dim-statement
     (interpret-dim rest)
@@ -218,3 +221,8 @@
 
 
 
+(defn interpret [statement]
+  (try (interpret1 statement)
+       (catch js/Error e
+         (screen/line-out (str "Fatal error: " (.-message e)) {:color "DarkRed"})
+         (screen/line-out "Program ended."))))
