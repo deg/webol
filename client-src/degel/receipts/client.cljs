@@ -9,7 +9,7 @@
             [degel.receipts.static-validators :refer [validate-receipt-fields]]
             [degel.utils.storage :refer [read write-local]]
             [degel.utils.html :as dhtml]
-            [degel.utils.utils :refer [now-string]]
+            [degel.utils.utils :as dutils]
             [degel.receipts.pages :refer [receipt-tab-controls receipt-tab-html
                                           confirmation-html
                                           setup-tab-controls setup-tab-html
@@ -147,7 +147,7 @@
 
 
 (defn fill-defaults []
-  (dom/set-value! (dom/by-id :date) (now-string)))
+  (dom/set-value! (dom/by-id :date) (dutils/now-string)))
 
 
 (defn ^:export init []

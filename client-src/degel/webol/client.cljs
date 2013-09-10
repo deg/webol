@@ -14,10 +14,6 @@
 (def memory-per-row 10)
 (def memory-num-rows 10)
 
-(defn debug [x]
-   (js* "debugger;")
-   x)
-
 (defn clear-all []
   (rt/clear-program)
   (doseq [n (range (* memory-per-row memory-num-rows))]
