@@ -1,5 +1,6 @@
 ._container, body {
   background-color:#F0D8B8;
+  text-align:left;
   width: 130mm;
   margin:10mm;
   padding:0;
@@ -8,22 +9,39 @@
 }
 
 ._majorBig, h1 {
-  text-align:left;
   font-size:1.6em;
 }
 
-._minorBig, h2 {
-  text-align:left;
+._mediumBig, h2 {
   font-size:1.2em;
+}
+
+._minorBig, h3 {
+  font-size:1.05em;
+  text-decoration:underline;
 }
 
 address {
     font-size:0.6em;
 }
 
-._embossed, kbd {
+._highlight, dfn {
+    font-style:italic;
+    color:#700000;
+}
+
+._embossed, kbd, blockquote {
   border-top: #777 1px solid;
   border-right: #777 1px solid;
   border-bottom: #ccc 1px solid;
   border-left: #ccc 1px solid;
+}
+
+._standout, .question {
+  background-color:#FFB0B0;
+  padding:0.5em;
+  border-top: #ccc 1px solid;
+  border-right: #ccc 1px solid;
+  border-bottom: #777 1px solid;
+  border-left: #777 1px solid;
 }

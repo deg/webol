@@ -12,14 +12,15 @@
     </header>
     <section><h1>What is Programming</h1>
 
-      <p>Programming is the art of telling a machine what to do. Most machines
-      do only one thing: a vacuum cleaner picks up dirt; a refrigerator
-      keeps food cold, etc.</p>
+      <p>Programming is the art of telling a machine what to do. Most
+      machines do only one thing: a vacuum cleaner picks up dirt; a
+      refrigerator keeps food cold, etc.</p>
 
       <p>Many machines can accept simple instructions. We can set the
-      thermostat to tell the refrigerator how cold to keep the food. We step
-      on the gas pedal to make a car move faster. We can even control how
-      much a hammer moves a nail by adjusting how hard we swing our arm.</p>
+      thermostat to tell the air conditioner how cold to keep the food. We
+      step on the gas pedal to make a car move faster. We can even control
+      how much a hammer moves a nail by adjusting how hard we swing our
+      arm.</p>
 
       <p>Computers are a special kind of machine designed so that we can
       control them much more. We can give a computer a long set of
@@ -36,8 +37,8 @@
     <section><h1>Immediate Commands</h1>
 
       <p>The first thing we will in Webol is how to tell the computer to do
-      something right now. This is called an <dfn>immediate
-      command</dfn>. One such command, which we will learn very soon, is
+      something right now. This is called an <dfn>immediate mode</dfn>
+      commands. One such command, which we will learn very soon, is
       the <code>PRINT</code> command which tells the computer to write
       something.</p>
 
@@ -74,9 +75,9 @@
       <p><kbd>PRINT 3+7</kbd></p>
       <p><kbd>PRINT "3+7"</kbd></p>
 
-      <p class="question">Question: What did the computer answer to each of these commands?
-      What was different about the last two commands?  What do you think the
-      quotation mark means in your command?</p>
+      <p class="question">Question: What did the computer answer to each of
+      these commands?  What was different about the last two commands?  What
+      do you think the quotation marks mean in the print commmand?</p>
 
       <p class="question">Question: what do you think will happen if
       type <kbd>PRINT hello</kbd> to the computer? Try it now.</p>
@@ -84,8 +85,78 @@
     </section>
 
     <section><h1>Run Mode</h1>
+
+      <p>In immediate mode, the computer does exactly what you ask, and does
+      it immediately. This is very nice if you want to use the computer as a
+      calculator, but sometimes you want to do more: You want to give the
+      computer a set of instructions for it to run later on, or maybe to run
+      many times.</p>
+
+      <p>To do this, you need to write a <dfn>program</dfn>. There are many,
+      many different programming languages. Some were designed to make
+      certain jobs easier. Others were designed for teaching. Still others
+      were created because ... well, I don't know; people just like
+      inventing new things.</p>
+
+      <p>Webol uses a small programming language that I have designed for
+      teaching students. It is very similar to the first language I learned,
+      called BASIC, which was created at Dartmouth University almost fifty
+      years ago.</p>
+
       <h2>Line numbers</h2>
-      <h2></code>RUN</code> and <code>LIST</code> Commands</h2>
+
+      <p>In Webol, you create a program by writing commands that start with
+      a <dfn>line number</dfn>. Here is a simple program:</p>
+
+      <blockquote>
+	1 PRINT "Hello!"<br>
+	2 PRINT "My name is Webby."<br>
+	3 PRINT "I am a program."<br>
+      </blockquote>
+
+      <p>Try typing that program into the Webol console. Notice that the
+      computer echoes each line back to you, but does not actually run the
+      line. You have now written a program: a set of instructions that the
+      computer can follow.</p>
+
+      <h2>Commands that manage programs</h2>
+
+      <h3>The <code>LIST</code> command</H3>
+
+      <p>The <code>LIST</code> command tells the computer to show us the
+      whole program.</p>
+
+      <p>Try it now:<br>
+      <kbd>LIST</kbd></p>
+
+      <h3>The <code>RUN</code> command</H3>
+
+      <p>The <code>RUN</code> command tells the computer to run the
+      program. It will look for all the instructions we gave, and will run
+      them, in the order of the line numbers.</p>
+
+      <h3>The <code>CLEAR</code> command</H3>
+
+      <p>The <code>CLEAR</code> command tells the computer to forget all the
+      lines that we taught it. After you say <kbd>CLEAR</kbd>, the computer
+      will not have a program to run until you give it a new program.</p>
+
+      <h2>Controlling program flow</h2>
+
+      <p><dfn>Program flow</dfn> means the order in which the computer
+      follows instructions. Like we saw above, normally Webol starts with
+      the lowest line number, and runs each instruction exactly once. This
+      lets us do many things. For example:
+
+      <p class="question">Write a program that counts from one to five. (You
+      should be able to write this program in just five instructions).</p>
+
+      <p class="question">Run the program to make sure that it works.</p>
+
+      <p>In the next lesson, we will learn two new
+      commands, <code>GOTO</code> and <code>IF</code>, that will let us
+      write programs that are much more interesting.</p>
+
     </section>
   </body>
 </html>
