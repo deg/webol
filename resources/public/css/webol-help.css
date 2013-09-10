@@ -1,0 +1,64 @@
+body {
+  background-color:BurlyWood;
+  width: 130mm;
+  margin:10mm;
+  padding:0;
+  font-family:sans-serif;
+  font-size:11pt;
+}
+
+h1 {
+  text-align:left;
+  font-size:1.6em;
+}
+
+h2 {
+  text-align:left;
+  font-size:1.2em;
+}
+
+address {
+    font-size:0.6em;
+}
+
+table, canvas, .control-group {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: 10px;
+    margin-top: 10px;
+    border: 2px solid Chocolate;
+}
+
+table, .control-group {
+    width:90%;
+}
+
+table {
+    background-color: CornSilk;
+}
+
+th, td, input {
+    border: 0px dashed black;
+    padding: 2px;
+    min-width: 40px;
+    background-color: DarkGoldenrod;
+}
+
+.location, .control-label {
+    font-size: 0.9em;
+    font-style: italic;
+    text-align: left;
+    padding: 1px;
+    color: DarkRed;
+    display: inline;
+}
+
+input {
+    max-width: 98%;
+}
+
+.value {
+    font-size: 1em;
+    text-align: right;
+    color: black;
+}
