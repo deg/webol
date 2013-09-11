@@ -7,8 +7,11 @@
   </head>
   <body>
     <header>
-      <h1>Introduction to Programming with Webol</h1>
-      <h2><address class="author"><a href="mailto:deg@degel.com">David Goldfarb</a></address></h2>
+      <h1 class="centered">Introduction to Programming with Webol</h1>
+      <h2 class="centered">
+	<address class="author"><a href="mailto:deg@degel.com">David
+	Goldfarb</a></address>
+      </h2>
     </header>
     <section><h1>What is Programming</h1>
 
@@ -16,8 +19,8 @@
       machines do only one thing: a vacuum cleaner picks up dirt; a
       refrigerator keeps food cold, etc.</p>
 
-      <p>Many machines can accept simple instructions. We can set the
-      thermostat to tell the air conditioner how cold to keep the food. We
+      <p>Many machines can accept simple instructions. We can set a
+      thermostat to tell the air conditioner how cold to keep the room. We
       step on the gas pedal to make a car move faster. We can even control
       how much a hammer moves a nail by adjusting how hard we swing our
       arm.</p>
@@ -41,6 +44,12 @@
       commands. One such command, which we will learn very soon, is
       the <code>PRINT</code> command which tells the computer to write
       something.</p>
+
+      <aside>Note: In this manual, I'm writing all the commands
+      in <code>UPPERCASE</code>. But, when you use Webol, you can write
+      commands however you want:
+      in <code>UPPERCASE</code>, <code>lowercase</code> or
+      even <code>sILlycASe</code>.</aside>
 
       <h2>The Webol console</h2>
 
@@ -70,10 +79,10 @@
 
       <p>Try the following:</p>
 
-      <p><kbd>PRINT "Hello"</kbd></p>
-      <p><kbd>PRINT 3</kbd></p>
-      <p><kbd>PRINT 3+7</kbd></p>
-      <p><kbd>PRINT "3+7"</kbd></p>
+      <p><blockquote>PRINT "Hello"</blockquote></p>
+      <p><blockquote>PRINT 3</blockquote></p>
+      <p><blockquote>PRINT 3+7</blockquote></p>
+      <p><blockquote>PRINT "3+7"</blockquote></p>
 
       <p class="question">Question: What did the computer answer to each of
       these commands?  What was different about the last two commands?  What
@@ -127,7 +136,7 @@
       whole program.</p>
 
       <p>Try it now:<br>
-      <kbd>LIST</kbd></p>
+      <blockquote>LIST</blockquote></p>
 
       <h3>The <code>RUN</code> command</H3>
 
@@ -141,7 +150,9 @@
       lines that we taught it. After you say <kbd>CLEAR</kbd>, the computer
       will not have a program to run until you give it a new program.</p>
 
-      <h2>Controlling program flow</h2>
+      </section>
+
+      <section><h1>Program flow</h1>
 
       <p><dfn>Program flow</dfn> means the order in which the computer
       follows instructions. Like we saw above, normally Webol starts with
@@ -153,9 +164,237 @@
 
       <p class="question">Run the program to make sure that it works.</p>
 
-      <p>In the next lesson, we will learn two new
-      commands, <code>GOTO</code> and <code>IF</code>, that will let us
-      write programs that are much more interesting.</p>
+      <p>Soon, we will learn two new commands, <code>GOTO</code>
+      and <code>IF</code>, that will let us write programs that are much
+      more interesting. But first we need to learn about variables.</p>
+
+      <h2>Variables</h2>
+
+      <p>Variables are one of the most important parts of any program. They
+      are a very important concept and you need to understand exactly what
+      they do.</p>
+
+      <p>You can think of a variable as being a little box that is just big
+      enough to hold one number. Each variable in your program has a name
+      (like the name of the box) and a value (the number that is held in the
+      box).</p>
+
+      <h3><code>DIM</code> to create a variable</h3>
+
+      <p>A new program begins with no variables. You need to register the
+      variables you want to use. You do this with the <code>DIM</code>
+      command. This command creates a new variable, gives it a name, and
+      puts the value 0 into it. Sounds complicated, but it is really quite
+      easy.</p>
+
+      <p>Create a variable named <code>x</code>:<br>
+      <blockquote>
+	10 DIM x
+      </blockquote></p>
+
+      <p>Create three variables named <code>a</code>, <code>b</code>, and <code>c</code>:<br>
+      <blockquote>
+	10 DIM a, b, c
+      </blockquote></p>
+
+      <p>Create a variable with a long name <code>ThisIsMyVariable</code>:<br>
+      <blockquote>
+	 10 DIM ThisIsMyVariable
+      </blockquote></p>
+
+      <h3><code>LET</code> to change a variable</h3>
+
+      <p>Ok, so now we know how to create a variable, and store a zero in
+      it. How can we store other numbers? Very easy; we use
+      the <code>LET</code> command. This command takes a variable name, and
+      a value to put into it.</p>
+
+      <p>Create <code>x</code> and give it the value 17:<br>
+      <blockquote>
+      10 DIM x<br>
+      20 LET x = 17
+      </blockquote>
+
+      <p>Create variable <code>sum</code> and give it the total of adding a
+      few numbers:<br>
+      <blockquote>
+      10 DIM sum<br>
+      20 LET sum = 1+2+3+4+5
+      </blockquote>
+
+      <p>You can also change the value of a variable and even use variables
+      to create values for other variables:</p>
+      <blockquote>
+      1 DIM x,y<br>
+      2 LET x = 1<br>
+      3 PRINT "X=", x<br>
+      4 LET y = x+1<br>
+      5 PRINT "Y=", y<br>
+      6 LET x = (x+y)/100<br>
+      7 PRINT "Now x=", x<br>
+      </blockquote>
+
+      <p class="question">Can you predict what that program will print?
+      Write it down, and now try to run the program. Were you right?</p>
+
+      <aside>That example showed us another new thing too. You can print
+      several things at the same time, by putting a comma between them. This
+      is useful when you want to print more information on one line.</aside>
+
+      <h3>String variables</h3>
+
+      <p>In programming, a <dfn>string</dfn> is what we call a piece of
+      text. We write a string by putting it inside quotation marks. You've
+      seen examples of strings already in some programs. We've used strings
+      like "Hello" and "X=".</p>
+
+      <p>We can also put strings into variables, just like we did with numbers:</p>
+      <blockquote>
+      10 DIM name<br>
+      20 LET name = "Alfred"<br>
+      30 PRINT "Hello", name
+      </blockquote>
+
+      <p class="question">What does that program do? Can you write a program
+      that will say hello to YOU?</p>
+
+      <p class="question">Now that you've learned about strings and about
+      variables, can you answer the question we asked way back at the
+      beginning? Why did <kbd>PRINT "Hello"</kbd> work, but not <kbd>PRINT
+      Hello</kbd>?</p>
+
+      <h2>Controlling program flow</h2>
+
+      <h3>The <code>GOTO</code> command</H3>
+
+      <p>Until now, in every example we've seen, saying <kbd>RUN</kbd> has
+      caused each line of our program to run exactly one time, and always in
+      number order. The <code>GOTO</code> command makes things more
+      interesting by telling the program what line to run next..</p>
+
+      <p class="warning">WARNING: Look at the next program but <em>do not run
+      it</em>. It will do bad things. So, read further first.</p>
+
+      <p>This program creates what we call an <dfn>infinite loop</dfn>, a
+      program that runs forever and never stops.</p>
+      <blockquote>
+      10 PRINT "Here I am!"<br>
+      20 GOTO 10<br>
+      </blockquote>
+
+      <p>Real computers usually have ways to stop this kind of loop. But,
+      Webol does not have a good way yet. The only way to stop the program
+      is to press the browser's refresh button (the button that looks
+      like <img src="art/refresh-button.png">
+      or <img src="art/chrome-reload-button.png">). This will also erase
+      your program and reload all of Webol.
+
+      <p class="question">Try it now. Type in the two-line program and
+      say <kbd>RUN</kbd>. When you have seen what it does, use the browser
+      refresh button to stop it and clear the program.</p>
+
+      <p>You already know how to write a program that counts to 5:</p>
+
+      <blockquote>
+      10 PRINT 1<br>
+      20 PRINT 2<br>
+      30 PRINT 3<br>
+      40 PRINT 4<br>
+      50 PRINT 5<br>
+      </blockquote>
+
+      <p>You now can also write a program that counts forever:</p>
+
+      <blockquote>
+      10 DIM count<br>
+      20 LET count=1<br>
+      30 PRINT COUNT<br>
+      40 LET count=count+1<br>
+      50 GOTO 30<br>
+      </blockquote>
+
+      <p class="question">Read that program. Can you understand what it
+      does?</p>
+
+      <p class="question">We are going to run this program a few times. But,
+      it contains an infinite loop. So, let's save it first so that Webol
+      reloads it automatically everytime we refresh the page. So, after you
+      enter the program, push the <kbd>Save</kbd> button at the top of the
+      page.</p>
+
+      <p class="question">Now run the program and watch it count. When
+      you've seen enough, push refresh to stop it.</p>
+
+      <p class="question">What do you think would happen if we changed the
+      program so that line 50 said <kbd>GOTO 20</kbd>? How about if we
+      changed it to be <kbd>GOTO 40</kbd>?  Try both of these changes and
+      see if you guessed right.</p>
+
+       <aside>Remember that you don't need to type the whole program again
+      just to change one line; you can change any line of your program just
+      by typing that line again.</aside>
+
+      <p><aside>Also, you may have wondered why we often number the lines 10,
+      20, 30, etc., and not just 1, 2, 3...  This is to make it easier to
+      make changes later on. If you later write a line 25, it will run
+      between lines 20 and 30. This makes it easier to make changes to your
+      programs.</aside></p>
+
+      <h3>The <code>IF</code> command</H3>
+
+      <p>So, we know how to get the program to count to 5 or to count
+      forever. But, what if we want to count to 50? Would we have to write
+      a 50 line proram?  NO! The very powerful <code>IF</code> command
+      gives us a neat way to do this.
+
+      <p class="question">What do you think this program will do? Try
+      it.</p>
+
+      <blockquote>
+      10 DIM count<br>
+      20 LET count = 1<br>
+      30 PRINT COUNT<br>
+      40 LET count = count+1<br>
+      50 IF count <= 50 THEN GOTO 30<br>
+      </blockquote>
+
+      <p>You've now learned enough about programming to write some simple,
+      but very real, programs. You've learned:</p>
+      <ul>
+	<li>A program contains a set of instructions that the computer will
+	follow exactly.</li>
+	<li>You can print numbers with the <code>PRINT</code> command.</li>
+	<li>You can make and change variables with the <code>DIM</code>
+	and <code>LET</code>.</li>
+	<li>You can control program flow with the <code>GOTO</code>
+	and <code>IF</code> commands.
+      </ul>
+
+      <p>Now, you can write some programs by yourself. Here are some
+      ideas:</p>
+
+      <p class=question>Write a program to print all the odd numbers less
+      than 30.</p>
+
+      <p class=question>Write a program to print the <dfn>triangle
+      numbers</dfn>. These are the numbers that are the solutions to the
+      equations: 1, 1+2, 1+2+3, 1+2+3+4, etc. So, the first numbers printed
+      should be 1, 3, 6, 10, 15, etc.</p>
+
+      <p class=question>Write a program to print the <dfn>fibonacci
+      series</dfn>. This is the series of numbers you get if you start with
+      0 and 1, and each next number is the sum of the previous two. So, the
+      series starts 0, 1, 1, 2, 3, 5, 8, 13, 21, etc.  (2 is 1+1; 3 is 1+2; 5 is
+      2+3; etc.)</p>
+
+      <p class=question>Invent your own programs. Have fun.</p>
+
+      </section>
+
+      <section><h1>Next Steps</h1>
+
+      <p>I will write the next chapter soon, but first I need to add more
+      features to Webol.</p>
 
     </section>
   </body>

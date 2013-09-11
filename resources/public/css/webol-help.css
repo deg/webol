@@ -8,6 +8,10 @@
   font-size:11pt;
 }
 
+._centered, .centered {
+    text-align:center;
+}
+
 ._majorBig, h1 {
   font-size:1.6em;
 }
@@ -21,6 +25,11 @@
   text-decoration:underline;
 }
 
+._minorSmall, aside {
+  font-size:.9em;
+  font-style:italic;
+}
+
 address {
     font-size:0.6em;
 }
@@ -30,18 +39,25 @@ address {
     color:#700000;
 }
 
-._embossed, kbd, blockquote {
-  border-top: #777 1px solid;
-  border-right: #777 1px solid;
-  border-bottom: #ccc 1px solid;
-  border-left: #ccc 1px solid;
+._indented, blockquote {
+    margin-top:0.1em;
+    margin-left:0.5em;
+    margin-right:0.5em;
 }
 
-._standout, .question {
+._embossed, kbd, blockquote {
+  padding:0.1em;
+  border-top: #777 2px solid;
+  border-right: #777 2px solid;
+  border-bottom: #ccc 2px solid;
+  border-left: #ccc 2px solid;
+}
+
+._standout, .question, .warning {
   background-color:#FFB0B0;
   padding:0.5em;
-  border-top: #ccc 1px solid;
-  border-right: #ccc 1px solid;
-  border-bottom: #777 1px solid;
-  border-left: #777 1px solid;
+  border-top: #ddd 3px solid;
+  border-right: #ddd 3px solid;
+  border-bottom: #977 2px solid;
+  border-left: #977 2px solid;
 }
