@@ -70,7 +70,7 @@
                        #_
                        {:source-paths ["client-src"]
                         :compiler {:output-to "resources/public/js/receipts-dev.js"
-                                   :optimizations :whitespace
+                                   :optimizations :whitespace ;; or :simple
                                    :libs [""] ;; See https://github.com/cemerick/pprng/
                                    :pretty-print true}
                         :jar false},
@@ -80,8 +80,8 @@
                                    ;; TODO {FogBugz:134} No :advanced until dom issue resolved;
                                    ;;      No :advanced so REPL will work, until :dev is
                                    ;;      usable again (per 'lib ""' bug)
-                                   :optimizations #_ :advanced :simple
+                                   :optimizations :advanced
                                    :libs [""] ;; See https://github.com/cemerick/pprng/
-                                   :pretty-print #_ false true}
+                                   :pretty-print false}
                         :jar true}}})
 
