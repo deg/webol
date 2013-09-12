@@ -51,8 +51,9 @@
   (rml/put! state-tree [:current-tab] tab))
 
 (defn update-vendors [- category]
-  (let [db-key (keyword (str "category-" category "-options"))]
-    (dhtml/fill-select-options :vendor :db-key db-key)))
+  (when category
+    (let [db-key (keyword (str "category-" category "-options"))]
+      (dhtml/fill-select-options :vendor :db-key db-key))))
 
 
 (defn on-current-tab  [_ _ _ tab]
