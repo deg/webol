@@ -259,17 +259,17 @@
 (def repl-env
   (reset! cemerick.austin.repls/browser-repl-env (cemerick.austin/repl-env)))
 
-(enlive/deftemplate webol-page
-  (io/resource "public/webol.html")
+(enlive/deftemplate webol-dev-page
+  (io/resource "public/webol-dev.html")
   []
   [:body] (enlive/append
             (enlive/html [:script (browser-connected-repl-js)])))
 
-
 (defroutes app-routes
   (GET "/" {:keys [server-name] :as all-keys}
     (cond (re-matches #"(?i).*receipt.*" server-name) (redirect "/new-receipt.html")
-          (re-matches #"(?i).*webol.*"   server-name) (webol-page)
+          (re-matches #"(?i).*webol-dev.*"   server-name) (webol-dev-page)
+          (re-matches #"(?i).*webol.*" server-name) (redirect "/webol.html")
           true (not-found "<h1>David moans: 'app not found'.</h1>")))
   ; to serve static pages saved in resources/public directory
   (resources "/")
