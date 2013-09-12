@@ -66,22 +66,24 @@
                            degel.redmapel.node
                            degel.receipts.db
                            degel.receipts.static-validators]
-              :builds {#_ :dev
-                       #_
+              ;; NOTE {FogBugz:134}
+              ;; Can't do "lein cljsbuild auto" of both builds together. Instead, need
+              ;; to say "lein cljsbuild once" or "lein cljsbuild auto dev" or
+              ;; "lein cljsbuild auto production".
+              ;; This is because of a problem with using :libs[""]. See
+              ;; https://github.com/emezeske/lein-cljsbuild/issues/219
+              :builds {:dev
                        {:source-paths ["client-src"]
-                        :compiler {:output-to "resources/public/js/receipts-dev.js"
+                        :compiler {:libs [""] ;; See https://github.com/cemerick/pprng/
+                                   :output-to "resources/public/js/receipts-dev.js"
                                    :optimizations :whitespace ;; or :simple
-                                   :libs [""] ;; See https://github.com/cemerick/pprng/
                                    :pretty-print true}
                         :jar false},
                        :production
                        {:source-paths ["client-src"]
-                        :compiler {:output-to "resources/public/js/receipts.js"
-                                   ;; TODO {FogBugz:134} No :advanced until dom issue resolved;
-                                   ;;      No :advanced so REPL will work, until :dev is
-                                   ;;      usable again (per 'lib ""' bug)
+                        :compiler {:libs [""] ;; See https://github.com/cemerick/pprng/
+                                   :output-to "resources/public/js/receipts.js"
                                    :optimizations :advanced
-                                   :libs [""] ;; See https://github.com/cemerick/pprng/
                                    :pretty-print false}
                         :jar true}}})
 
