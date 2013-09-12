@@ -107,7 +107,7 @@
   [list-id & {:keys [db-key callback] :or {db-key (kstr list-id "-options")}}]
   (let [list-ctrl (dom/by-id (name list-id))
         with-others (-> list-ctrl .-parentNode .-parentNode
-                        (dom/attr :with-others) utils/safe-read-string)]
+                        (dom/attr :with-others) utils/read-string-or-nil)]
     (read db-key
           (fn [vals _]
             (dom/set-html! list-ctrl
@@ -134,7 +134,7 @@
 (defn value-with-other [ctrl-id]
   (let [value (clj-value ctrl-id)
         others (-> (dom/by-id ctrl-id) .-parentNode .-parentNode
-                   (dom/attr :with-others) utils/safe-read-string)]
+                   (dom/attr :with-others) utils/read-string-or-nil)]
     (if (empty? others)
       value
       (str/join " "

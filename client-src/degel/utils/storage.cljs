@@ -34,7 +34,7 @@
   "Unwrap a locally-stored value and return the value itself."
   [key]
   (when-let [wrapped-value (.getItem storage key)]
-    (utils/safe-read-string wrapped-value)))
+    (utils/read-string-or-nil wrapped-value)))
 
 
 (defn read
@@ -55,7 +55,7 @@
             password (:value (read-wrapped-local :password))]
         (remote-callback :read-storage [key user-id password]
           #(if (= (:status %) db/SUCCESS)
-             (let [remote-value (utils/safe-read-string (:value %))]
+             (let [remote-value (utils/read-string-or-nil (:value %))]
                (when remote-value
                  (write-wrapped-local key remote-value false)
                  (when read-fn

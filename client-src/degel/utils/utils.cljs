@@ -13,7 +13,7 @@
          (if (< day 10) "0" "") day)))
 
 
-(defn safe-read-string
+(defn read-string-or-nil
   "Read a string or nil, or return clojure value."
   [str]
   (if (empty? str)
