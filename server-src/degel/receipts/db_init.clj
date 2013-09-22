@@ -1,4 +1,4 @@
-(ns degel.receipts.db_init)
+(ns degel.receipts.db-init)
 
 ;; [TODO] {FogBugz:138} This is ugly.  Store these in a text (or json or xml) file.
 
@@ -64,8 +64,54 @@
   ["Levana"])
 
 
+(def category-Clothing-options
+  ["200 meter fashion"
+   "Amnon shoes"
+   "Autenti"
+   "Bazaar Strauss"
+   "Clarks Shoes"
+   "Dry cleaner"
+   "fox"
+   "Glik"
+   "H&O"
+   "Hamachsan"
+   "Hige IQ"
+   "Kosher Casual"
+   "Lili Shoes"
+   "Lior kids clothing"
+   "Macbeset Hagiva"
+   "Matias Matar Club Ofna"
+   "Matok fashion"
+   "Mekimi"
+   "Olam Habeged"
+   "Onyx Shoes"
+   "Pinuk"
+   "Ricochet"
+   "Shop Center"
+   "Sisna fashion"
+   "Super Shoe"
+   "Tamnoon"
+   "Zara"])
+
+
 (def category-Dogs-options
   ["Chayot HaBayit" "Dod Moshe" "Vet"])
+
+
+(def category-Entertainment-options
+  ["Al Derech Burma"
+   "BS Chamber Music Series"
+   "Ba B'tov"
+   "Bowling Modiin"
+   "Cinema City"
+   "Country Beit Shemesh"
+   "Disc Club"
+   "Ezra"
+   "Globus Max"
+   "Mesilat Zion pool"
+   "Nitzanim Beach"
+   "Rav Chen Modiin"
+   "Yamit 2000"])
 
 
 (def category-Food-options
@@ -89,12 +135,39 @@
    "Supersol Deal"])
 
 
+(def category-Garden-options
+  ["Beit Shemesh"
+   "Hapina Hayeroka"
+   "Mishtelet Habayit"
+   "Nursery Chatzer Hamashtela"
+   "Richard's Flower Shop"])
+
+
 (def category-Gift-options
   ["Devarim Yafim"
    "Kangaroo"
    "Kfar HaShaashuim"
    "Magnolia"
    "Tachshit Plus"])
+
+
+(def category-Health-options
+  ["Arthur's Pharmacy"
+   "Chaya Shames"
+   "Dr. Metz"
+   "Hadassa SHaRaP"
+   "Hamashbir LeTzarchan"
+   "Meuchedet RBS drugstore"
+   "Meuchedet"
+   "Meuhedet drugstore"
+   "Optika Ayin Tov"
+   "Optika Halperin"
+   "Optika Speed"
+   "Optiko Petel-Natali"
+   "Pharma shaul"
+   "Shaarei Tzedek"
+   "Superpharm"
+   "Terem"])
 
 
 (def category-Home-options
@@ -132,6 +205,11 @@
    "Yossi Zadiki"])
 
 
+(def category-Jewelry-options
+  ["Magnolia"
+   "Tachshit plus"])
+
+
 (def category-Kids-options
   ["Beit Shemesh"
    "Bnei Akiva"
@@ -150,5 +228,35 @@
    "Red Pirate"])
 
 
+(def category-Restaurant-options
+     ["Aldo"
+      "Aroma"
+      "Big Apple Pizza"
+      "Burger's Bar"
+      "Café Bagels"
+      "Café Café"
+      "Café Neeman"
+      "Canela"
+      "Chalav u'dvash"
+      "El Baryo"
+      "Felafal Ahava"
+      "Gachalim"
+      "Japan-Japan"
+      "Levi's Pizza"
+      "McDonalds"
+      "Marvad hakesmim"
+      "Mercaz HaPizza"
+      "Olla"
+      "Pikansin"
+      "Pizza Hut"
+      "Sbarro"
+      "Shwarma Skouri"
+      "Tom's Place"])
+
+
 (def category-Tax-options
   ["Meches" "Philip Stein"])
+
+
+(def category-Travel-options
+  ["Bus" "Taxi" "Train"])

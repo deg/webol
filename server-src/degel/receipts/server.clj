@@ -11,7 +11,7 @@
             [cemerick.austin.repls :refer (browser-connected-repl-js)]
             [degel.cljutil.devutils :as dev]
             [degel.webol.parser :refer [parse-line]]
-            [degl.receipts.db-init :as db-init]
+            [degel.receipts.db-init :as db-init]
             [degel.receipts.simpleDB :refer [put-record get-record nuke-db]]
             [degel.receipts.receipts :refer [collect-receipt-history enter-receipt-internal]]))
 
