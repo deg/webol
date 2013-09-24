@@ -63,7 +63,7 @@
 
 (defn record-progline [[[- line-num] [- statement]]]
   (store/update! [:program] assoc line-num statement)
-  (screen/line-out (format-line line-num statement)))
+  (screen/line-out (format-line line-num statement) {}))
 
 
 (defn set-program [program]
@@ -76,7 +76,7 @@
 
 (defn list-program []
   (doseq [[line-num statement] (get-program)]
-    (screen/line-out (format-line line-num statement))))
+    (screen/line-out (format-line line-num statement) {})))
 
 
 (defn next-line
@@ -92,7 +92,7 @@
   (let [[line-num statement] (next-line program (store/fetch [:register :pc]))]
     (store/put! [:register :pc] line-num)
     (if (nil? line-num)
-      (screen/line-out "** DONE **")
+      (screen/line-out "** DONE **" {})
       (do
         (when trace
           (screen/line-out (format-line line-num statement) {:color "Red"}))
@@ -191,10 +191,10 @@
     (do)
 
     :clear-cmd
-    (clear-program rest)
+    (clear-program)
 
     :print-cmd
-    (->> (map interpret-expr rest) (str/join " ") screen/line-out)
+    (screen/line-out (str/join " " (map interpret-expr rest)) {})
 
     :list-cmd
     (list-program)
@@ -223,4 +223,4 @@
   (try (interpret1 statement)
        (catch js/Error e
          (screen/line-out (str "Fatal error: " (.-message e)) {:color "DarkRed"})
-         (screen/line-out "Program ended."))))
+         (screen/line-out "Program ended." {}))))

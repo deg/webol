@@ -4,6 +4,7 @@
   :license {:name "Proprietary software - this is not open-source"
             :url "http://nonesuch/com/no-license.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
+                 [org.clojure/clojurescript "0.0-1889"]
 
                  ;; Degel's Clojure utility library
                  [degel-clojure-utils "0.1.12"]

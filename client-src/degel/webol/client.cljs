@@ -69,7 +69,7 @@
                         :error (screen/line-out (str "ERROR: " error) {:color "DarkRed"})
                         :success (rt/interpret parse))))
                   false))
-  (rt/set-program (read "program"))
+  (rt/set-program (read "program" nil))
   (events/listen! (dom/by-id :save-program) :click
     #(write-local "program" (rt/get-program)))
   (events/listen! (dom/by-id "input") :keyup
