@@ -44,7 +44,7 @@
 
   :plugins [[lein-cljsbuild "0.3.2" :exclusions [org.clojure/clojure]]
             [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
-            [com.cemerick/austin "0.1.0"]
+            [com.cemerick/austin "0.1.1"]
 
             ;; Not supported in lein 2.2.0, but here as a reminder to get features
             ;; mentioned in https://groups.google.com/forum/#!msg/clojure/9cA5hvFJTkw/fnWwxvALd64J
