@@ -7,11 +7,11 @@
 
 (deftest case-checks
   (testing "upper"
-    (is (= (parse-line "PRINT 42") (wrap [:print-cmd [:arith 42]]))))
+    (is (= (parse-line "PRINT 42") (wrap [:print-cmd 42]))))
   (testing "lower"
-    (is (= (parse-line "print 42") (wrap [:print-cmd [:arith 42]]))))
+    (is (= (parse-line "print 42") (wrap [:print-cmd 42]))))
   (testing "mixed"
-    (is (= (parse-line "pRiNt 42") (wrap [:print-cmd [:arith 42]])))))
+    (is (= (parse-line "pRiNt 42") (wrap [:print-cmd 42])))))
 
 (deftest white-check
   (testing "before"
@@ -29,27 +29,27 @@
                 ["\"With ' single-quote\"" "With ' single-quote"]
                 ["\"With \"\" double-quote\"" "With \"\" double-quote"]
                 ["\"With \"\"several\"\" double-quote\"" "With \"\"several\"\" double-quote"]
-                ["3" [:arith 3]]
-                ["35" [:arith 35]]
-                ["0" [:arith 0]]
-                ["4.7" [:arith 4.7]]
-                ["0.3" [:arith 0.3]]
-                [".756" [:arith 0.756]]
-                ["3+5" [:arith [:add 3 5]]]
-                ["3+7*x" [:arith [:add 3 [:mul 7 [:var "x"]]]]]
-                ["5.07*(x/.7)" [:arith [:mul 5.07 [:div [:var "x"] 0.7]]]]]]
+                ["3" 3]
+                ["35" 35]
+                ["0" 0]
+                ["4.7" 4.7]
+                ["0.3" 0.3]
+                [".756" 0.756]
+                ["3+5" [:add 3 5]]
+                ["3+7*x" [:add 3 [:mul 7 [:var "x"]]]]
+                ["5.07*(x/.7)" [:mul 5.07 [:parens [:div [:var "x"] 0.7]]]]]]
     (doseq [[in parse] parses]
       (let [test (str "print " in)]
         (testing test
           (is (= (parse-line test) (wrap [:print-cmd parse]))))))
     (doseq [[in parse] parses]
-      (let [test (str "print " in " " in " " in)]
+      (let [test (str "print " in ", " in ", " in)]
         (testing (str "multi-" test)
           (is (= (parse-line test) (wrap [:print-cmd parse parse parse]))))))
     ;; [TODO] {FogBugz:137} Relatively expensive test, and not terribly interesting. Maybe delete
     (doall (for [[in1 parse1] parses
                  [in2 parse2] parses]
-      (let [test (str "print " in1 " " in2)]
+      (let [test (str "print " in1 ", " in2)]
         (testing test
           (is (= (parse-line test)
                  (wrap [:print-cmd parse1 parse2])))))))))
