@@ -37,6 +37,9 @@
                  [shoreleave/shoreleave-remote-ring "0.3.0"]
                  [shoreleave/shoreleave-remote "0.3.0"]
 
+                 ;; Testing from ClojureScript
+                 [com.cemerick/clojurescript.test "0.0.4"]
+
                  ;; Clojure/ClojureScript validation
                  [com.cemerick/valip "0.3.2"]
 
@@ -74,17 +77,22 @@
               ;; This is because of a problem with using :libs[""]. See
               ;; https://github.com/emezeske/lein-cljsbuild/issues/219
               :builds {:dev
-                       {:source-paths ["client-src"]
+                       {:source-paths ["client-src" "client-test"]
                         :compiler {:libs [""] ;; See https://github.com/cemerick/pprng/
                                    :output-to "resources/public/js/receipts-dev.js"
-                                   :optimizations :whitespace ;; or :simple
-                                   :pretty-print true}
+                                   :optimizations :simple ;; or :whitespace
+                                   :pretty-print true
+                                   ;; :source-map "receipts-dev.js.map"
+                                   }
                         :jar false},
                        :production
                        {:source-paths ["client-src"]
                         :compiler {:libs [""] ;; See https://github.com/cemerick/pprng/
                                    :output-to "resources/public/js/receipts.js"
                                    :optimizations :advanced
-                                   :pretty-print false}
-                        :jar true}}})
+                                   :pretty-print false
+                                   ;; :source-map "receipts.js.map"
+                                   }
+                        :jar true}}
+              :test-commands {"unit-tests" ["runners/phantomjs.js" "resources/public/js/receipts-dev.js"]}})
 
