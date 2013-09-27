@@ -53,14 +53,21 @@
     (when-not local-only?
       (let [user-id (:value (read-wrapped-local :user-id))
             password (:value (read-wrapped-local :password))]
-        (remote-callback :read-storage [key user-id password]
-          #(if (= (:status %) db/SUCCESS)
-             (let [remote-value (utils/read-string-or-nil (:value %))]
-               (when remote-value
-                 (write-wrapped-local key remote-value false)
-                 (when read-fn
-                   (read-fn remote-value :remote))))
-             ((or fail-fn js/alert) (:errmsg %))))))
+        ;; The server will check and err correctly if the user-id or
+        ;; password are invalid, but we still need to short-circuit if
+        ;; neither is present to prevent going to the server in
+        ;; programs that only intend to use local storage -- the first
+        ;; time they read, before they've written the local-only flag,
+        ;; we don't want a spurious error message.
+        (when (or user-id password)
+          (remote-callback :read-storage [key user-id password]
+            #(if (= (:status %) db/SUCCESS)
+               (let [remote-value (utils/read-string-or-nil (:value %))]
+                 (when remote-value
+                   (write-wrapped-local key remote-value false)
+                   (when read-fn
+                     (read-fn remote-value :remote))))
+               ((or fail-fn js/alert) (:errmsg %)))))))
     value))
 
 
