@@ -42,7 +42,8 @@
         (string? expr) (str "\"" expr "\"")
         (vector? expr) (let [[expr-type & expr-vals] expr]
                          (condp = expr-type
-                           :print-cmd (str "PRINT " (format-list expr-vals))
+                           :print-cmd (str "PRINT " (format-list expr-vals) ",")
+                           :println-cmd (str "PRINT " (format-list expr-vals))
                            :dim-statement (str "DIM " (format-list expr-vals))
                            :goto-statement (str "GOTO " (-> expr-vals first second))
                            :let-statement (format-let expr-vals)
@@ -194,6 +195,9 @@
     (clear-program)
 
     :print-cmd
+    (screen/text-out (str/join " " (map interpret-expr rest)) {})
+
+    :println-cmd
     (screen/line-out (str/join " " (map interpret-expr rest)) {})
 
     :list-cmd

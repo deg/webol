@@ -7,11 +7,11 @@
 
 (deftest case-checks
   (testing "upper"
-    (is (= (parse-line "PRINT 42") (wrap [:print-cmd 42]))))
+    (is (= (parse-line "PRINT 42") (wrap [:println-cmd 42]))))
   (testing "lower"
-    (is (= (parse-line "print 42") (wrap [:print-cmd 42]))))
+    (is (= (parse-line "print 42") (wrap [:println-cmd 42]))))
   (testing "mixed"
-    (is (= (parse-line "pRiNt 42") (wrap [:print-cmd 42])))))
+    (is (= (parse-line "pRiNt 42") (wrap [:println-cmd 42])))))
 
 (deftest white-check
   (testing "before"
@@ -41,18 +41,18 @@
     (doseq [[in parse] parses]
       (let [test (str "print " in)]
         (testing test
-          (is (= (parse-line test) (wrap [:print-cmd parse]))))))
+          (is (= (parse-line test) (wrap [:println-cmd parse]))))))
     (doseq [[in parse] parses]
       (let [test (str "print " in ", " in ", " in)]
         (testing (str "multi-" test)
-          (is (= (parse-line test) (wrap [:print-cmd parse parse parse]))))))
+          (is (= (parse-line test) (wrap [:println-cmd parse parse parse]))))))
     ;; [TODO] {FogBugz:137} Relatively expensive test, and not terribly interesting. Maybe delete
     (doall (for [[in1 parse1] parses
                  [in2 parse2] parses]
       (let [test (str "print " in1 ", " in2)]
         (testing test
           (is (= (parse-line test)
-                 (wrap [:print-cmd parse1 parse2])))))))))
+                 (wrap [:println-cmd parse1 parse2])))))))))
 
 
 (deftest immediate-cmds

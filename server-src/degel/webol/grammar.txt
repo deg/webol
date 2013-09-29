@@ -2,7 +2,7 @@
 input-line = <whitespace>? (action | (!action bad-cmd) | progline) <whitespace>?
 
 (* Immediate mode commands *)
-<action> = clear-cmd | edit-cmd | help-cmd | list-cmd | manual-cmd | print-cmd |
+<action> = clear-cmd | edit-cmd | help-cmd | list-cmd | manual-cmd | println-cmd | print-cmd |
            renumber-cmd | run-cmd | trace-cmd
 
 clear-cmd     = <#"(?i)clear">
@@ -10,7 +10,8 @@ edit-cmd     = <#"(?i)edit"> <whitespace>? line-num
 help-cmd     = <#"(?i)help">
 list-cmd     = <#"(?i)list">
 manual-cmd   = <(#"(?i)man"|#"(?i)manual")> (<whitespace> expr)*
-print-cmd    = <#"(?i)print"> <whitespace>? expr-list
+println-cmd    = <#"(?i)print"> <whitespace>? expr-list
+print-cmd    = <#"(?i)print"> <whitespace>? expr-list <comma-delim>
 renumber-cmd = <#"(?i)renumber"> (<whitespace> line-num)?
 run-cmd      = <#"(?i)run"> (<whitespace> line-num)?
 trace-cmd    = <#"(?i)trace">
@@ -26,22 +27,24 @@ dim-statement = <#"(?i)dim"> <whitespace>? var-list
 goto-statement = <#"(?i)goto"> <whitespace>? line-num
 if-statement = <#"(?i)if"> <whitespace>? condition <whitespace>? <#"(?i)then"> <whitespace>? statement
 let-statement = <#"(?i)let">  <whitespace>? var <whitespace>? <"="> <whitespace>? expr
-<print-statement> = print-cmd
+<print-statement> = print-cmd | println-cmd
 rem-statement = <#"(?i)rem"> comment
 
 condition = expr <whitespace>? cond-op <whitespace>? expr
 <cond-op> = "==" | "!=" | "<" | "<=" | ">" | ">="
 
-<var-list> = var | var-list <whitespace>? <","> <whitespace>? var
+<var-list> = var | var-list <comma-delim> var
 
 comment = #".*"
 
-<expr-list> = expr | expr-list <whitespace>? <","> <whitespace>? expr
+<expr-list> = expr | expr-list <comma-delim> expr
 <expr> = quoted-string | arith
 
 <quoted-string> = <dquote> string-with-embedded-dquotes <dquote>
 <simple-string> = #"[^\"]*"
 string-with-embedded-dquotes = simple-string | simple-string '""' string-with-embedded-dquotes
+
+<comma-delim> = <whitespace>? <","> <whitespace>? 
 
 line-num = integer
 
