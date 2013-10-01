@@ -1,6 +1,7 @@
 *#
 *~
 /.lein-repl-history
+/.nrepl-port
 /.repl
 checkouts/
 out/
