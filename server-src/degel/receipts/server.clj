@@ -6,7 +6,7 @@
             [ring.adapter.jetty :refer [run-jetty]]
             [ring.util.response :refer [redirect]]
             [shoreleave.middleware.rpc :refer [wrap-rpc defremote]]
-            [net.cgrand.enlive-html :as enlive]
+            [net.cgrand.enlive-html :as html]
             [compojure.handler :refer [site]]
             [cemerick.austin.repls :refer (browser-connected-repl-js)]
             [degel.cljutil.devutils :as dev]
@@ -67,16 +67,21 @@
 (def repl-env
   (reset! cemerick.austin.repls/browser-repl-env (cemerick.austin/repl-env)))
 
-(enlive/deftemplate webol-dev-page
-  (io/resource "public/webol-dev.html")
-  []
-  [:body] (enlive/append
-            (enlive/html [:script (browser-connected-repl-js)])))
+(defn dev-page [page production-js dev-js]
+  ((html/template page []
+    [:body]
+    (html/append (html/html [:script (browser-connected-repl-js)]))
+
+    [[:script (html/attr= :src production-js)]]
+    (html/set-attr :src dev-js))))
 
 (defroutes app-routes
   (GET "/" {:keys [server-name] :as all-keys}
     (cond (re-matches #"(?i).*receipt.*" server-name) (redirect "/new-receipt.html")
-          (re-matches #"(?i).*webol-dev.*"   server-name) (webol-dev-page)
+
+          (re-matches #"(?i).*webol-dev.*"   server-name)
+          (dev-page "public/webol.html" "js/receipts.js" "js/receipts-dev.js")
+
           (re-matches #"(?i).*webol.*" server-name) (redirect "/webol.html")
           true (not-found "<h1>David moans: 'app not found'.</h1>")))
   ; to serve static pages saved in resources/public directory
