@@ -77,7 +77,7 @@
 
 (defroutes app-routes
   (GET "/" {:keys [server-name] :as all-keys}
-    (cond (re-matches #"(?i).*receipt.*" server-name) (redirect "/new-receipt.html")
+    (cond (re-matches #"(?i).*receipt.*" server-name) (redirect "/receipts.html")
 
           (re-matches #"(?i).*webol-dev.*"   server-name)
           (dev-page "public/webol.html" "js/receipts.js" "js/receipts-dev.js")
