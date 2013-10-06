@@ -138,9 +138,9 @@
     (if (empty? others)
       value
       (str/join " "
-                (map #(let [other (some #{%} others)]
+                (map #(let [other (some #{(kstr %)} others)]
                         (if other
-                          (str other ":" (clj-value (str ctrl-id "-" other)))
+                          (str (name other) ":" (clj-value (kstr ctrl-id "-" other)))
                           %))
                      (if (vector? value) value (vector value)))))))
 
