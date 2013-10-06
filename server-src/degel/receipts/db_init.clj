@@ -1,8 +1,9 @@
-(ns degel.receipts.db-init)
+(ns degel.receipts.db-init
+  (:require [degel.receipts.simpleDB :as simpleDB]))
 
 ;; [TODO] {FogBugz:138} This is ugly.  Store these in a text (or json or xml) file.
 
-(def paid-by-options
+(def ^:private paid-by-options
   ["Cash"
    ["v9949" "H Shufersal"]
    ["v9457-5760" "H UBank"]
@@ -13,7 +14,7 @@
    ["mc5331" "Fid MC -5331"]])
 
 
-(def for-whom-options
+(def ^:private for-whom-options
   [["D" "David"]
    ["H" "Heidi"]
    ["A" "Aviva"]
@@ -23,7 +24,7 @@
    ["Netzach" "Netzach Menashe"]])
 
 
-(def category-options
+(def ^:private category-options
   ["Books"
    "Car"
    "Charity"
@@ -43,15 +44,15 @@
    "Travel"])
 
 
-(def category-Books-options
+(def ^:private category-Books-options
   ["Masada" "Sefarim v'od" "Steimatzky" "Tzomet Sefarim"])
 
 
-(def category-Car-options
+(def ^:private category-Car-options
   ["Parking" "Paz" "Puncheria Yossi" "Subaru"])
 
 
-(def category-Charity-options
+(def ^:private category-Charity-options
   ["Beit Hagalgalim"
    "Deaf group"
    "Hakol Lashulchan"
@@ -60,11 +61,11 @@
    "Swim4Sadna"])
 
 
-(def category-Cleaning-options
+(def ^:private category-Cleaning-options
   ["Levana"])
 
 
-(def category-Clothing-options
+(def ^:private category-Clothing-options
   ["200 meter fashion"
    "Amnon shoes"
    "Autenti"
@@ -94,11 +95,11 @@
    "Zara"])
 
 
-(def category-Dogs-options
+(def ^:private category-Dogs-options
   ["Chayot HaBayit" "Dod Moshe" "Vet"])
 
 
-(def category-Entertainment-options
+(def ^:private category-Entertainment-options
   ["Al Derech Burma"
    "BS Chamber Music Series"
    "Ba B'tov"
@@ -114,7 +115,7 @@
    "Yamit 2000"])
 
 
-(def category-Food-options
+(def ^:private category-Food-options
   ["Alonit"
    "Angel"
    "Benny's"
@@ -135,7 +136,7 @@
    "Supersol Deal"])
 
 
-(def category-Garden-options
+(def ^:private category-Garden-options
   ["Beit Shemesh"
    "Hapina Hayeroka"
    "Mishtelet Habayit"
@@ -143,7 +144,7 @@
    "Richard's Flower Shop"])
 
 
-(def category-Gift-options
+(def ^:private category-Gift-options
   ["Devarim Yafim"
    "Kangaroo"
    "Kfar HaShaashuim"
@@ -151,7 +152,7 @@
    "Tachshit Plus"])
 
 
-(def category-Health-options
+(def ^:private category-Health-options
   ["Arthur's Pharmacy"
    "Chaya Shames"
    "Dr. Metz"
@@ -170,7 +171,7 @@
    "Terem"])
 
 
-(def category-Home-options
+(def ^:private category-Home-options
   ["Ashley Coleman"
    "Ben Harush"
    "Big Deal"
@@ -205,12 +206,12 @@
    "Yossi Zadiki"])
 
 
-(def category-Jewelry-options
+(def ^:private category-Jewelry-options
   ["Magnolia"
    "Tachshit plus"])
 
 
-(def category-Kids-options
+(def ^:private category-Kids-options
   ["Beit Shemesh"
    "Bnei Akiva"
    "Conservatory"
@@ -228,7 +229,7 @@
    "Red Pirate"])
 
 
-(def category-Restaurant-options
+(def ^:private category-Restaurant-options
      ["Aldo"
       "Aroma"
       "Big Apple Pizza"
@@ -254,9 +255,44 @@
       "Tom's Place"])
 
 
-(def category-Tax-options
+(def ^:private category-Tax-options
   ["Meches" "Philip Stein"])
 
 
-(def category-Travel-options
+(def ^:private category-Travel-options
   ["Bus" "Taxi" "Train"])
+
+
+
+(defn read-storage [key user-id password]
+  (simpleDB/get-record "User-data" key :value password))
+
+(defn write-storage  [key value user-id password]
+  (let [columns {:password password
+                 :uid (str key)
+                 :user-id user-id
+                 :value value}]
+    (simpleDB/put-record "User-data" columns)))
+
+
+(defn init-category-options [password]
+  (write-storage :paid-by-options (str paid-by-options) nil password)
+  (write-storage :for-whom-options (str for-whom-options) nil password)
+  (write-storage :category-options (str category-options) nil password)
+  (write-storage :category-Books-options (str category-Books-options) nil password)
+  (write-storage :category-Car-options (str category-Car-options) nil password)
+  (write-storage :category-Charity-options (str category-Charity-options) nil password)
+  (write-storage :category-Cleaning-options (str category-Cleaning-options) nil password)
+  (write-storage :category-Clothing-options (str category-Clothing-options) nil password)
+  (write-storage :category-Dogs-options (str category-Dogs-options) nil password)
+  (write-storage :category-Entertainment-options (str category-Entertainment-options) nil password)
+  (write-storage :category-Food-options (str category-Food-options) nil password)
+  (write-storage :category-Garden-options (str category-Garden-options) nil password)
+  (write-storage :category-Gift-options (str category-Gift-options) nil password)
+  (write-storage :category-Health-options (str category-Health-options) nil password)
+  (write-storage :category-Home-options (str category-Home-options) nil password)
+  (write-storage :category-Jewelry-options (str category-Jewelry-options) nil password)
+  (write-storage :category-Kids-options (str category-Kids-options) nil password)
+  (write-storage :category-Restaurant-options (str category-Restaurant-options) nil password)
+  (write-storage :category-Tax-options (str category-Tax-options) nil password)
+  (write-storage :category-Travel-options (str category-Travel-options) nil password))
