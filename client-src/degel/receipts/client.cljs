@@ -60,19 +60,19 @@
   (page-to-storage)
   (condp = tab
     :receipt-tab (do
-                    (dom/set-html! (dom/by-id :contents) (receipt-tab-html))
-                    (dhtml/fill-select-options :paid-by)
-                    (dhtml/fill-select-options :category :callback update-vendors)
-                    (dhtml/fill-select-options :for-whom)
-                    (let [submit-btn (dom/by-id :submit-receipt)]
-                      (events/listen! submit-btn :click (dhtml/button-handler submit-receipt))))
+                   (dom/set-html! (dom/by-id :contents) (receipt-tab-html))
+                   (dhtml/fill-select-options :paid-by)
+                   (dhtml/fill-select-options :category :callback update-vendors)
+                   (dhtml/fill-select-options :for-whom)
+                   (let [submit-btn (dom/by-id :submit-receipt)]
+                     (events/listen! submit-btn :click (dhtml/button-handler submit-receipt))))
     :status      ((rml/fetch state-tree [:tab-action]))
     :setup-tab   (dom/set-html! (dom/by-id :contents) (setup-tab-html))
     :history-tab (do
-                    (dom/set-html! (dom/by-id :contents) (history-tab-html))
-                    (refresh-history)
-                    (events/listen! (dom/by-id :refresh-history) :click
-                      (dhtml/button-handler refresh-history)))
+                   (dom/set-html! (dom/by-id :contents) (history-tab-html))
+                   (refresh-history)
+                   (events/listen! (dom/by-id :refresh-history) :click
+                     (dhtml/button-handler refresh-history)))
     ;; Finally, catch clicks on empty parts of tabbar, mostly just for code cleanness.
     "tabbar"      (do ))
   (storage-to-page))
