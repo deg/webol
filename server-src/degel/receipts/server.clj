@@ -67,26 +67,54 @@
 (def repl-env
   (reset! cemerick.austin.repls/browser-repl-env (cemerick.austin/repl-env)))
 
-(defn dev-page [page production-js dev-js]
-  ((html/template page []
-    [:body]
-    (html/append (html/html [:script (browser-connected-repl-js)]))
+(defn dev-page
+  ([{:keys [base-page production-js dev-js]}]
+     (dev-page (str "public" base-page) production-js dev-js))
+  ([page production-js dev-js]
+     ((html/template page []
+        [:body] (html/append (html/html [:script (browser-connected-repl-js)]))
+        [[:script (html/attr= :src production-js)]] (html/set-attr :src dev-js)))))
 
-    [[:script (html/attr= :src production-js)]]
-    (html/set-attr :src dev-js))))
+(def app-dispatch (atom {}))
+
+(defrecord app-data [name base-page production-js dev-js])
+
+(defn add-app [& {:keys [name base-page production-js dev-js]}]
+  (swap! app-dispatch
+         assoc name (->app-data name base-page production-js dev-js)))
+
+
+(defn find-site-records [server-request]
+   (filter (fn [{:keys [name] :as record}]
+             (re-matches (re-pattern (str "(?i).*" name ".*")) server-request))
+           (vals @app-dispatch)))
+
+(defn dev-site? [server-request {:keys [name] :as record}]
+  (string? (re-matches (re-pattern (str "(?i).*" name "-dev.*")) server-request)))
+
 
 (defroutes app-routes
   (GET "/" {:keys [server-name] :as all-keys}
-    (cond (re-matches #"(?i).*receipt.*" server-name) (redirect "/receipts.html")
-
-          (re-matches #"(?i).*webol-dev.*"   server-name)
-          (dev-page "public/webol.html" "js/receipts.js" "js/receipts-dev.js")
-
-          (re-matches #"(?i).*webol.*" server-name) (redirect "/webol.html")
-          true (not-found "<h1>David moans: 'app not found'.</h1>")))
-  ; to serve static pages saved in resources/public directory
-  (resources "/")
+    (let [[matching-site & extra-matches] (find-site-records server-name)]
+      (cond (nil? matching-site)        (not-found "<h1>David moans: 'app website not found'.</h1>")
+            extra-matches               (not-found "<h1>David moans: 'Ambiguous app website URL'.</h1>")
+            (dev-site? server-name
+                       matching-site)   (dev-page matching-site)
+            true                        (redirect (:base-page matching-site)))))
+  (resources "/")   ;; to serve static pages saved in resources/public directory
   (not-found "<h1>David moans: 'page not found'.</h1>"))
+
+
+
+(add-app :name          "receipts"
+         :base-page     "/receipts.html"
+         :production-js "js/receipts.js"
+         :dev-js        "js/receipts-dev.js")
+
+(add-app :name          "webol"
+         :base-page     "/webol.html"
+         :production-js "js/receipts.js"
+         :dev-js        "js/receipts-dev.js")
 
 
 (def app (-> app-routes wrap-rpc site))
