@@ -17,7 +17,7 @@
 
 
 (defn- kstr [& keys-or-strings]
-  (keyword (reduce str (map name keys-or-strings))))
+  (keyword (reduce str (map #(if % (name %) "") keys-or-strings))))
 
 (defn- string-or-keyword? [x]
   (or (string? x) (keyword? x)))
