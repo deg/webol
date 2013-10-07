@@ -5,6 +5,6 @@
 # we have the lein-cljsbuild plugin. I hope this is all just
 # temporary, until I understand the tool chain better.
 
-lein cljsbuild once
+lein cljsbuild once production
 lein compile :production
 
