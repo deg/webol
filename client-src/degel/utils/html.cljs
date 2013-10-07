@@ -112,8 +112,8 @@
           (fn [vals _]
             (dom/set-html! list-ctrl
               (html [:select
-                     (selection (into vals with-others)
-                                (or (clj-value list-id) (read db-key nil)))]))
+                     (selection (into vals (map name with-others))
+                                (or (clj-value list-id) (read list-id nil)))]))
             (when with-others
               (let [fill-others
                     #(let [value (clj-value list-id)]
