@@ -12,6 +12,9 @@
                  ;; Degel's Redmapel state tree library
                  [redmapel "0.1.7"]
 
+                 ;; Degel's website multiplexer
+                 [muxx "0.1.0-SNAPSHOT"]
+
                  ;; Parser tools
                  [instaparse "1.2.2"]
 
