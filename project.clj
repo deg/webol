@@ -59,9 +59,9 @@
 
   :source-paths ["server-src"]
   :test-paths ["test"]
-  :ring {:handler degel.receipts.server/app}
+  ;:ring {:handler degel.muxx.server/app}
   ;:profiles {:dev {:hooks [leiningen.cljsbuild]}}
-  :main degel.receipts.server
+  :main degel.deploy.deployment
 
   :cljsbuild {:crossovers [valip.core
                            valip.predicates
