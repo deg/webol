@@ -4,7 +4,7 @@
 
 (defn read-grammar
   ([]
-     (read-grammar "server-src/degel/webol/grammar.txt"))
+     (read-grammar "../receipts/server-src/degel/webol/grammar.txt"))
   ([filename]
      (slurp filename)))
 
