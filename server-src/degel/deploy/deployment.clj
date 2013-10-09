@@ -1,7 +1,6 @@
 (ns degel.deploy.deployment
   (:gen-class)
-  (:require [ring.adapter.jetty :refer [run-jetty]]
-            [cemerick.austin :as austin]
+  (:require [cemerick.austin :as austin]
             [cemerick.austin.repls :as austin-repls]
             [degel.muxx.server :as muxx]
             [degel.receipts.server :as receipts]
@@ -11,9 +10,9 @@
 
 (defn -main [& [port]]
   (let [port (Integer. (or port (System/getenv "PORT") 3000))]
-    (defonce ^:private server
-      (run-jetty #'muxx/app {:port port :join? false}))
-    server))
+    (muxx/run-servers :port port
+                      :apps [(receipts/app-properties)
+                             (webol/app-properties)])))
 
 
 (def repl-env
@@ -23,7 +22,3 @@
 (defn start-cljs-repl []
   (-main)
   (austin-repls/cljs-repl repl-env))
-
-
-(muxx/add-app (receipts/app-properties))
-(muxx/add-app (webol/app-properties))
