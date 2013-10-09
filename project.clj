@@ -64,7 +64,6 @@
   :test-paths ["test"]
   ;:ring {:handler degel.muxx.server/app}
   ;:profiles {:dev {:hooks [leiningen.cljsbuild]}}
-  :main degel.deploy.deployment
 
   :cljsbuild {:crossovers [valip.core
                            valip.predicates
