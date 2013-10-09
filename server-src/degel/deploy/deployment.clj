@@ -4,7 +4,8 @@
             [cemerick.austin :as austin]
             [cemerick.austin.repls :as austin-repls]
             [degel.muxx.server :as muxx]
-            [degel.receipts.server :as app1] ;; temp hack
+            [degel.receipts.server :as receipts]
+            [degel.webol.server :as webol]
             [degel.cljutil.devutils :as dev]))
 
 
@@ -24,13 +25,5 @@
   (austin-repls/cljs-repl repl-env))
 
 
-
-(muxx/add-app :name          "receipts"
-              :base-page     "/receipts.html"
-              :production-js "js/receipts.js"
-              :dev-js        "js/receipts-dev.js")
-
-(muxx/add-app :name          "webol"
-              :base-page     "/webol.html"
-              :production-js "js/receipts.js"
-              :dev-js        "js/receipts-dev.js")
+(muxx/add-app (receipts/app-properties))
+(muxx/add-app (webol/app-properties))
