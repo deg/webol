@@ -1,7 +1,7 @@
-(defproject receipts "0.1.0-SNAPSHOT"
-  :description "HTML5 web-app to manage our receipts."
+(defproject deg-scraps "0.1.0-SNAPSHOT"
+  :description "HTML5 web-app to play with clojure and clojurescript."
   :url "https://bitbucket.org/degeldeg/receipts"
-  :license {:name "Proprietary software - this is not open-source"
+  :license {:name "Not fit for public use so formally proprietary software - this is not open-source"
             :url "http://nonesuch/com/no-license.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/clojurescript "0.0-1889"]
