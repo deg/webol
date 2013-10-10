@@ -1,0 +1,21 @@
+#!/bin/sh
+
+# Run this after first checking out this project to a new machine.
+# It registers the project in mr and creates local checkout links - two actions
+# that I don't know how to automate with git.
+
+cd $(git rev-parse --show-toplevel)
+
+if [ -d checkouts ]; then
+  echo "Error: checkouts dir already exists; contains:"
+  ls checkouts
+  exit 2
+fi
+
+mr register .
+
+mkdir checkouts
+cd checkouts
+ln -s ../../degel-clojure-utils/ degel-clojure-utils
+ln -s ../../muxx/ muxx
+ln -s ../../redmapel/ redmapel
