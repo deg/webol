@@ -1,7 +1,6 @@
 (ns degel.utils.storage
   (:require [domina :refer [log]]
             [shoreleave.remotes.http-rpc :refer [remote-callback]]
-            [degel.receipts.db :as db] ;; [TODO] {FogBugz:140} Needs to be moved out of receipts
             [degel.utils.utils :as utils]))
 
 ;;; Use local storage as a cache backed by server-side storage.
@@ -27,7 +26,7 @@
    if it should be backed to the server or be stored only locally."
   [key value local-only?]
   (.setItem storage key (pr-str {:value value :local-only? local-only?}))
-  {:status db/SUCCESS})
+  {:status :success})
 
 
 (defn- read-wrapped-local
@@ -61,7 +60,7 @@
         ;; we don't want a spurious error message.
         (when (or user-id password)
           (remote-callback :read-storage [key user-id password]
-            #(if (= (:status %) db/SUCCESS)
+            #(if (= (:status %) :success)
                (let [remote-value (utils/read-string-or-nil (:value %))]
                  (when remote-value
                    (write-wrapped-local key remote-value false)

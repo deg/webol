@@ -13,5 +13,5 @@
   []
   {:name          "webol"
    :base-page     "/webol.html"
-   :production-js "js/receipts.js"
-   :dev-js        "js/receipts-dev.js"})
+   :production-js "js/webol.js"
+   :dev-js        "js/webol-dev.js"})

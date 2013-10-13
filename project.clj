@@ -1,8 +1,8 @@
-(defproject deg-scraps "0.1.0-SNAPSHOT"
+(defproject webol "0.1.0-SNAPSHOT"
   :description "HTML5 web-app to play with clojure and clojurescript."
-  :url "https://bitbucket.org/degeldeg/receipts"
-  :license {:name "Not fit for public use so formally proprietary software - this is not open-source"
-            :url "http://nonesuch/com/no-license.html"}
+  :url "https://github.com/deg/webol"
+  :license {:name "Eclipse Public License"
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
                  [org.clojure/clojurescript "0.0-1889"]
 
@@ -69,9 +69,7 @@
                            valip.predicates
                            degel.cljutil.utils
                            degel.redmapel
-                           degel.redmapel.node
-                           degel.receipts.db
-                           degel.receipts.static-validators]
+                           degel.redmapel.node]
               ;; NOTE {FogBugz:134}
               ;; Can't do "lein cljsbuild auto" of both builds together. Instead, need
               ;; to say "lein cljsbuild once" or "lein cljsbuild auto dev" or
@@ -81,7 +79,7 @@
               :builds {:dev
                        {:source-paths ["client-src" "client-test"]
                         :compiler {:libs [""] ;; See https://github.com/cemerick/pprng/
-                                   :output-to "resources/public/js/receipts-dev.js"
+                                   :output-to "resources/public/js/webol-dev.js"
                                    :optimizations :simple ;; or :whitespace
                                    :pretty-print true
                                    ;; :source-map "receipts-dev.js.map"
@@ -90,7 +88,7 @@
                        :production
                        {:source-paths ["client-src"]
                         :compiler {:libs [""] ;; See https://github.com/cemerick/pprng/
-                                   :output-to "resources/public/js/receipts.js"
+                                   :output-to "resources/public/js/webol.js"
                                    :optimizations :advanced
                                    :pretty-print false
                                    ;; :source-map "receipts.js.map"
