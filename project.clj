@@ -1,4 +1,4 @@
-(defproject webol "0.1.0"
+(defproject webol "0.1.1"
   :description "HTML5 web-app to play with clojure and clojurescript."
   :url "https://github.com/deg/webol"
   :license {:name "Eclipse Public License"
@@ -7,7 +7,7 @@
                  [org.clojure/clojurescript "0.0-1889"]
 
                  ;; Degel's Clojure utility library
-                 [degel-clojure-utils "0.1.12"]
+                 [degel-clojure-utils "0.1.13"]
 
                  ;; Degel's Redmapel state tree library
                  [redmapel "0.1.7"]
