@@ -2,8 +2,7 @@
   (:require-macros [hiccups.core :refer [html]])
   (:require [hiccups.runtime] ;; Needed by hiccups.core macros
             [domina :as dom :refer [log]]
-            [degel.utils.html :as dhtml]
-            [degel.cljutil.devutils :as dev]))
+            [degel.utils.html :as dhtml]))
 
 
 (defn location-and-value [location value]
@@ -15,7 +14,7 @@
 (defn webol-page []
   (html
    [:div#main
-    [:h1 (str "Webol Computer - " (dev/project-version "webol" "webol"))]
+    [:h1 "Webol Computer"]
     [:h2 [:address.author "Copyright &copy; 2013; "
           [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]
     [:div.save-load
