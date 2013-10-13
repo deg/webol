@@ -25,7 +25,7 @@
                  [compojure "1.1.5" :exclusions [ring/ring-core org.clojure/tools.macro]]
 
                  ;; DOM manipulation library for ClojureScript
-                 [domina "1.0.2-SNAPSHOT"]
+                 [domina "1.0.2"]
 
                  ;; HTML templating.
                  ;; [TODO] {FogBugz:139} Compare with Hiccup. Maybe choose just one
