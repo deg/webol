@@ -52,9 +52,6 @@
                  [shoreleave/shoreleave-remote-ring "0.3.0"]
                  [shoreleave/shoreleave-remote "0.3.0"]
 
-                 ;; Utility to get our version at runtime
-                 [trptcolin/versioneer "0.1.0"]
-
                  ;; Testing from ClojureScript
                  [com.cemerick/clojurescript.test "0.0.4"]
 
