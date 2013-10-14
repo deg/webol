@@ -2,6 +2,7 @@
   (:require-macros [hiccups.core :refer [html]])
   (:require [hiccups.runtime] ;; Needed by hiccups.core macros
             [domina :as dom :refer [log]]
+            [degel.webol.store :as store]
             [degel.utils.html :as dhtml]))
 
 
@@ -26,4 +27,8 @@
     (dhtml/label-and-autocomplete-text-field :input "Cmd" {:size 64})
     [:table#memory]
     [:table#registers]
-    [:div#program]]))
+    [:div#program]
+    [:h6 (clojure.string/join
+          "<br>"
+          (map (fn [[_ artifact version]] (str artifact ": " version))
+               (store/fetch [:versions])))]]))

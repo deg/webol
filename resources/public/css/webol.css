@@ -6,18 +6,20 @@ body {
   font-size:11pt;
 }
 
-h1 {
+.centered, h1, h2, h6 {
   text-align:center;
+}
+
+.small, h6, address {
+  font-size:0.6em;
+}
+
+h1 {
   font-size:2em;
 }
 
 h2 {
-  text-align:center;
   font-size:1.5em;
-}
-
-address {
-    font-size:0.6em;
 }
 
 table, canvas, .control-group {

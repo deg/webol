@@ -43,8 +43,7 @@
                             (register-name %2)
                             (->  (register-key %2) store/fetch or-empty)))))
 
-(defn ^:export init []
-  (clear-all)
+(defn- draw-screen []
   (dom/set-html! (dom/by-id "page") (page/webol-page))
   (dom/set-html! (dom/by-id "memory")
     (dhtml/table memory-num-rows memory-per-row
@@ -77,3 +76,13 @@
        (let [control (-> % events/target)]
          (store/put! [:input :line] (-> control dom/value))
          (dom/set-value! control "")))))
+
+(defn ^:export init []
+  (clear-all)
+  (remote-callback
+      :project-versions [[["webol" "webol"]
+                          ["degel-clojure-utils" "degel-clojure-utils"]
+                          ["org.clojure" "clojurescript"]]]
+    (fn [v]
+      (store/put! [:versions] v)
+      (draw-screen))))

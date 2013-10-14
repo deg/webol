@@ -1,19 +1,31 @@
-(defproject webol "0.1.1"
+;;; Copyright (c) 2012-2013 David Goldfarb. All rights reserved.
+;;; Contact info: deg@degel.com
+;;;
+;;; The use and distribution terms for this software are covered by the Eclipse
+;;; Public License 1.0 (http://opensource.org/licenses/eclipse-1.0.php) which can
+;;; be found in the file epl-v10.html at the root of this distribution.
+;;; By using this software in any fashion, you are agreeing to be bound by the
+;;; terms of this license.
+;;;
+;;; You must not remove this notice, or any other, from this software.
+
+
+(defproject webol "0.1.2-SNAPSHOT"
   :description "HTML5 web-app to play with clojure and clojurescript."
   :url "https://github.com/deg/webol"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [org.clojure/clojurescript "0.0-1889"]
+                 [org.clojure/clojurescript "0.0-1934"]
 
                  ;; Degel's Clojure utility library
-                 [degel-clojure-utils "0.1.13"]
+                 [degel-clojure-utils "0.1.14-SNAPSHOT"]
 
                  ;; Degel's Redmapel state tree library
                  [redmapel "0.1.7"]
 
                  ;; Degel's website multiplexer
-                 [muxx "0.1.0"]
+                 [muxx "0.1.1-SNAPSHOT"]
 
                  ;; Parser tools
                  [instaparse "1.2.2"]
@@ -40,6 +52,9 @@
                  [shoreleave/shoreleave-remote-ring "0.3.0"]
                  [shoreleave/shoreleave-remote "0.3.0"]
 
+                 ;; Utility to get our version at runtime
+                 [trptcolin/versioneer "0.1.0"]
+
                  ;; Testing from ClojureScript
                  [com.cemerick/clojurescript.test "0.0.4"]
 
@@ -49,7 +64,7 @@
                  ;; Clojure interface to AWS SimpleDB
                  [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]]
 
-  :plugins [[lein-cljsbuild "0.3.2" :exclusions [org.clojure/clojure]]
+  :plugins [[lein-cljsbuild "0.3.3"]
             [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
             [com.cemerick/austin "0.1.1"]
 
@@ -59,6 +74,8 @@
             ]
 
   :min-lein-version "2.0.0"
+
+  :main degel.webol.server ;; For standalone deployment
 
   :source-paths ["server-src"]
   :test-paths ["test"]
