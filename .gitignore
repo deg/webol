@@ -3,8 +3,10 @@
 /.lein-repl-history
 /.nrepl-port
 /.repl
+/docs
+/out
+/pom.xml*
+/repl
+/resources/public/js/webol*.js
+/target
 checkouts/
-out/
-repl/
-resources/public/js/receipts*.js
-target/
