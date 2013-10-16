@@ -19,7 +19,11 @@
     [:h2 [:address.author "Copyright &copy; 2013; "
           [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]
     [:div.save-load
-     (dhtml/submit-button :save-program "Save")
+     (dhtml/cmd-button-group
+         [[:list-program "List"]
+          [:save-program "Save"]
+          [:run-program "Run"]
+          [:abort-program "Abort"]])
      #_(dhtml/selection-list "Programs" "My Programs" {} false nil ["AAA" "BBB" "CCC"])]
     [:div.canvas-wrapper
      [:canvas#sketchboard {:width "640px" :height "360px"}

@@ -69,8 +69,10 @@
                         :success (rt/interpret parse))))
                   false))
   (rt/set-program (read "program" nil))
-  (events/listen! (dom/by-id :save-program) :click
-    #(write-local "program" (rt/get-program)))
+  (events/listen! (dom/by-id :list-program)  :click #(store/put! [:input :line] "LIST"))
+  (events/listen! (dom/by-id :save-program)  :click #(store/put! [:input :line] "SAVE"))
+  (events/listen! (dom/by-id :run-program)   :click #(store/put! [:input :line] "RUN"))
+  (events/listen! (dom/by-id :abort-program) :click #(store/put! [:input :line] "ABORT"))
   (events/listen! (dom/by-id "input") :keyup
     #(when (= 13 (-> % events/raw-event .-keyCode))
        (let [control (-> % events/target)]

@@ -145,6 +145,19 @@
                      (if (vector? value) value (vector value)))))))
 
 
+
+
+
+(defn cmd-button-group
+  "Create a group of buttons, arranged in a row"
+  [ids-and-labels]
+  [:div.control-group
+   [:div.controls
+    (for [[id label] ids-and-labels]
+      [:button.btn {:type "submit" :id id :class "btn-large"}
+       label])]])
+
+
 (defn button-group
   "Return HTML for a button-group.
    id is the id for the group div.

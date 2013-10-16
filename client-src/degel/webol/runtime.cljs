@@ -2,7 +2,8 @@
   (:require [domina :as dom :refer [log]]
             [clojure.string :as str]
             [degel.webol.screen :as screen]
-            [degel.webol.store :as store]))
+            [degel.webol.store :as store]
+            [degel.utils.storage :as storage]))
 
 
 (defn show-language-help [bad-cmd]
@@ -228,6 +229,9 @@
 
     :trace-cmd
     (run-program {:trace true})
+
+    :save-cmd
+    (storage/write-local "program" (get-program))
 
     :progline
     (record-progline rest)
