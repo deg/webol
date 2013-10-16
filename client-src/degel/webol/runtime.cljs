@@ -90,22 +90,28 @@
 
 (defn stop-program-run
   "Terminate the running program."
-  []
-  (store/put! [:register :running] false)
-  (store/put! [:register :pc] nil)
-  (screen/line-out "** DONE **" {}))
+  ([]
+     (store/put! [:register :running] false)
+     (store/put! [:register :pc] nil))
+  ([msg]
+     (stop-program-run)
+     (screen/line-out (str "** " msg " **"){:color "DarkRed"})))
 
 (defn- continue-program [program {:keys [trace] :as flags}]
   (let [[line-num statement] (next-line program (store/fetch [:register :pc]))]
     (store/put! [:register :pc] line-num)
-    (if (or (not (store/fetch [:register :running]))
-            (nil? line-num))
-      (stop-program-run)
-      (do
-        (when trace
-          (screen/line-out (format-line line-num statement) {:color "Red"}))
-        (interpret statement)
-        ((.-setTimeout js/window) #(continue-program program flags) 0)))))
+    (cond (nil? line-num)
+          (stop-program-run "Done")
+
+          (not (store/fetch [:register :running]))
+          (stop-program-run) ;; No msg, since already halted
+
+          :else
+          (do
+            (when trace
+              (screen/line-out (format-line line-num statement) {:color "Red"}))
+            (interpret statement)
+            ((.-setTimeout js/window) #(continue-program program flags) 0)))))
 
 
 (defn run-program [{:keys [trace] :as flags}]
@@ -187,6 +193,9 @@
 
 (defn- interpret1 [[action & rest]]
   (condp = action
+    :abort-cmd
+    (stop-program-run "Aborted")
+
     :dim-statement
     (interpret-dim rest)
 
@@ -237,5 +246,4 @@
 (defn interpret [statement]
   (try (interpret1 statement)
        (catch js/Error e
-         (screen/line-out (str "Fatal error: " (.-message e)) {:color "DarkRed"})
-         (stop-program-run))))
+         (stop-program-run (str "Fatal error: " (.-message e))))))
