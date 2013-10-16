@@ -88,12 +88,19 @@
 
 (declare interpret interpret1 interpret-expr)
 
+(defn stop-program-run
+  "Terminate the running program."
+  []
+  (store/put! [:register :running] false)
+  (store/put! [:register :pc] nil)
+  (screen/line-out "** DONE **" {}))
 
 (defn- continue-program [program {:keys [trace] :as flags}]
   (let [[line-num statement] (next-line program (store/fetch [:register :pc]))]
     (store/put! [:register :pc] line-num)
-    (if (nil? line-num)
-      (screen/line-out "** DONE **" {})
+    (if (or (not (store/fetch [:register :running]))
+            (nil? line-num))
+      (stop-program-run)
       (do
         (when trace
           (screen/line-out (format-line line-num statement) {:color "Red"}))
@@ -102,9 +109,13 @@
 
 
 (defn run-program [{:keys [trace] :as flags}]
-  (let [program (store/fetch [:program])]
-    (store/put! [:register :pc] 0)
-    (continue-program program trace)))
+  (if (store/fetch [:register :running])
+    (do
+      (screen/line-out "Can't run while a program is already running" {:color "DarkRed"}))
+    (let [program (store/fetch [:program])]
+      (store/put! [:register :running] true)
+      (store/put! [:register :pc] 0)
+      (continue-program program trace))))
 
 
 (defn interpret-dim [vars]
@@ -227,4 +238,4 @@
   (try (interpret1 statement)
        (catch js/Error e
          (screen/line-out (str "Fatal error: " (.-message e)) {:color "DarkRed"})
-         (screen/line-out "Program ended." {}))))
+         (stop-program-run))))
