@@ -22,8 +22,11 @@
      (dhtml/cmd-button-group
          [[:list-program "List"]
           [:save-program "Save"]
+          [:clear-program "Clear"]
           [:run-program "Run"]
-          [:abort-program "Abort"]])
+          [:abort-program "Abort"]
+          [:help-program "Help"]
+          [:manual-program "Manual"]])
      #_(dhtml/selection-list "Programs" "My Programs" {} false nil ["AAA" "BBB" "CCC"])]
     [:div.canvas-wrapper
      [:canvas#sketchboard {:width "640px" :height "360px"}
