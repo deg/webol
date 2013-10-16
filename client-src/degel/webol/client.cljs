@@ -75,7 +75,6 @@
   (events/listen! (dom/by-id :run-program)   :click #(store/put! [:input :line] "RUN"))
   (events/listen! (dom/by-id :abort-program) :click #(store/put! [:input :line] "ABORT"))
   (events/listen! (dom/by-id :help-program) :click #(store/put! [:input :line] "HELP"))
-  (events/listen! (dom/by-id :manual-program) :click #(store/put! [:input :line] "MANUAL"))
   (events/listen! (dom/by-id "input") :keyup
     #(when (= 13 (-> % events/raw-event .-keyCode))
        (let [control (-> % events/target)]

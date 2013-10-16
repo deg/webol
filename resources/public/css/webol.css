@@ -6,6 +6,19 @@ body {
   font-size:11pt;
 }
 
+.leftAppCol {
+    position:absolute;
+    width:710px;
+}
+
+.rightManCol {
+    position:absolute;
+    top:0px;
+    left:700px;
+    width:550px;
+    height:1000px;
+}
+
 .centered, h1, h2, h6 {
   text-align:center;
 }

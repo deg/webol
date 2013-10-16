@@ -14,7 +14,7 @@
 
 (defn webol-page []
   (html
-   [:div#main
+   [:div#main.leftAppCol
     [:h1 "Webol Computer"]
     [:h2 [:address.author "Copyright &copy; 2013; "
           [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]
@@ -25,9 +25,7 @@
           [:clear-program "Clear"]
           [:run-program "Run"]
           [:abort-program "Abort"]
-          [:help-program "Help"]
-          [:manual-program "Manual"]])
-     #_(dhtml/selection-list "Programs" "My Programs" {} false nil ["AAA" "BBB" "CCC"])]
+          [:help-program "Help"]])]
     [:div.canvas-wrapper
      [:canvas#sketchboard {:width "640px" :height "360px"}
       "This browser does not support canvases"]]
@@ -38,4 +36,6 @@
     [:h6 (clojure.string/join
           "<br>"
           (map (fn [[_ artifact version]] (str artifact ": " version))
-               (store/fetch [:versions])))]]))
+               (store/fetch [:versions])))]]
+   [:div#manual.rightManCol
+    [:iframe {:src "webol-help.html" :width "100%" :height "100%"}]]))

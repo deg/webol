@@ -17,7 +17,7 @@
 input-line = <whitespace>? (action | (!action bad-cmd) | progline) <whitespace>?
 
 (* Immediate mode commands *)
-<action> = abort-cmd | clear-cmd | edit-cmd | help-cmd | list-cmd | manual-cmd |
+<action> = abort-cmd | clear-cmd | edit-cmd | help-cmd | list-cmd |
            println-cmd | print-cmd | renumber-cmd | run-cmd | save-cmd | trace-cmd
 
 abort-cmd     = <#\"(?i)abort\">
@@ -25,7 +25,6 @@ clear-cmd     = <#\"(?i)clear\">
 edit-cmd     = <#\"(?i)edit\"> <whitespace>? line-num
 help-cmd     = <#\"(?i)help\">
 list-cmd     = <#\"(?i)list\">
-manual-cmd   = <(#\"(?i)man\"|#\"(?i)manual\")> (<whitespace> expr)*
 println-cmd    = <#\"(?i)print\"> <whitespace>? expr-list
 print-cmd    = <#\"(?i)print\"> <whitespace>? expr-list <comma-delim>
 renumber-cmd = <#\"(?i)renumber\"> (<whitespace> line-num)?

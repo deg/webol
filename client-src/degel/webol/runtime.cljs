@@ -236,9 +236,6 @@
     :progline
     (record-progline rest)
 
-    :manual-cmd
-    (.open js/window "/webol-help.html" "Webol Help" "width=700,height=500,resizable=1")
-
     :bad-cmd
     (show-language-help (first rest))
     :help-cmd
