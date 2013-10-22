@@ -4,4 +4,4 @@
 
 git push
 git push kiln
-lein do clean, uberjar, cljsbuild once dev, cljsbuild once production, deploy clojars
+lein do clean, jar, cljsbuild once dev, cljsbuild once production, deploy clojars
