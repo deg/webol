@@ -25,6 +25,7 @@
           [:clear-program "Clear"]
           [:run-program "Run"]
           [:abort-program "Abort"]
+          [:step-program "Step"]
           [:help-program "Help"]])]
     [:div.canvas-wrapper
      [:canvas#sketchboard {:width "640px" :height "360px"}

@@ -18,7 +18,8 @@ input-line = <whitespace>? (action | (!action bad-cmd) | progline) <whitespace>?
 
 (* Immediate mode commands *)
 <action> = abort-cmd | clear-cmd | edit-cmd | help-cmd | list-cmd |
-           println-cmd | print-cmd | renumber-cmd | run-cmd | save-cmd | trace-cmd
+           println-cmd | print-cmd | renumber-cmd | run-cmd | save-cmd |
+           step-cmd | trace-cmd
 
 abort-cmd     = <#\"(?i)abort\">
 clear-cmd     = <#\"(?i)clear\">
@@ -30,6 +31,7 @@ print-cmd    = <#\"(?i)print\"> <whitespace>? expr-list <comma-delim>
 renumber-cmd = <#\"(?i)renumber\"> (<whitespace> line-num)?
 run-cmd      = <#\"(?i)run\"> (<whitespace> line-num)?
 save-cmd    = <#\"(?i)save\">
+step-cmd    = <#\"(?i)step\">
 trace-cmd    = <#\"(?i)trace\">
 
 bad-cmd      = #\"[a-zA-Z].*\"

@@ -16,9 +16,9 @@
         "  MAN or MANUAL - Popup web page about Webol\n"
         "  PRINT - print an expression\n"
         "  RENUMBER (not yet implemented)\n"
-        "  RUN (not yet implemented)\n"
-        "  STEP (not yet implemented)\n"
-        "  TRACE (not yet implemented)")
+        "  RUN - Run the program\n"
+        "  STEP - Run just one step of the program\n"
+        "  TRACE - Run the program, listing each step as it runs")
    {:color (if bad-cmd "DarkRed" "DarkBlue")}))
 
 
@@ -89,40 +89,43 @@
 
 (declare interpret interpret1 interpret-expr)
 
-(defn stop-program-run
-  "Terminate the running program."
-  ([]
-     (store/put! [:register :running] false)
-     (store/put! [:register :pc] nil))
-  ([msg]
-     (stop-program-run)
-     (screen/line-out (str "** " msg " **"){:color "DarkRed"})))
 
-(defn- continue-program [program {:keys [trace] :as flags}]
+(defn stop-program-run [{:keys [msg stay-at-current-line]}]
+  "Terminate the running program."
+  (store/put! [:register :running] false)
+  (when-not stay-at-current-line
+    (store/put! [:register :pc] 0))
+  (when msg
+    (screen/line-out (str "** " msg " **"){:color "DarkRed"})))
+
+
+(defn- continue-program [program {:keys [trace one-step] :as flags}]
   (let [[line-num statement] (next-line program (store/fetch [:register :pc]))]
     (store/put! [:register :pc] line-num)
-    (cond (nil? line-num)
-          (stop-program-run "Done")
+    (cond (= 0 line-num)
+          (stop-program-run {:msg "Done"})
 
           (not (store/fetch [:register :running]))
-          (stop-program-run) ;; No msg, since already halted
+          (stop-program-run {}) ;; No msg, since already halted
 
           :else
           (do
             (when trace
               (screen/line-out (format-line line-num statement) {:color "Red"}))
             (interpret statement)
-            ((.-setTimeout js/window) #(continue-program program flags) 0)))))
+            (if one-step
+              (stop-program-run {:stay-at-current-line true})
+              ((.-setTimeout js/window) #(continue-program program flags) 0))))))
 
 
-(defn run-program [{:keys [trace] :as flags}]
+(defn run-program [{:keys [trace one-step] :as flags}]
   (if (store/fetch [:register :running])
-    (do
-      (screen/line-out "Can't run while a program is already running" {:color "DarkRed"}))
+    (screen/line-out "Can't run while a program is already running" {:color "DarkRed"})
     (let [program (store/fetch [:program])]
       (store/put! [:register :running] true)
-      (store/put! [:register :pc] 0)
-      (continue-program program trace))))
+      (when-not one-step
+        (store/put! [:register :pc] 0))
+      (continue-program program flags))))
 
 
 (defn interpret-dim [vars]
@@ -195,7 +198,7 @@
 (defn- interpret1 [[action & rest]]
   (condp = action
     :abort-cmd
-    (stop-program-run "Aborted")
+    (stop-program-run {:msg "Aborted"})
 
     :dim-statement
     (interpret-dim rest)
@@ -230,6 +233,9 @@
     :trace-cmd
     (run-program {:trace true})
 
+    :step-cmd
+    (run-program {:trace true :one-step true})
+
     :save-cmd
     (storage/write-local "program" (get-program))
 
@@ -247,4 +253,4 @@
 (defn interpret [statement]
   (try (interpret1 statement)
        (catch js/Error e
-         (stop-program-run (str "Fatal error: " (.-message e))))))
+         (stop-program-run {:msg (str "Fatal error: " (.-message e))}))))
