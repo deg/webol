@@ -87,7 +87,7 @@
   (first (subseq program > line)))
 
 
-(declare interpret interpret1 interpret-expr)
+(declare interpret-top-level interpret interpret-expr)
 
 
 (defn stop-program-run [{:keys [msg stay-at-current-line]}]
@@ -112,7 +112,7 @@
           (do
             (when trace
               (screen/line-out (format-line line-num statement) {:color "Red"}))
-            (interpret statement)
+            (interpret-top-level statement)
             (if one-step
               (stop-program-run {:stay-at-current-line true})
               ((.-setTimeout js/window) #(continue-program program flags) 0))))))
@@ -139,7 +139,7 @@
         right (interpret-expr rhs)
         fcn (get {"==" == "!=" not= "<" < "<=" <= ">" > ">=" >=} op)]
     (if (fcn left right)
-      (interpret1 statement))))
+      (interpret statement))))
 
 
 (defn interpret-goto [[[- line-num]]]
@@ -195,62 +195,66 @@
 ;; - Math functions
 ;;   ABS, trig, SQRT, FLOOR, CEILING
 
-(defn- interpret1 [[action & rest]]
-  (condp = action
-    :abort-cmd
-    (stop-program-run {:msg "Aborted"})
+(defmulti interpret first)
 
-    :dim-statement
-    (interpret-dim rest)
+(defmethod interpret :default [[action & rest]]
+  (screen/line-out (str "*** Unknown PARSE: " action ": " rest) {:color "DarkRed"}))
 
-    :goto-statement
-    (interpret-goto rest)
+(defmethod interpret :bad-cmd [[_ bad-cmd & _]]
+  (show-language-help bad-cmd))
 
-    :if-statement
-    (interpret-if rest)
+(defmethod interpret :abort-cmd [_]
+  (stop-program-run {:msg "Aborted"}))
 
-    :let-statement
-    (interpret-let rest)
+(defmethod interpret :dim-statement [[_ & rest]]
+  (interpret-dim rest))
 
-    :rem-statement
-    (do)
+(defmethod interpret :goto-statement [[_ & rest]]
+  (interpret-goto rest))
 
-    :clear-cmd
-    (clear-program)
+(defmethod interpret :if-statement [[_ & rest]]
+  (interpret-if rest))
 
-    :print-cmd
-    (screen/text-out (str/join " " (map interpret-expr rest)) {})
+(defmethod interpret :let-statement [[_ & rest]]
+  (interpret-let rest))
 
-    :println-cmd
-    (screen/line-out (str/join " " (map interpret-expr rest)) {})
+(defmethod interpret :rem-statement [_]
+  (do))
 
-    :list-cmd
-    (list-program)
+(defmethod interpret :clear-cmd [_]
+  (clear-program))
 
-    :run-cmd
-    (run-program {:trace false})
+(defmethod interpret :print-cmd [[_ & rest]]
+  (screen/text-out (str/join " " (map interpret-expr rest)) {}))
 
-    :trace-cmd
-    (run-program {:trace true})
+(defmethod interpret :println-cmd [[_ & rest]]
+  (screen/line-out (str/join " " (map interpret-expr rest)) {}))
 
-    :step-cmd
-    (run-program {:trace true :one-step true})
+(defmethod interpret :list-cmd [_]
+  (list-program))
 
-    :save-cmd
-    (storage/write-local "program" (get-program))
+(defmethod interpret :run-cmd [_]
+  (run-program {:trace false}))
 
-    :progline
-    (record-progline rest)
+(defmethod interpret :trace-cmd [_]
+  (run-program {:trace true}))
 
-    :bad-cmd
-    (show-language-help (first rest))
-    :help-cmd
-    (show-language-help nil)
+(defmethod interpret :step-cmd [_]
+  (run-program {:trace true :one-step true}))
 
-    (screen/line-out (str "*** Unknown PARSE: " action ": " rest) {:color "DarkRed"})))
+(defmethod interpret :save-cmd [_]
+  (storage/write-local "program" (get-program)))
+
+(defmethod interpret :progline [[_ & rest]]
+  (record-progline rest))
+
+(defmethod interpret :help-cmd [_]
+  (show-language-help nil))
 
 
-(defn interpret [statement]
-  (try (interpret1 statement)
+
+
+(defn interpret-top-level [statement]
+  (try (interpret statement)
        (catch js/Error e
          (stop-program-run {:msg (str "Fatal error: " (.-message e))}))))
