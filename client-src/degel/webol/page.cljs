@@ -30,8 +30,8 @@
      [:canvas#sketchboard {:width "640px" :height "360px"}
       "This browser does not support canvases"]]
     (dhtml/label-and-autocomplete-text-field :input "Cmd" {:size 64})
-    [:table#memory]
     [:table#registers]
+    [:table#memory]
     [:div#program]
     [:h6 (clojure.string/join
           "<br>"
