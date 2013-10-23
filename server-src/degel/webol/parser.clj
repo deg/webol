@@ -21,17 +21,17 @@ input-line = (action | (!action bad-cmd) | progline)
            println-cmd | print-cmd | renumber-cmd | run-cmd | save-cmd |
            step-cmd | trace-cmd
 
-abort-cmd     = <#\"(?i)abort\">
-clear-cmd     = <#\"(?i)clear\">
+abort-cmd    = <#\"(?i)abort\">
+clear-cmd    = <#\"(?i)clear\">
 edit-cmd     = <#\"(?i)edit\"> line-num
 help-cmd     = <#\"(?i)help\">
 list-cmd     = <#\"(?i)list\">
-println-cmd    = <#\"(?i)print\"> expr-list
+println-cmd  = <#\"(?i)print\"> expr-list
 print-cmd    = <#\"(?i)print\"> expr-list <comma-delim>
 renumber-cmd = <#\"(?i)renumber\"> (line-num)?
 run-cmd      = <#\"(?i)run\"> (line-num)?
-save-cmd    = <#\"(?i)save\">
-step-cmd    = <#\"(?i)step\">
+save-cmd     = <#\"(?i)save\">
+step-cmd     = <#\"(?i)step\">
 trace-cmd    = <#\"(?i)trace\">
 
 bad-cmd      = #\"[a-zA-Z].*\"
