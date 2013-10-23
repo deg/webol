@@ -14,7 +14,7 @@
 (def ^:private grammar
   "
 (* A full line to be parsed *)
-input-line = <whitespace>? (action | (!action bad-cmd) | progline) <whitespace>?
+input-line = <ows> (action | (!action bad-cmd) | progline) <ows>
 
 (* Immediate mode commands *)
 <action> = abort-cmd | clear-cmd | edit-cmd | help-cmd | list-cmd |
@@ -23,32 +23,32 @@ input-line = <whitespace>? (action | (!action bad-cmd) | progline) <whitespace>?
 
 abort-cmd     = <#\"(?i)abort\">
 clear-cmd     = <#\"(?i)clear\">
-edit-cmd     = <#\"(?i)edit\"> <whitespace>? line-num
+edit-cmd     = <#\"(?i)edit\"> <ows> line-num
 help-cmd     = <#\"(?i)help\">
 list-cmd     = <#\"(?i)list\">
-println-cmd    = <#\"(?i)print\"> <whitespace>? expr-list
-print-cmd    = <#\"(?i)print\"> <whitespace>? expr-list <comma-delim>
-renumber-cmd = <#\"(?i)renumber\"> (<whitespace> line-num)?
-run-cmd      = <#\"(?i)run\"> (<whitespace> line-num)?
+println-cmd    = <#\"(?i)print\"> <ows> expr-list
+print-cmd    = <#\"(?i)print\"> <ows> expr-list <comma-delim>
+renumber-cmd = <#\"(?i)renumber\"> (<ows> line-num)?
+run-cmd      = <#\"(?i)run\"> (<ows> line-num)?
 save-cmd    = <#\"(?i)save\">
 step-cmd    = <#\"(?i)step\">
 trace-cmd    = <#\"(?i)trace\">
 
 bad-cmd      = #\"[a-zA-Z].*\"
 
-progline  = line-num <whitespace>? statement
+progline  = line-num <ows> statement
 
 statement = dim-statement | goto-statement | if-statement | let-statement|
             print-statement | rem-statement
 
-dim-statement = <#\"(?i)dim\"> <whitespace>? var-list
-goto-statement = <#\"(?i)goto\"> <whitespace>? line-num
-if-statement = <#\"(?i)if\"> <whitespace>? condition <whitespace>? <#\"(?i)then\"> <whitespace>? statement
-let-statement = <#\"(?i)let\">  <whitespace>? var <whitespace>? <\"=\"> <whitespace>? expr
+dim-statement = <#\"(?i)dim\"> <ows> var-list
+goto-statement = <#\"(?i)goto\"> <ows> line-num
+if-statement = <#\"(?i)if\"> <ows> condition <ows> <#\"(?i)then\"> <ows> statement
+let-statement = <#\"(?i)let\">  <ows> var <ows> <\"=\"> <ows> expr
 <print-statement> = print-cmd | println-cmd
 rem-statement = <#\"(?i)rem\"> comment
 
-condition = expr <whitespace>? cond-op <whitespace>? expr
+condition = expr <ows> cond-op <ows> expr
 <cond-op> = \"==\" | \"!=\" | \"<\" | \"<=\" | \">\" | \">=\"
 
 <var-list> = var | var-list <comma-delim> var
@@ -62,7 +62,7 @@ comment = #\".*\"
 <simple-string> = #\"[^\\\"]*\"
 string-with-embedded-dquotes = simple-string | simple-string '\"\"' string-with-embedded-dquotes
 
-<comma-delim> = <whitespace>? <\",\"> <whitespace>?
+<comma-delim> = <ows> <\",\"> <ows>
 
 line-num = integer
 
@@ -85,7 +85,7 @@ integer = #'[0-9]+'
 (* Lexical items *)
 dquote = '\"'
 squote = \"'\"
-whitespace = #'\\s+'
+ows = #'\\s*'
 "
   )
 
