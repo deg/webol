@@ -35,7 +35,13 @@
 (defn- format-let [[lhs rhs]]
   (str "LET " (format-expr lhs) " = " (format-expr rhs)))
 
-(defn- format-if [[[- lhs op rhs] [- statement]]]
+(defn- format-for [[var start end skip]]
+  (str "FOR " (format-expr var) " = "
+       (format-expr start) " TO " (format-expr end)
+       (when skip
+         (str " BY " (format-expr skip)))))
+
+(defn- format-if [[[_ lhs op rhs] [- statement]]]
   (str "IF " (format-expr lhs) " " op " " (format-expr rhs) " THEN " (format-expr statement)))
 
 (defn format-expr [expr]
@@ -46,9 +52,11 @@
                            :print-cmd (str "PRINT " (format-list expr-vals) ",")
                            :println-cmd (str "PRINT " (format-list expr-vals))
                            :dim-statement (str "DIM " (format-list expr-vals))
+                           :for-statement (format-for expr-vals)
                            :goto-statement (str "GOTO " (-> expr-vals first second))
                            :let-statement (format-let expr-vals)
                            :if-statement (format-if expr-vals)
+                           :next-statement (str "NEXT " (-> expr-vals first format-expr))
                            :rem-statement (str "REM" (-> expr-vals first second))
                            :add (str/join "+" (map format-expr expr-vals))
                            :sub (str/join "-" (map format-expr expr-vals))
@@ -251,8 +259,6 @@
 
 (defmethod interpret :help-cmd [_]
   (show-language-help nil))
-
-
 
 
 (defn interpret-top-level [statement]

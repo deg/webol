@@ -38,13 +38,15 @@ bad-cmd      = #\"[a-zA-Z].*\"
 
 progline  = line-num statement
 
-statement = dim-statement | goto-statement | if-statement | let-statement|
-            print-statement | rem-statement
+statement = dim-statement | for-statement | goto-statement | if-statement |
+            next-statement | print-statement | rem-statement
 
 dim-statement = <#\"(?i)dim\"> var-list
+for-statement = <#\"(?i)for\"> var <\"=\"> expr <#\"(?i)TO\"> expr (<#\"(?i)by\"> expr)?
 goto-statement = <#\"(?i)goto\"> line-num
 if-statement = <#\"(?i)if\"> condition <#\"(?i)then\"> statement
 let-statement = <#\"(?i)let\">  var <\"=\"> expr
+next-statement = <#\"(?i)next\">  var
 <print-statement> = print-cmd | println-cmd
 rem-statement = <#\"(?i)rem\"> comment
 
