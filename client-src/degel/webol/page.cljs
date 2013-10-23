@@ -11,6 +11,37 @@
          [:div.location location]
          [:div.value value]]))
 
+(defn- webol-menu-bar []
+  (dhtml/cmd-button-group
+   [[:list-program "List"]
+    [:save-program "Save"]
+    [:clear-program "Clear"]
+    [:run-program "Run"]
+    [:abort-program "Abort"]
+    [:step-program "Step"]
+    [:help-program "Help"]]))
+
+
+(defn manpage-frame [page]
+  (html [:iframe#manpage {:src page :width "100%" :height "100%"}]))
+
+
+(defn manpage-and-menu [page]
+  (html [:div#manual.rightManCol
+         (dhtml/cmd-button-group
+          [[:manual-introduction "Introduction"]
+           [:manual-tutorial "Tutorial"]
+           [:manual-reference "Reference"]
+           [:manual-exercises "Exercises"]])
+         (manpage-frame page)]))
+
+
+(defn- page-bottom-notices []
+  [:h6 (clojure.string/join
+        "<br>"
+        (map (fn [[_ artifact version]] (str artifact ": " version))
+             (store/fetch [:versions])))])
+
 
 (defn webol-page []
   (html
@@ -18,14 +49,7 @@
     [:h1 "Webol Computer"]
     [:h2 [:address.author "Copyright &copy; 2013; "
           [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]
-    (dhtml/cmd-button-group
-     [[:list-program "List"]
-      [:save-program "Save"]
-      [:clear-program "Clear"]
-      [:run-program "Run"]
-      [:abort-program "Abort"]
-      [:step-program "Step"]
-      [:help-program "Help"]])
+    (webol-menu-bar)
     [:div.canvas-wrapper
      [:canvas#sketchboard {:width "640px" :height "360px"}
       "This browser does not support canvases"]]
@@ -33,9 +57,5 @@
     [:table#registers]
     [:table#memory]
     [:div#program]
-    [:h6 (clojure.string/join
-          "<br>"
-          (map (fn [[_ artifact version]] (str artifact ": " version))
-               (store/fetch [:versions])))]]
-   [:div#manual.rightManCol
-    [:iframe {:src "webol-help.html" :width "100%" :height "100%"}]]))
+    (page-bottom-notices)]
+   (manpage-and-menu "webol-intro.html")))

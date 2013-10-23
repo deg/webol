@@ -43,6 +43,10 @@
                             (register-name %2)
                             (->  (register-key %2) store/fetch or-empty)))))
 
+(defn- set-man-page [src]
+  (dom/swap-content! (dom/by-id "manpage")
+    (page/manpage-frame src)))
+
 (defn- draw-screen []
   (dom/set-html! (dom/by-id "page") (page/webol-page))
   (dom/set-html! (dom/by-id "memory")
@@ -76,6 +80,10 @@
   (events/listen! (dom/by-id :abort-program) :click #(store/put! [:input :line] "ABORT"))
   (events/listen! (dom/by-id :step-program) :click #(store/put! [:input :line] "STEP"))
   (events/listen! (dom/by-id :help-program) :click #(store/put! [:input :line] "HELP"))
+  (events/listen! (dom/by-id :manual-introduction) :click #(set-man-page "webol-intro.html"))
+  (events/listen! (dom/by-id :manual-tutorial) :click #(set-man-page "webol-tutorial.html"))
+  (events/listen! (dom/by-id :manual-reference) :click #(set-man-page "webol-reference.html"))
+  (events/listen! (dom/by-id :manual-exercises) :click #(set-man-page "webol-exercises.html"))
   (events/listen! (dom/by-id "input") :keyup
     #(when (= 13 (-> % events/raw-event .-keyCode))
        (let [control (-> % events/target)]
