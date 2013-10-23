@@ -84,7 +84,8 @@
 (defn next-line
   ;; [TODO] {FogBugz:143} No way this is efficent. But, may not matter yet. Optimize when needed.
   [program line]
-  (first (subseq program > line)))
+  (or (first (subseq program > line))
+      [0 nil]))
 
 
 (declare interpret-top-level interpret interpret-expr)
