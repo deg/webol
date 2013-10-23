@@ -71,11 +71,6 @@
   (str line-num " " (format-expr statement-tree)))
 
 
-(defn record-progline [[[- line-num] [- statement]]]
-  (store/update! [:program] assoc line-num statement)
-  (screen/line-out (format-line line-num statement) {}))
-
-
 (defn set-program [program]
   (store/put! [:program] (into (sorted-map) program)))
 
@@ -137,24 +132,6 @@
       (continue-program program flags))))
 
 
-(defn interpret-dim [vars]
-  (doseq [[- var] vars]
-    (store/update! [:program-vars] assoc var 0)))
-
-
-
-(defn- interpret-if [[[- lhs op rhs] [- statement]]]
-  (let [left (interpret-expr lhs)
-        right (interpret-expr rhs)
-        fcn (get {"==" == "!=" not= "<" < "<=" <= ">" > ">=" >=} op)]
-    (if (fcn left right)
-      (interpret statement))))
-
-
-(defn interpret-goto [[[- line-num]]]
-  (store/put! [:register :pc] (dec line-num)))
-
-
 (defn error ;; [TODO] {FogBugz:144} TEMP
   [& msg-and-params]
   (let [line (store/fetch [:register :pc])
@@ -162,12 +139,6 @@
                     (str "[line " (store/fetch [:register :pc]) "] "))
         errmsg (apply str line-prefix msg-and-params)]
     (throw (js/Error. errmsg "(no file yet)" line))))
-
-
-(defn interpret-let [[[- lhs] rhs]]
-  (if (get (store/fetch [:program-vars]) lhs)
-    (store/update! [:program-vars] assoc lhs (interpret-expr rhs))
-    (error "Undefined assignment '" lhs "'")))
 
 
 (defn get-var-val [var]
@@ -215,17 +186,24 @@
 (defmethod interpret :abort-cmd [_]
   (stop-program-run {:msg "Aborted"}))
 
-(defmethod interpret :dim-statement [[_ & rest]]
-  (interpret-dim rest))
+(defmethod interpret :dim-statement [[_ & vars]]
+  (doseq [[- var] vars]
+    (store/update! [:program-vars] assoc var 0)))
 
-(defmethod interpret :goto-statement [[_ & rest]]
-  (interpret-goto rest))
+(defmethod interpret :goto-statement [[_ [_ line-num]]]
+  (store/put! [:register :pc] (dec line-num)))
 
-(defmethod interpret :if-statement [[_ & rest]]
-  (interpret-if rest))
+(defmethod interpret :if-statement [[_ [_ lhs op rhs] [_ statement]]]
+  (let [left (interpret-expr lhs)
+        right (interpret-expr rhs)
+        fcn (get {"==" == "!=" not= "<" < "<=" <= ">" > ">=" >=} op)]
+    (if (fcn left right)
+      (interpret statement))))
 
-(defmethod interpret :let-statement [[_ & rest]]
-  (interpret-let rest))
+(defmethod interpret :let-statement [[_ [_ lhs] rhs]]
+  (if (get (store/fetch [:program-vars]) lhs)
+    (store/update! [:program-vars] assoc lhs (interpret-expr rhs))
+    (error "Undefined assignment '" lhs "'")))
 
 (defmethod interpret :rem-statement [_]
   (do))
@@ -233,11 +211,11 @@
 (defmethod interpret :clear-cmd [_]
   (clear-program))
 
-(defmethod interpret :print-cmd [[_ & rest]]
-  (screen/text-out (str/join " " (map interpret-expr rest)) {}))
+(defmethod interpret :print-cmd [[_ & exprs]]
+  (screen/text-out (str/join " " (map interpret-expr exprs)) {}))
 
-(defmethod interpret :println-cmd [[_ & rest]]
-  (screen/line-out (str/join " " (map interpret-expr rest)) {}))
+(defmethod interpret :println-cmd [[_ & exprs]]
+  (screen/line-out (str/join " " (map interpret-expr exprs)) {}))
 
 (defmethod interpret :list-cmd [_]
   (list-program))
@@ -254,8 +232,9 @@
 (defmethod interpret :save-cmd [_]
   (storage/write-local "program" (get-program)))
 
-(defmethod interpret :progline [[_ & rest]]
-  (record-progline rest))
+(defmethod interpret :progline [[_ [_ line-num] [_ statement]]]
+  (store/update! [:program] assoc line-num statement)
+  (screen/line-out (format-line line-num statement) {}))
 
 (defmethod interpret :help-cmd [_]
   (show-language-help nil))
