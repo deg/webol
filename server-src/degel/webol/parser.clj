@@ -39,7 +39,7 @@ bad-cmd      = #\"[a-zA-Z].*\"
 progline  = line-num statement
 
 statement = dim-statement | for-statement | goto-statement | if-statement |
-            next-statement | print-statement | rem-statement
+            let-statement | next-statement | print-statement | rem-statement
 
 dim-statement = <#\"(?i)dim\"> var-list
 for-statement = <#\"(?i)for\"> var <\"=\"> expr <#\"(?i)TO\"> expr (<#\"(?i)by\"> expr)?
