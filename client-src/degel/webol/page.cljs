@@ -18,15 +18,14 @@
     [:h1 "Webol Computer"]
     [:h2 [:address.author "Copyright &copy; 2013; "
           [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]
-    [:div.save-load
-     (dhtml/cmd-button-group
-         [[:list-program "List"]
-          [:save-program "Save"]
-          [:clear-program "Clear"]
-          [:run-program "Run"]
-          [:abort-program "Abort"]
-          [:step-program "Step"]
-          [:help-program "Help"]])]
+    (dhtml/cmd-button-group
+     [[:list-program "List"]
+      [:save-program "Save"]
+      [:clear-program "Clear"]
+      [:run-program "Run"]
+      [:abort-program "Abort"]
+      [:step-program "Step"]
+      [:help-program "Help"]])
     [:div.canvas-wrapper
      [:canvas#sketchboard {:width "640px" :height "360px"}
       "This browser does not support canvases"]]
