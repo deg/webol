@@ -14,7 +14,7 @@
 (def ^:private grammar
   "
 (* A full line to be parsed *)
-input-line = <ows> (action | (!action bad-cmd) | progline) <ows>
+input-line = (action | (!action bad-cmd) | progline)
 
 (* Immediate mode commands *)
 <action> = abort-cmd | clear-cmd | edit-cmd | help-cmd | list-cmd |
@@ -23,32 +23,32 @@ input-line = <ows> (action | (!action bad-cmd) | progline) <ows>
 
 abort-cmd     = <#\"(?i)abort\">
 clear-cmd     = <#\"(?i)clear\">
-edit-cmd     = <#\"(?i)edit\"> <ows> line-num
+edit-cmd     = <#\"(?i)edit\"> line-num
 help-cmd     = <#\"(?i)help\">
 list-cmd     = <#\"(?i)list\">
-println-cmd    = <#\"(?i)print\"> <ows> expr-list
-print-cmd    = <#\"(?i)print\"> <ows> expr-list <comma-delim>
-renumber-cmd = <#\"(?i)renumber\"> (<ows> line-num)?
-run-cmd      = <#\"(?i)run\"> (<ows> line-num)?
+println-cmd    = <#\"(?i)print\"> expr-list
+print-cmd    = <#\"(?i)print\"> expr-list <comma-delim>
+renumber-cmd = <#\"(?i)renumber\"> (line-num)?
+run-cmd      = <#\"(?i)run\"> (line-num)?
 save-cmd    = <#\"(?i)save\">
 step-cmd    = <#\"(?i)step\">
 trace-cmd    = <#\"(?i)trace\">
 
 bad-cmd      = #\"[a-zA-Z].*\"
 
-progline  = line-num <ows> statement
+progline  = line-num statement
 
 statement = dim-statement | goto-statement | if-statement | let-statement|
             print-statement | rem-statement
 
-dim-statement = <#\"(?i)dim\"> <ows> var-list
-goto-statement = <#\"(?i)goto\"> <ows> line-num
-if-statement = <#\"(?i)if\"> <ows> condition <ows> <#\"(?i)then\"> <ows> statement
-let-statement = <#\"(?i)let\">  <ows> var <ows> <\"=\"> <ows> expr
+dim-statement = <#\"(?i)dim\"> var-list
+goto-statement = <#\"(?i)goto\"> line-num
+if-statement = <#\"(?i)if\"> condition <#\"(?i)then\"> statement
+let-statement = <#\"(?i)let\">  var <\"=\"> expr
 <print-statement> = print-cmd | println-cmd
 rem-statement = <#\"(?i)rem\"> comment
 
-condition = expr <ows> cond-op <ows> expr
+condition = expr cond-op expr
 <cond-op> = \"==\" | \"!=\" | \"<\" | \"<=\" | \">\" | \">=\"
 
 <var-list> = var | var-list <comma-delim> var
@@ -62,7 +62,7 @@ comment = #\".*\"
 <simple-string> = #\"[^\\\"]*\"
 string-with-embedded-dquotes = simple-string | simple-string '\"\"' string-with-embedded-dquotes
 
-<comma-delim> = <ows> <\",\"> <ows>
+<comma-delim> = <\",\">
 
 line-num = integer
 
@@ -85,11 +85,13 @@ integer = #'[0-9]+'
 (* Lexical items *)
 dquote = '\"'
 squote = \"'\"
-ows = #'\\s*'
 "
-  )
+)
 
-(def ^:private line-parser (insta/parser grammar #_(read-grammar)))
+(def whitespace-parser (insta/parser "ws = #'\\s+'"))
+
+(def ^:private line-parser (insta/parser grammar #_(read-grammar)
+                                         :auto-whitespace whitespace-parser))
 
 (defn- err-to-str [parse-result]
   (-> parse-result insta/get-failure
@@ -115,4 +117,3 @@ ows = #'\\s*'
 
         ;; Should never happen, unless grammar is broken
         :else {:status :error :error (if errs-to-strs? (err-to-str rslt) rslt)}))))
-

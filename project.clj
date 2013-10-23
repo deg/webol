@@ -28,7 +28,7 @@
                  [muxx "0.1.1"]
 
                  ;; Parser tools
-                 [instaparse "1.2.2"]
+                 [instaparse "1.2.4"]
 
                  ;; Needed, I think, in order to build a runnable uberjar with compojure
                  [ring/ring-jetty-adapter "1.1.8"]
