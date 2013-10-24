@@ -203,6 +203,34 @@
 (defmethod interpret :goto-statement [[_ [_ line-num]]]
   (store/put! [:register :pc] (dec line-num)))
 
+(defmethod interpret :for-statement [[_ [_ var] start end skip]]
+  (let [open-loops (store/fetch [:register :open-loops])
+        open-loop-vars (map :var open-loops)]
+    (when (some #{var} open-loop-vars)
+      (error "Can't nest loops of " var))
+    (store/update! [:register :open-loops] conj
+                   {:line (store/fetch [:register :pc])
+                    :var var
+                    :start start
+                    :end end
+                    :skip (or skip 1)}))
+  (assign-var var start))
+
+(defmethod interpret :next-statement [[_ [_ var]]]
+  (let [open-loop (first (store/fetch [:register :open-loops]))]
+    (if (= var (:var open-loop))
+      (let [new-val (+ (get-var-val var) (:skip open-loop))]
+        (assign-var var new-val)
+        (if (> new-val (:end open-loop))
+          (store/update! [:register :open-loops] pop)
+          (store/put! [:register :pc] (:line open-loop))))
+      (error "'NEXT " var
+             (if (nil? open-loop)
+               (str "', but no open loop.")
+               (str "' cannot close loop on " (:var open-loop)
+                    " (opened at line " (:line open-loop) ")."))))))
+
+
 (defmethod interpret :if-statement [[_ [_ lhs op rhs] [_ statement]]]
   (let [left (interpret-expr lhs)
         right (interpret-expr rhs)
