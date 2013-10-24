@@ -17,20 +17,23 @@
 input-line = (action | (!action bad-cmd) | progline)
 
 (* Immediate mode commands *)
-<action> = abort-cmd | clear-cmd | edit-cmd | help-cmd | list-cmd |
-           println-cmd | print-cmd | renumber-cmd | run-cmd | save-cmd |
-           step-cmd | trace-cmd
+<action> = abort-cmd | clear-cmd | destroy-cmd | dir-cmd | edit-cmd | help-cmd |
+           list-cmd | load-cmd | println-cmd | print-cmd | renumber-cmd | run-cmd |
+           save-cmd | step-cmd | trace-cmd
 
 abort-cmd    = <#\"(?i)abort\">
 clear-cmd    = <#\"(?i)clear\">
+destroy-cmd  = <#\"(?i)destroy\"> proj-name
+dir-cmd      = <#\"(?i)dir\">
 edit-cmd     = <#\"(?i)edit\"> line-num
 help-cmd     = <#\"(?i)help\">
 list-cmd     = <#\"(?i)list\">
-println-cmd  = <#\"(?i)print\"> expr-list
+load-cmd     = <#\"(?i)load\"> proj-name
 print-cmd    = <#\"(?i)print\"> expr-list <comma-delim>
+println-cmd  = <#\"(?i)print\"> expr-list
 renumber-cmd = <#\"(?i)renumber\"> (line-num)?
 run-cmd      = <#\"(?i)run\"> (line-num)?
-save-cmd     = <#\"(?i)save\">
+save-cmd     = <#\"(?i)save\"> (proj-name)?
 step-cmd     = <#\"(?i)step\">
 trace-cmd    = <#\"(?i)trace\">
 
@@ -66,6 +69,8 @@ string-with-embedded-dquotes = simple-string | simple-string '\"\"' string-with-
 
 <comma-delim> = <\",\">
 
+<proj-name> = quoted-string | unquoted-name
+
 line-num = integer
 
 (* Arithmetic expression parser *)
@@ -79,7 +84,8 @@ div = mul-div <'/'> term
 <term> = atom | parens
 parens = <'('> add-sub <')'>
 <atom> = number | var
-var = #'[A-Za-z][A-Za-z0-9]*'
+var = unquoted-name
+<unquoted-name> = #'[A-Za-z][A-Za-z0-9]*'
 <number> = integer | float
 float = #'[0-9]*\\.[0-9]+'
 integer = #'[0-9]+'

@@ -265,8 +265,30 @@
 (defmethod interpret :step-cmd [_]
   (run-program {:trace true :one-step true}))
 
-(defmethod interpret :save-cmd [_]
-  (storage/write-local "program" (get-program)))
+(defmethod interpret :save-cmd [[_ new-name]]
+  (let [name (or new-name (store/fetch [:program :name]))]
+    (when-not (or (nil? new-name) (= new-name name))
+      (store/put! [:program :name] new-name))
+    (storage/write-local ["program" name] (get-program))
+    (let [dir (storage/read "program-directory" nil)]
+      (when-not (some #{name} dir)
+        (storage/write-local "program-directory" (conj dir name))))))
+
+(defmethod interpret :load-cmd [[_ name]]
+  (let [got (storage/read ["program" name] nil)]
+    (set-program (storage/read ["program" name] nil))
+    (store/put! [:program :name] name)))
+
+(defmethod interpret :dir-cmd [_]
+  (screen/line-out "Saved programs:" {})
+  (doseq [program  (storage/read "program-directory" nil)]
+    (screen/line-out (str "- " program) {})))
+
+(defmethod interpret :destroy-cmd [[_ name]]
+  (storage/write-local "program-directory"
+                       (remove #{name} (storage/read "program-directory" nil)))
+  (storage/write-local ["program" name] nil))
+
 
 (defmethod interpret :progline [[_ [_ line-num] [_ statement]]]
   (store/update! [:program] assoc line-num statement)

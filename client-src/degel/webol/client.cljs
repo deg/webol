@@ -72,7 +72,6 @@
                         :error (screen/line-out (str "ERROR: " error) {:color "DarkRed"})
                         :success (rt/interpret-top-level parse))))
                   false))
-  (rt/set-program (read "program" nil))
   (events/listen! (dom/by-id :list-program)  :click #(store/put! [:input :line] "LIST"))
   (events/listen! (dom/by-id :save-program)  :click #(store/put! [:input :line] "SAVE"))
   (events/listen! (dom/by-id :clear-program)  :click #(store/put! [:input :line] "CLEAR"))
