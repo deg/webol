@@ -22,9 +22,20 @@
    {:color (if bad-cmd "DarkRed" "DarkBlue")}))
 
 
+(defn stop-program-run [{:keys [msg stay-at-current-line]}]
+  "Terminate the running program."
+  (store/put! [:register :running] false)
+  (store/put! [:register :open-loops] nil)
+  (when-not stay-at-current-line
+    (store/put! [:register :pc] 0))
+  (when msg
+    (screen/line-out (str "** " msg " **"){:color "DarkRed"})))
+
+
 (defn clear-program []
   (store/put! [:program] (sorted-map))
-  (store/put! [:program-vars] {}))
+  (store/put! [:program-vars] {})
+  (stop-program-run {}))
 
 
 (declare format-expr)
@@ -94,15 +105,6 @@
 (declare interpret-top-level interpret interpret-expr)
 
 
-(defn stop-program-run [{:keys [msg stay-at-current-line]}]
-  "Terminate the running program."
-  (store/put! [:register :running] false)
-  (when-not stay-at-current-line
-    (store/put! [:register :pc] 0))
-  (when msg
-    (screen/line-out (str "** " msg " **"){:color "DarkRed"})))
-
-
 (defn- continue-program [program {:keys [trace one-step] :as flags}]
   (let [[line-num statement] (next-line program (store/fetch [:register :pc]))]
     (store/put! [:register :pc] line-num)
@@ -141,9 +143,17 @@
     (throw (js/Error. errmsg "(no file yet)" line))))
 
 
-(defn get-var-val [var]
+(defn- init-var [var]
+  (store/update! [:program-vars] assoc var 0))
+
+(defn- get-var-val [var]
   (or (get (store/fetch [:program-vars]) var)
       (error "Undefined variable '" var "'")))
+
+(defn- assign-var [var val]
+  (if (get (store/fetch [:program-vars]) var)
+    (store/update! [:program-vars] assoc var (interpret-expr val))
+    (error "Undefined assignment '" var "'")))
 
 
 (defn interpret-expr [expr]
@@ -188,7 +198,7 @@
 
 (defmethod interpret :dim-statement [[_ & vars]]
   (doseq [[- var] vars]
-    (store/update! [:program-vars] assoc var 0)))
+    (init-var var)))
 
 (defmethod interpret :goto-statement [[_ [_ line-num]]]
   (store/put! [:register :pc] (dec line-num)))
@@ -201,9 +211,7 @@
       (interpret statement))))
 
 (defmethod interpret :let-statement [[_ [_ lhs] rhs]]
-  (if (get (store/fetch [:program-vars]) lhs)
-    (store/update! [:program-vars] assoc lhs (interpret-expr rhs))
-    (error "Undefined assignment '" lhs "'")))
+  (assign-var lhs rhs))
 
 (defmethod interpret :rem-statement [_]
   (do))
