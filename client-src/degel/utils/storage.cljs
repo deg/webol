@@ -89,3 +89,7 @@
         password (read :password nil)]
     (remote-callback :write-storage [key value user-id password]
       #(remote-callback-fn %))))
+
+(defn delete [key]
+  ;; [TODO] BugId: 172. This needs to delete the remote value too, if one exists.
+  (.removeItem storage key))

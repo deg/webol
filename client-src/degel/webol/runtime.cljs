@@ -287,7 +287,7 @@
 (defmethod interpret :destroy-cmd [[_ name]]
   (storage/write-local "program-directory"
                        (remove #{name} (storage/read "program-directory" nil)))
-  (storage/write-local ["program" name] nil))
+  (storage/delete ["program" name]))
 
 
 (defmethod interpret :progline [[_ [_ line-num] [_ statement]]]
