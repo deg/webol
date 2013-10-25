@@ -6,6 +6,12 @@
             [degel.utils.html :as dhtml]))
 
 
+(defn header-bar []
+  (html
+   [:div
+    [:h1 "Webol Computer"]
+    [:h2 [:address.author "Copyright &copy; 2013; "
+          [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]]))
 (defn location-and-value [location value]
   (html [:div
          [:div.location location]
@@ -46,9 +52,7 @@
 (defn webol-page []
   (html
    [:div#main.leftAppCol
-    [:h1 "Webol Computer"]
-    [:h2 [:address.author "Copyright &copy; 2013; "
-          [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]
+    (header-bar)
     (webol-menu-bar)
     [:div.canvas-wrapper
      [:canvas#sketchboard {:width "640px" :height "360px"}
