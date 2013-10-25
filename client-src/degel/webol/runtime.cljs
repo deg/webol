@@ -267,8 +267,7 @@
 
 (defmethod interpret :save-cmd [[_ new-name]]
   (let [name (or new-name (store/fetch [:program :name]))]
-    (when-not (or (nil? new-name) (= new-name name))
-      (store/put! [:program :name] new-name))
+    (store/put! [:program :name] name)
     (storage/write-local ["program" name] (get-program))
     (let [dir (storage/read "program-directory" nil)]
       (when-not (some #{name} dir)

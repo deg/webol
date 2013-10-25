@@ -47,6 +47,10 @@
   (dom/swap-content! (dom/by-id "manpage")
     (page/manpage-frame src)))
 
+(defn- draw-program-name [name]
+  (log "Setting program name to: " name)
+  (dom/set-text! (dom/by-id "progname") name))
+
 (defn- draw-screen []
   (dom/set-html! (dom/by-id "page") (page/webol-page))
   (dom/set-html! (dom/by-id "memory")
@@ -58,6 +62,7 @@
   (draw-registers)
   (screen/text-mode)
   (store/alert! [:register] :draw-pc (fn [_ _ _ _] (draw-registers)))
+  (store/alert! [:program :name] :new-program (fn [_ _ _ name] (draw-program-name name)))
   (store/guard! [:input :line] :input-line
                 ;; This somewhat abuses the guard metaphor. I'm using it here as a
                 ;; one-shot: We don't need or want to store anything in [:input :line];
@@ -97,4 +102,5 @@
                           ["org.clojure" "clojurescript"]]]
     (fn [v]
       (store/put! [:versions] v)
-      (draw-screen))))
+      (draw-screen)
+      (store/put! [:input :line] "LOAD startup"))))

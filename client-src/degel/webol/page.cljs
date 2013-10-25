@@ -12,6 +12,10 @@
     [:h1 "Webol Computer"]
     [:h2 [:address.author "Copyright &copy; 2013; "
           [:a {:href "mailto:deg@degel.com"} "David Goldfarb"]]]]))
+
+(defn program-name-bar []
+  (html [:h2 "Loaded program: " [:span#progname (store/fetch [:program :name])]]))
+
 (defn location-and-value [location value]
   (html [:div
          [:div.location location]
@@ -53,6 +57,7 @@
   (html
    [:div#main.leftAppCol
     (header-bar)
+    (program-name-bar)
     (webol-menu-bar)
     [:div.canvas-wrapper
      [:canvas#sketchboard {:width "640px" :height "360px"}
