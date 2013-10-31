@@ -1,6 +1,7 @@
 (ns degel.webol.page
   (:require-macros [hiccups.core :refer [html]])
-  (:require [hiccups.runtime] ;; Needed by hiccups.core macros
+  (:require [clojure.string :as str]
+            [hiccups.runtime] ;; Needed by hiccups.core macros
             [domina :as dom :refer [log]]
             [degel.webol.store :as store]
             [degel.utils.html :as dhtml]))
@@ -47,7 +48,7 @@
 
 
 (defn- page-bottom-notices []
-  [:h6 (clojure.string/join
+  [:h6 (str/join
         "<br>"
         (map (fn [[_ artifact version]] (str artifact ": " version))
              (store/fetch [:versions])))])
