@@ -60,6 +60,7 @@
                               loc
                               (-> [:memory loc] store/fetch or-empty)))))
   (draw-registers)
+  (page/enable-behaviors)
   (screen/text-mode)
   (store/alert! [:register] :draw-pc (fn [_ _ _ _] (draw-registers)))
   (store/alert! [:program :name] :new-program (fn [_ _ _ name] (draw-program-name name)))
@@ -98,6 +99,7 @@
   (clear-all)
   (remote-callback
       :project-versions [[["webol" "webol"]
+                          ["muxx" "muxx"]
                           ["degel-clojure-utils" "degel-clojure-utils"]
                           ["org.clojure" "clojurescript"]]]
     (fn [v]

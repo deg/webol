@@ -3,6 +3,7 @@
   (:require [clojure.string :as str]
             [hiccups.runtime] ;; Needed by hiccups.core macros
             [domina :as dom :refer [log]]
+            [goog.ui.Zippy :as zippy]
             [degel.webol.store :as store]
             [degel.utils.html :as dhtml]))
 
@@ -48,10 +49,12 @@
 
 
 (defn- page-bottom-notices []
-  [:h6 (str/join
-        "<br>"
-        (map (fn [[_ artifact version]] (str artifact ": " version))
-             (store/fetch [:versions])))])
+  [:h6#footer
+   [:div#credits-tag "Credits"]
+   [:div#credits-body (str/join
+                       "<br>"
+                       (map (fn [[_ artifact version]] (str artifact ": " version))
+                            (store/fetch [:versions])))]])
 
 
 (defn webol-page []
@@ -69,3 +72,6 @@
     [:div#program]
     (page-bottom-notices)]
    (manpage-and-menu "webol-intro.html")))
+
+(defn enable-behaviors []
+  (goog.ui.Zippy. (dom/by-id "credits-tag") (dom/by-id "credits-body")))
