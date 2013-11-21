@@ -1,12 +1,12 @@
 *#
 *~
-/.lein-repl-history
+/.lein-*
 /.nrepl-port
 /.repl
+/checkouts
 /docs
 /out
 /pom.xml*
 /repl
 /resources/public/js/webol*.js
 /target
-checkouts/
