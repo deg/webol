@@ -53,7 +53,10 @@
    [:div#credits-tag "Credits"]
    [:div#credits-body (str/join
                        "<br>"
-                       (map (fn [[_ artifact version]] (str artifact ": " version))
+                       (map (fn [[group-id artifact version]] (str (if (= group-id artifact)
+                                                              artifact
+                                                              (str group-id "/" artifact))
+                                                            ": " version))
                             (store/fetch [:versions])))]])
 
 

@@ -98,7 +98,7 @@
 (defn ^:export init []
   (clear-all)
   (remote-callback
-      :project-versions [[["webol" "webol"]
+      :project-versions [[["degel" "webol"]
                           ["muxx" "muxx"]
                           ["degel-clojure-utils" "degel-clojure-utils"]
                           ["org.clojure" "clojurescript"]]]
