@@ -10,7 +10,7 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 
-(defproject webol "0.1.5-SNAPSHOT"
+(defproject webol "0.1.5"
   :description "DEPRECATED: HTML5 web-app to play with clojure and clojurescript."
   :url "https://github.com/deg/webol"
   :license {:name "Eclipse Public License"
