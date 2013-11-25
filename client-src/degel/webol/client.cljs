@@ -99,8 +99,10 @@
   (clear-all)
   (remote-callback
       :project-versions [[["degel" "webol"]
-                          ["muxx" "muxx"]
-                          ["degel-clojure-utils" "degel-clojure-utils"]
+                          ["degel" "muxx"]
+                          ["degel" "redmapel"]
+                          ["redmapel" "redmapel"] ;; [TODO] just here for now. BugId: 181
+                          ["degel" "degel-clojure-utils"]
                           ["org.clojure" "clojurescript"]]]
     (fn [v]
       (store/put! [:versions] v)

@@ -10,7 +10,7 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 
-(defproject degel/webol "0.1.5"
+(defproject degel/webol "0.1.7"
   :description "HTML5 web-app to play with clojure and clojurescript."
   :url "https://github.com/deg/webol"
   :license {:name "Eclipse Public License"
@@ -19,13 +19,14 @@
                  [org.clojure/clojurescript "0.0-2014"]
 
                  ;; Degel's Clojure utility library
-                 [degel-clojure-utils "0.1.15"]
+                 [degel/degel-clojure-utils "0.1.17"]
 
                  ;; Degel's Redmapel state tree library
+                 ;; [TODO] Lein cljsbuild crashes on latest degel/redmapel.  BugId: 181
                  [redmapel "0.1.7"]
 
                  ;; Degel's website multiplexer
-                 [muxx "0.1.2"]
+                 [degel/muxx "0.1.4"]
 
                  ;; Parser tools
                  [instaparse "1.2.6"]
@@ -52,9 +53,6 @@
                  [shoreleave/shoreleave-remote-ring "0.3.0"]
                  [shoreleave/shoreleave-remote "0.3.0"]
 
-                 ;; Testing from ClojureScript
-                 [com.cemerick/clojurescript.test "0.0.4"]
-
                  ;; Clojure/ClojureScript validation
                  [com.cemerick/valip "0.3.2"]
 
@@ -63,7 +61,10 @@
 
   :plugins [[lein-cljsbuild "0.3.3"]
             [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
-            [com.cemerick/austin "0.1.1"]
+            [com.cemerick/austin "0.1.3"]
+
+            ;; Testing from ClojureScript
+            [com.cemerick/clojurescript.test "0.2.1"]
 
             ;; Not supported in lein 2.2.0, but here as a reminder to get features
             ;; mentioned in https://groups.google.com/forum/#!msg/clojure/9cA5hvFJTkw/fnWwxvALd64J
