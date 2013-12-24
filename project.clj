@@ -10,7 +10,7 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 
-(defproject degel/webol "0.1.7"
+(defproject degel/webol "0.1.8"
   :description "HTML5 web-app to play with clojure and clojurescript."
   :url "https://github.com/deg/webol"
   :license {:name "Eclipse Public License"
@@ -19,14 +19,13 @@
                  [org.clojure/clojurescript "0.0-2014"]
 
                  ;; Degel's Clojure utility library
-                 [degel/degel-clojure-utils "0.1.17"]
+                 [degel/degel-clojure-utils "0.1.20"]
 
                  ;; Degel's Redmapel state tree library
-                 ;; [TODO] Lein cljsbuild crashes on latest degel/redmapel.  BugId: 181
-                 [redmapel "0.1.7"]
+                 [degel/redmapel "0.1.13"]
 
                  ;; Degel's website multiplexer
-                 [degel/muxx "0.1.4"]
+                 [degel/muxx "0.1.5"]
 
                  ;; Parser tools
                  [instaparse "1.2.6"]
@@ -72,6 +71,8 @@
             ]
 
   :min-lein-version "2.0.0"
+
+;  :pedantic? :abort
 
   :main degel.webol.server ;; For standalone deployment
 

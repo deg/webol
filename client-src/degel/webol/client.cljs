@@ -101,7 +101,6 @@
       :project-versions [[["degel" "webol"]
                           ["degel" "muxx"]
                           ["degel" "redmapel"]
-                          ["redmapel" "redmapel"] ;; [TODO] just here for now. BugId: 181
                           ["degel" "degel-clojure-utils"]
                           ["org.clojure" "clojurescript"]]]
     (fn [v]
