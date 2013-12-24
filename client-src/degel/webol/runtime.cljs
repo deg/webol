@@ -60,6 +60,7 @@
         (string? expr) (str "\"" expr "\"")
         (vector? expr) (let [[expr-type & expr-vals] expr]
                          (condp = expr-type
+                           :print-bare-cmd (str "PRINT")
                            :print-cmd (str "PRINT " (format-list expr-vals) ",")
                            :println-cmd (str "PRINT " (format-list expr-vals))
                            :dim-statement (str "DIM " (format-list expr-vals))
@@ -252,6 +253,9 @@
 
 (defmethod interpret :println-cmd [[_ & exprs]]
   (screen/line-out (str/join " " (map interpret-expr exprs)) {}))
+
+(defmethod interpret :print-bare-cmd [_]
+  (screen/line-out " " {}))
 
 (defmethod interpret :list-cmd [_]
   (list-program))

@@ -18,7 +18,7 @@ input-line = (action | (!action bad-cmd) | progline)
 
 (* Immediate mode commands *)
 <action> = abort-cmd | clear-cmd | destroy-cmd | dir-cmd | edit-cmd | help-cmd |
-           list-cmd | load-cmd | println-cmd | print-cmd | renumber-cmd | run-cmd |
+           list-cmd | load-cmd | println-cmd | print-bare-cmd | print-cmd | renumber-cmd | run-cmd |
            save-cmd | step-cmd | trace-cmd
 
 abort-cmd    = <#\"(?i)abort\">
@@ -29,6 +29,7 @@ edit-cmd     = <#\"(?i)edit\"> line-num
 help-cmd     = <#\"(?i)help\">
 list-cmd     = <#\"(?i)list\">
 load-cmd     = <#\"(?i)load\"> proj-name
+print-bare-cmd = <#\"(?i)print\">
 print-cmd    = <#\"(?i)print\"> expr-list <comma-delim>
 println-cmd  = <#\"(?i)print\"> expr-list
 renumber-cmd = <#\"(?i)renumber\"> (line-num)?
@@ -50,7 +51,7 @@ goto-statement = <#\"(?i)goto\"> line-num
 if-statement = <#\"(?i)if\"> condition <#\"(?i)then\"> statement
 let-statement = <#\"(?i)let\">  var <\"=\"> expr
 next-statement = <#\"(?i)next\">  var
-<print-statement> = print-cmd | println-cmd
+<print-statement> = print-cmd | println-cmd | print-bare-cmd
 rem-statement = <#\"(?i)rem\"> comment
 
 condition = expr cond-op expr
