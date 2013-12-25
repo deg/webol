@@ -22,7 +22,7 @@ input-line = (action | (!action bad-cmd) | progline)
            save-cmd | step-cmd | trace-cmd
 
 abort-cmd    = <#\"(?i)abort\">
-clear-cmd    = <#\"(?i)clear\">
+clear-cmd    = <#\"(?i)clear\"> (line-range)?
 destroy-cmd  = <#\"(?i)destroy\"> proj-name
 dir-cmd      = <#\"(?i)dir\">
 edit-cmd     = <#\"(?i)edit\"> line-num
@@ -71,6 +71,8 @@ string-with-embedded-dquotes = simple-string | simple-string '\"\"' string-with-
 <comma-delim> = <\",\">
 
 <proj-name> = quoted-string | unquoted-name
+
+<line-range> = line-num | line-num comma-delim line-num
 
 line-num = integer
 

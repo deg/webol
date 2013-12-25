@@ -32,10 +32,24 @@
     (screen/line-out (str "** " msg " **"){:color "DarkRed"})))
 
 
-(defn clear-program []
-  (store/put! [:program] (sorted-map))
-  (store/put! [:program-vars] {})
-  (stop-program-run {}))
+(defn clear-program
+  "Clear the whole program or part of it.
+   CLEAR     - clear everything
+   CLEAR n   - clear everything from line N until the end of the program
+   CLEAR n,m - clear everything from line N through line M"
+  ([] (clear-program nil nil))
+  ([start-line end-line]
+     (cond (nil? start-line)
+           (store/put! [:program] (sorted-map))
+           (nil? end-line)
+           (store/put! [:program] (subseq (store/fetch [:program]) < start-line))
+           :else
+           (store/put! [:program]
+                       (into (sorted-map)
+                             (filter #(or (< (first %) start-line) (> (first %) end-line))
+                                     (store/fetch [:program])))))
+     (store/put! [:program-vars] {})
+     (stop-program-run {})))
 
 
 (declare format-expr)
@@ -245,8 +259,8 @@
 (defmethod interpret :rem-statement [_]
   (do))
 
-(defmethod interpret :clear-cmd [_]
-  (clear-program))
+(defmethod interpret :clear-cmd [[_ [_ start-line] [_ end-line]]]
+  (clear-program start-line end-line))
 
 (defmethod interpret :print-cmd [[_ & exprs]]
   (screen/text-out (str/join " " (map interpret-expr exprs)) {}))
