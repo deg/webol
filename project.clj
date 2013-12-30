@@ -10,7 +10,7 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 
-(defproject degel/webol "0.1.8"
+(defproject degel/webol "0.1.9"
   :description "HTML5 web-app to play with clojure and clojurescript."
   :url "https://github.com/deg/webol"
   :license {:name "Eclipse Public License"
@@ -25,7 +25,7 @@
                  [degel/redmapel "0.1.13"]
 
                  ;; Degel's website multiplexer
-                 [degel/muxx "0.1.6-SNAPSHOT"]
+                 [degel/muxx "0.1.6"]
 
                  ;; Parser tools
                  [instaparse "1.2.13"]
