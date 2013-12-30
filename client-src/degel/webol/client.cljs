@@ -48,7 +48,6 @@
     (page/manpage-frame src)))
 
 (defn- draw-program-name [name]
-  (log "Setting program name to: " name)
   (dom/set-text! (dom/by-id "progname") name))
 
 (defn- draw-screen []
