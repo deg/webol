@@ -25,7 +25,7 @@
                  [degel/redmapel "0.1.13"]
 
                  ;; Degel's website multiplexer
-                 [degel/muxx "0.1.5"]
+                 [degel/muxx "0.1.6-SNAPSHOT"]
 
                  ;; Parser tools
                  [instaparse "1.2.13"]
