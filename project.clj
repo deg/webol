@@ -16,10 +16,10 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.5.1"]
-                 [org.clojure/clojurescript "0.0-2014"]
+                 [org.clojure/clojurescript "0.0-2069"]
 
                  ;; Degel's Clojure utility library
-                 [degel/degel-clojure-utils "0.1.20"]
+                 [degel/degel-clojure-utils "0.1.20" :exclusions [joda-time]]
 
                  ;; Degel's Redmapel state tree library
                  [degel/redmapel "0.1.13"]
@@ -31,10 +31,10 @@
                  [instaparse "1.2.13"]
 
                  ;; Needed, I think, in order to build a runnable uberjar with compojure
-                 [ring/ring-jetty-adapter "1.1.8"]
+                 [ring/ring-jetty-adapter "1.2.1"]
 
                  ;; Routing library for Ring web application library
-                 [compojure "1.1.5" :exclusions [ring/ring-core org.clojure/tools.macro]]
+                 [compojure "1.1.6" :exclusions [org.clojure/tools.macro]]
 
                  ;; DOM manipulation library for ClojureScript
                  [domina "1.0.2"]
@@ -59,7 +59,7 @@
                  [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]]
 
   :plugins [[lein-cljsbuild "0.3.3"]
-            [lein-ring "0.8.3" :exclusions [org.clojure/clojure]]
+            [lein-ring "0.8.3"]
             [com.cemerick/austin "0.1.3"]
 
             ;; Testing from ClojureScript
