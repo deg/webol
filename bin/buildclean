@@ -3,5 +3,5 @@
 # Build this entire project, from a clean base throught check-in and release
 
 git push
-git push kiln
+git push kiln master
 lein do clean, jar, cljsbuild once dev, cljsbuild once production, deploy clojars

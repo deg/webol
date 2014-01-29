@@ -10,7 +10,7 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 
-(defproject degel/webol "0.1.10"
+(defproject degel/webol "0.1.11"
   :description "HTML5 web-app to play with clojure and clojurescript."
   :url "https://github.com/deg/webol"
   :license {:name "Eclipse Public License"
@@ -59,20 +59,15 @@
                  [com.cemerick/rummage "1.0.1" :exclusions [commons-codec]]]
 
   :plugins [[lein-cljsbuild "0.3.3"]
-            [lein-ring "0.8.3"]
+            [lein-ring "0.8.10" :exclusions [org.clojure/clojure]]  ;; [TODO] Do we still want this, with Muxx?
             [com.cemerick/austin "0.1.3"]
 
             ;; Testing from ClojureScript
-            [com.cemerick/clojurescript.test "0.2.1"]
-
-            ;; Not supported in lein 2.2.0, but here as a reminder to get features
-            ;; mentioned in https://groups.google.com/forum/#!msg/clojure/9cA5hvFJTkw/fnWwxvALd64J
-            #_[lein-pedantic "0.0.5"]
-            ]
+            [com.cemerick/clojurescript.test "0.2.1"]]
 
   :min-lein-version "2.0.0"
 
-;  :pedantic? :abort
+  :pedantic? :abort
 
   :main degel.webol.server ;; For standalone deployment
 
