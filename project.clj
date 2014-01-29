@@ -10,7 +10,7 @@
 ;;; You must not remove this notice, or any other, from this software.
 
 
-(defproject degel/webol "0.1.9"
+(defproject degel/webol "0.1.10"
   :description "HTML5 web-app to play with clojure and clojurescript."
   :url "https://github.com/deg/webol"
   :license {:name "Eclipse Public License"
@@ -19,16 +19,16 @@
                  [org.clojure/clojurescript "0.0-2069"]
 
                  ;; Degel's Clojure utility library
-                 [degel/degel-clojure-utils "0.1.20" :exclusions [joda-time]]
+                 [degel/degel-clojure-utils "0.1.21"]
 
                  ;; Degel's Redmapel state tree library
-                 [degel/redmapel "0.1.13"]
+                 [degel/redmapel "0.1.14"]
 
                  ;; Degel's website multiplexer
-                 [degel/muxx "0.1.6"]
+                 [degel/muxx "0.1.7"]
 
                  ;; Parser tools
-                 [instaparse "1.2.13"]
+                 [instaparse "1.2.14"]
 
                  ;; Needed, I think, in order to build a runnable uberjar with compojure
                  [ring/ring-jetty-adapter "1.2.1"]
